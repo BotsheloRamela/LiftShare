@@ -42,3 +42,11 @@ PAYSTACK_API_KEY=your_paystack_api_key
 GOOGLE_MAPS_API_KEY=your_google_maps_api_key
 
 ```
+
+Replace the placeholder values with your actual API keys and Firebase configuration.
+
+## Running the App
+1. Clone the repository: `git clone https://github.com/BotsheloRamela/liftshare.git`
+2. Navigate to the project directory: `cd liftshare-app`
+3. Install dependencies: `flutter pub get`
+4. Run the app: `flutter run`

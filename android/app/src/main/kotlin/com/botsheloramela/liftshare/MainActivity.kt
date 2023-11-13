@@ -1,4 +1,4 @@
-package com.botsheloramela.fuel4u
+package com.botsheloramela.liftshare
 
 import io.flutter.embedding.android.FlutterActivity
 
