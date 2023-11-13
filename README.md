@@ -12,6 +12,71 @@ The LiftShare app is designed to make it easy for users to organize or join ride
 - **Google Maps API**: Utilized to enhance location-based features.
 - **MVVM Architecture**: The app follows the Model-View-ViewModel architectural pattern for a scalable and maintainable codebase.
 
+## Project Structure
+```
+lib
+|-- app
+|   |-- main.dart
+|-- data
+|   |-- models
+|   |   |-- user.dart
+|   |   |-- lift.dart
+|   |   |-- notification.dart
+|   |-- repositories
+|   |   |-- user_repository.dart
+|   |   |-- lift_repository.dart
+|   |   |-- notification_repository.dart
+|-- ui
+|   |-- screens
+|   |   |-- onboarding
+|   |   |   |-- register_screen.dart
+|   |   |   |-- login_screen.dart
+|   |   |   |-- reset_password_screen.dart
+|   |-- lift
+|   |   |-- offer_lift_screen.dart
+|   |   |-- update_lift_screen.dart
+|   |   |-- view_offered_lifts_screen.dart
+|   |-- search
+|   |   |-- view_available_lifts_screen.dart
+|   |   |-- search_lift_screen.dart
+|   |   |-- view_lift_details_screen.dart
+|   |-- confirm_cancel
+|   |   |-- confirm_joining_lift_screen.dart
+|   |   |-- view_confirmed_lifts_screen.dart
+|   |   |-- cancel_booking_screen.dart
+|   |   |-- cancel_offered_lift_screen.dart
+|-- utils
+|   |-- constants.dart
+|   |-- routes.dart
+|-- viewmodels
+|   |-- onboarding_viewmodel.dart
+|   |-- lift_viewmodel.dart
+|   |-- search_viewmodel.dart
+|   |-- confirm_cancel_viewmodel.dart
+|-- services
+|   |-- authentication_service.dart
+|   |-- firebase_service.dart
+|   |-- paystack_service.dart
+|   |-- google_maps_service.dart
+|   |-- in_app_messaging_service.dart
+|-- main.dart
+
+```
+
+Explanation:
+
+- `app`: Contains the main file (main.dart) that initializes the app.
+- `data`: Manages data-related concerns such as models and repositories.
+    - `models`: Data models representing entities like User, Lift, and Notification.
+    - `repositories`: Classes responsible for handling data operations for each entity.
+- `ui`: Contains UI-related components, organized by screens and functionality.
+screens: Divided into subfolders based on the user journey or feature.
+- `utils`: Houses constants and route definitions.
+- `viewmodels`: Manages the application's logic, following the MVVM pattern.
+- `services`: Handles external services like Firebase, PayStack, Google Maps, and in-app messaging.
+
+
+
 ## Getting Started
 
 ### Prerequisites
