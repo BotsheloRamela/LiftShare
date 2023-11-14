@@ -70,7 +70,7 @@ Explanation:
     - `models`: Data models representing entities like User, Lift, and Notification.
     - `repositories`: Classes responsible for handling data operations for each entity.
 - `ui`: Contains UI-related components, organized by screens and functionality.
-screens: Divided into subfolders based on the user journey or feature.
+- `screens`: Divided into subfolders based on the user journey or feature.
 - `utils`: Houses constants and route definitions.
 - `viewmodels`: Manages the application's logic, following the MVVM pattern.
 - `services`: Handles external services like Firebase, PayStack, Google Maps, and in-app messaging.
