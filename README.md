@@ -15,52 +15,61 @@ The LiftShare app is designed to make it easy for users to organize or join ride
 ## Project Structure
 ```
 lib
-|-- app
-|   |-- main.dart
 |-- data
 |   |-- models
-|   |   |-- user.dart
 |   |   |-- lift.dart
 |   |   |-- notification.dart
+|   |   |-- user.dart
 |   |-- repositories
-|   |   |-- user_repository.dart
 |   |   |-- lift_repository.dart
 |   |   |-- notification_repository.dart
+|   |   |-- user_repository.dart
+|-- services
+|   |-- authentication_service.dart
+|   |-- firebase_service.dart
+|   |-- google_maps_service.dart
+|   |-- in_app_messaging_service.dart
+|   |-- paystack_service.dart
 |-- ui
 |   |-- screens
+|   |   |-- activity
+|   |   |   |-- activity_details_joined_lift_screen.dart
+|   |   |   |-- activity_details_offered_lift_screen.dart
+|   |   |   |-- home_screen.dart
+|   |   |-- chats
+|   |   |   |-- chats_screen.dart
+|   |   |   |-- messaging_screen.dart
+|   |   |-- get_a_lift
+|   |   |   |-- home_screen.dart
+|   |   |   |-- join_lift_screen.dart
+|   |   |   |-- lift_details_screen.dart
+|   |   |   |-- search_lift_screen.dart
+|   |   |-- offer_a_lift
+|   |   |   |-- confirmed_lift_offer_screen.dart
+|   |   |   |-- home_screen.dart
+|   |   |   |-- offer_lift_screen.dart
 |   |   |-- onboarding
-|   |   |   |-- register_screen.dart
+|   |   |   |-- create_account_screen.dart
 |   |   |   |-- login_screen.dart
 |   |   |   |-- reset_password_screen.dart
-|   |-- lift
-|   |   |-- offer_lift_screen.dart
-|   |   |-- update_lift_screen.dart
-|   |   |-- view_offered_lifts_screen.dart
-|   |-- search
-|   |   |-- view_available_lifts_screen.dart
-|   |   |-- search_lift_screen.dart
-|   |   |-- view_lift_details_screen.dart
-|   |-- confirm_cancel
-|   |   |-- confirm_joining_lift_screen.dart
-|   |   |-- view_confirmed_lifts_screen.dart
-|   |   |-- cancel_booking_screen.dart
-|   |   |-- cancel_offered_lift_screen.dart
+|   |   |   |-- welcome_screen.dart
+|   |   |-- user
+|   |   |   |-- edit_profile_screen.dart
+|   |   |   |-- profile_screen.dart
+|   |-- widgets
+|   |   |-- app_button.dart
+|   |   |-- app_card.dart
+|   |   |-- app_textfield.dart
+|   |   |-- ... (other reusable widgets)
 |-- utils
 |   |-- constants.dart
 |   |-- routes.dart
 |-- viewmodels
-|   |-- onboarding_viewmodel.dart
-|   |-- lift_viewmodel.dart
-|   |-- search_viewmodel.dart
 |   |-- confirm_cancel_viewmodel.dart
-|-- services
-|   |-- authentication_service.dart
-|   |-- firebase_service.dart
-|   |-- paystack_service.dart
-|   |-- google_maps_service.dart
-|   |-- in_app_messaging_service.dart
+|   |-- lift_viewmodel.dart
+|   |-- onboarding_viewmodel.dart
+|   |-- search_viewmodel.dart
 |-- main.dart
-
 ```
 
 Explanation:
