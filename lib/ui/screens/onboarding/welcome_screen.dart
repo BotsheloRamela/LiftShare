@@ -15,56 +15,54 @@ class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Stack(
-        children: [
-          appBackground(),
-          Padding(
-            padding: const EdgeInsets.all(AppValues.screenPadding),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SizedBox(height: 90),
-                SvgPicture.asset(
-                  'assets/icons/liftshare_logo.svg',
-                  height: 140,
-                  width: 140,
+      child: DecoratedBox(
+        decoration: appBackground(),
+        child: Padding(
+          padding: const EdgeInsets.all(AppValues.screenPadding),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(height: 90),
+              SvgPicture.asset(
+                'assets/icons/liftshare_logo.svg',
+                height: 140,
+                width: 140,
+              ),
+              const SizedBox(height: 60),
+              const Text(
+                'Log In',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  decoration: TextDecoration.none,
+                  fontFamily: 'Aeonik',
                 ),
-                const SizedBox(height: 60),
-                const Text(
-                  'Log In',
+              ),
+              const SizedBox(height: 20),
+              _socialsSignInButtons(),
+              const SizedBox(height: 40),
+              TextDivider.horizontal(
+                thickness: 1,
+                color: AppColors.highlightColor,
+                text: const Text('Or',
                   style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
+                    color: AppColors.highlightColor,
+                    fontSize: 16,
                     decoration: TextDecoration.none,
+                    fontWeight: FontWeight.normal,
                     fontFamily: 'Aeonik',
                   ),
-                ),
-                const SizedBox(height: 20),
-                _socialsSignInButtons(),
-                const SizedBox(height: 40),
-                TextDivider.horizontal(
-                  thickness: 1,
-                  color: AppColors.highlightColor,
-                  text: const Text('Or',
-                    style: TextStyle(
-                      color: AppColors.highlightColor,
-                      fontSize: 16,
-                      decoration: TextDecoration.none,
-                      fontWeight: FontWeight.normal,
-                      fontFamily: 'Aeonik',
-                    ),
-                  )
-                ),
-                const SizedBox(height: 40),
-                // Email Sign In Button
-                _signInWithEmailButton(context),
-                const Spacer(),
-                _signUpTextWidget(),
-              ],
-            ),
-          )
-        ],
+                )
+              ),
+              const SizedBox(height: 40),
+              // Email Sign In Button
+              _signInWithEmailButton(context),
+              const Spacer(),
+              _signUpTextWidget(),
+            ],
+          ),
+        ),
       ),
     );
   }
