@@ -1,5 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:liftshare/services/authentication_service.dart';
+import 'package:liftshare/ui/screens/get_a_lift/home_screen.dart';
 
 import '../../../utils/constants.dart';
 import '../../widgets/app_background.dart';
@@ -13,11 +17,13 @@ class CreateAccountScreen extends StatefulWidget {
 }
 
 class _CreateAccountScreenState extends State<CreateAccountScreen> {
+  final FirebaseAuthService _firebaseAuthService = FirebaseAuthService();
+
   final _formKey = GlobalKey<FormState>();
 
-  final fullNameController = TextEditingController();
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+  final _fullNameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
 
   var _isPasswordVisible = false;
 
@@ -25,6 +31,47 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   void initState() {
     super.initState();
     _isPasswordVisible = true;
+  }
+
+  @override
+  void dispose() {
+    _fullNameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  void _signUp() async {
+    String fullName = _fullNameController.text.trim();
+    String email = _emailController.text.trim();
+    String password = _passwordController.text.trim();
+
+    try {
+      User? user = await _firebaseAuthService.signUpWithEmailAndPassword(email, password, fullName);
+
+      if (user != null) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const GetALiftHomeScreen()),
+        );
+      } else {
+        Fluttertoast.showToast(
+          msg: 'Failed to create account.',
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.TOP,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+        );
+      }
+    } catch(e) {
+      Fluttertoast.showToast(
+        msg: e.toString(),
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.TOP,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+    }
   }
 
   @override
@@ -87,15 +134,15 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                         key: _formKey,
                         child: Column(
                           children: [
-                            _fullNameTextField(fullNameController),
+                            _fullNameTextField(_fullNameController),
                             const SizedBox(height: 15),
 
-                            _emailTextField(emailController),
+                            _emailTextField(_emailController),
                             const SizedBox(height: 15),
 
                             TextFormField(
                               obscureText: _isPasswordVisible,
-                              controller: passwordController,
+                              controller: _passwordController,
                               decoration: InputDecoration(
                                 labelText: 'Password',
                                 filled: true,
@@ -159,7 +206,12 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                       color: AppColors.highlightColor,
                     ),
                     const SizedBox(height: 12),
-                    _signUpButton(context),
+                    GestureDetector(
+                        onTap: () {
+                          _signUp();
+                        },
+                        child: _signUpButton()
+                    ),
                   ],
                 ),
               ),
@@ -259,30 +311,25 @@ Widget _emailTextField(controller) {
   );
 }
 
-Widget _signUpButton(BuildContext context) {
-  return GestureDetector(
-    onTap: () {
-      // TODO: Call Create Account Function
-    },
-    child: Container(
-        height: 60,
-        width: double.infinity,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(AppValues.largeBorderRadius)),
-        ),
-        child: const Center(
-          child: Text(
-            'Create Account',
-            style: TextStyle(
-              color: AppColors.backgroundColor,
-              fontSize: 20,
-              decoration: TextDecoration.none,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Aeonik',
-            ),
+Widget _signUpButton() {
+  return Container(
+      height: 60,
+      width: double.infinity,
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.all(Radius.circular(AppValues.largeBorderRadius)),
+      ),
+      child: const Center(
+        child: Text(
+          'Create Account',
+          style: TextStyle(
+            color: AppColors.backgroundColor,
+            fontSize: 20,
+            decoration: TextDecoration.none,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Aeonik',
           ),
-        )
-    ),
+        ),
+      )
   );
 }

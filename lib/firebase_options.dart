@@ -11,19 +11,19 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 /// ```dart
 /// import 'firebase_options.dart';
 /// // ...
-/// await Firebase.initializeApp(
-///   options: DefaultFirebaseOptions.currentPlatform,
-/// );
+// / await Firebase.initializeApp(
+// /   options: DefaultFirebaseOptions.currentPlatform,
+// / );
 /// ```
 ///
-String get androidApiKey => DotEnv().get("ANDROID_FIREBASE_API_KEY");
-String get iosApiKey => DotEnv().get("IOS_FIREBASE_API_KEY");
-String get androidAppId => DotEnv().get("ANDROID_FIREBASE_APP_ID");
-String get iosAppId => DotEnv().get("IOS_FIREBASE_APP_ID");
-String get messagingSenderId => DotEnv().get("FIREBASE_MESSAGING_SENDER_ID");
-String get projectId => DotEnv().get("FIREBASE_PROJECT_ID");
-String get storageBucket => DotEnv().get("FIREBASE_STORAGE_BUCKET");
-String get iosBundleId => DotEnv().get("IOS_BUNDLE_ID");
+String get androidApiKey => dotenv.get("ANDROID_FIREBASE_API_KEY");
+String get iosApiKey => dotenv.get("IOS_FIREBASE_API_KEY");
+String get androidAppId => dotenv.get("ANDROID_FIREBASE_APP_ID");
+String get iosAppId => dotenv.get("IOS_FIREBASE_APP_ID");
+String get messagingSenderId => dotenv.get("FIREBASE_MESSAGING_SENDER_ID");
+String get projectId => dotenv.get("FIREBASE_PROJECT_ID");
+String get storageBucket => dotenv.get("FIREBASE_STORAGE_BUCKET");
+String get iosBundleId => dotenv.get("IOS_BUNDLE_ID");
 
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {

@@ -1,10 +1,14 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:liftshare/ui/screens/onboarding/reset_password_screen.dart';
 import 'package:liftshare/utils/constants.dart';
 
+import '../../../services/authentication_service.dart';
 import '../../widgets/app_background.dart';
 import '../../widgets/back_button.dart';
+import '../get_a_lift/home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -14,10 +18,12 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final FirebaseAuthService _firebaseAuthService = FirebaseAuthService();
+
   final _formKey = GlobalKey<FormState>();
 
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
 
   var _isPasswordVisible = false;
 
@@ -25,6 +31,45 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     super.initState();
     _isPasswordVisible = true;
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  void _signIn() async {
+    String email = _emailController.text.trim();
+    String password = _passwordController.text.trim();
+
+    try {
+      User? user = await _firebaseAuthService.signInWithEmailAndPassword(email, password);
+
+      if (user != null) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const GetALiftHomeScreen()),
+        );
+      } else {
+        Fluttertoast.showToast(
+          msg: 'Failed to sign in.',
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.TOP,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+        );
+      }
+    } catch(e) {
+      Fluttertoast.showToast(
+        msg: e.toString(),
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.TOP,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+    }
   }
 
   @override
@@ -87,13 +132,13 @@ class _LoginScreenState extends State<LoginScreen> {
                         key: _formKey,
                         child: Column(
                           children: [
-                            _emailTextField(emailController),
+                            _emailTextField(_emailController),
 
                             const SizedBox(height: 15),
 
                             TextFormField(
                               obscureText: _isPasswordVisible,
-                              controller: passwordController,
+                              controller: _passwordController,
                               decoration: InputDecoration(
                                 labelText: 'Password',
                                 filled: true,
@@ -179,7 +224,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       color: AppColors.highlightColor,
                     ),
                     const SizedBox(height: 12),
-                    _logInButton(context),
+                    GestureDetector(
+                      onTap: () {_signIn();},
+                      child: _logInButton()
+                    ),
                   ],
                 ),
               ),
@@ -235,30 +283,25 @@ Widget _emailTextField(controller) {
   );
 }
 
-Widget _logInButton(BuildContext context) {
-  return GestureDetector(
-    onTap: () {
-      // TODO: Call Log In Function
-    },
-    child: Container(
-        height: 60,
-        width: double.infinity,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(AppValues.largeBorderRadius)),
-        ),
-        child: const Center(
-          child: Text(
-            'Log In',
-            style: TextStyle(
-              color: AppColors.backgroundColor,
-              fontSize: 20,
-              decoration: TextDecoration.none,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Aeonik',
-            ),
+Widget _logInButton() {
+  return Container(
+      height: 60,
+      width: double.infinity,
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.all(Radius.circular(AppValues.largeBorderRadius)),
+      ),
+      child: const Center(
+        child: Text(
+          'Log In',
+          style: TextStyle(
+            color: AppColors.backgroundColor,
+            fontSize: 20,
+            decoration: TextDecoration.none,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Aeonik',
           ),
-        )
-    ),
+        ),
+      )
   );
 }
