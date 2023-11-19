@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:liftshare/utils/constants.dart';
 
+import '../../../utils/constants.dart';
 import '../../widgets/app_background.dart';
 import '../../widgets/back_button.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class CreateAccountScreen extends StatefulWidget {
+  const CreateAccountScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<CreateAccountScreen> createState() => _CreateAccountScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _CreateAccountScreenState extends State<CreateAccountScreen> {
   final _formKey = GlobalKey<FormState>();
 
+  final fullNameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -33,7 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
         extendBodyBehindAppBar: true,
         appBar: AppBar(
           title: const Text(
-            'Log In',
+            'Create Account',
             style: TextStyle(
               color: Colors.white,
               fontSize: 24,
@@ -86,8 +87,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         key: _formKey,
                         child: Column(
                           children: [
-                            _emailTextField(emailController),
+                            _fullNameTextField(fullNameController),
+                            const SizedBox(height: 15),
 
+                            _emailTextField(emailController),
                             const SizedBox(height: 15),
 
                             TextFormField(
@@ -151,40 +154,65 @@ class _LoginScreenState extends State<LoginScreen> {
                         )
                     ),
                     const SizedBox(height: 12),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: GestureDetector(
-                        onTap: () {
-                          // TODO: Navigate to Forgot Password Screen
-                        },
-                        child: const Text(
-                          'Forgot Password?',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            decoration: TextDecoration.none,
-                            fontWeight: FontWeight.normal,
-                            fontFamily: 'Aeonik',
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
                     const Divider(
                       thickness: 1,
                       color: AppColors.highlightColor,
                     ),
                     const SizedBox(height: 12),
-                    _logInButton(context),
+                    _signUpButton(context),
                   ],
                 ),
               ),
             ),
           ),
-        ),
+        )
       ),
     );
   }
+}
+
+Widget _fullNameTextField(controller) {
+  return TextFormField(
+    controller: controller,
+    keyboardType: TextInputType.name,
+    decoration: const InputDecoration(
+      labelText: 'Full Name',
+      filled: true,
+      fillColor: AppColors.buttonColor,
+      labelStyle: TextStyle(
+        color: Colors.white,
+        fontSize: 16,
+        fontWeight: FontWeight.normal,
+        decoration: TextDecoration.none,
+        fontFamily: 'Aeonik',
+      ),
+      enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: AppColors.highlightColor,
+            width: 1.5,
+          ),
+          borderRadius: BorderRadius.all(
+              Radius.circular(AppValues.largeBorderRadius)
+          )
+      ),
+      focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Colors.white,
+            width: 1.5,
+          ),
+          borderRadius: BorderRadius.all(
+              Radius.circular(AppValues.largeBorderRadius)
+          )
+      ),
+    ),
+    style: const TextStyle(
+      color: Colors.white,
+      fontSize: 16,
+      fontWeight: FontWeight.normal,
+      decoration: TextDecoration.none,
+      fontFamily: 'Aeonik',
+    ),
+  );
 }
 
 Widget _emailTextField(controller) {
@@ -203,22 +231,22 @@ Widget _emailTextField(controller) {
         fontFamily: 'Aeonik',
       ),
       enabledBorder: OutlineInputBorder(
-        borderSide: BorderSide(
-          color: AppColors.highlightColor,
-          width: 1.5,
-        ),
-        borderRadius: BorderRadius.all(
-            Radius.circular(AppValues.largeBorderRadius)
-        )
+          borderSide: BorderSide(
+            color: AppColors.highlightColor,
+            width: 1.5,
+          ),
+          borderRadius: BorderRadius.all(
+              Radius.circular(AppValues.largeBorderRadius)
+          )
       ),
       focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(
-          color: Colors.white,
-          width: 1.5,
-        ),
-        borderRadius: BorderRadius.all(
-            Radius.circular(AppValues.largeBorderRadius)
-        )
+          borderSide: BorderSide(
+            color: Colors.white,
+            width: 1.5,
+          ),
+          borderRadius: BorderRadius.all(
+              Radius.circular(AppValues.largeBorderRadius)
+          )
       ),
     ),
     style: const TextStyle(
@@ -231,10 +259,10 @@ Widget _emailTextField(controller) {
   );
 }
 
-Widget _logInButton(BuildContext context) {
+Widget _signUpButton(BuildContext context) {
   return GestureDetector(
     onTap: () {
-      // TODO: Call Log In Function
+      // TODO: Call Create Account Function
     },
     child: Container(
         height: 60,
@@ -245,7 +273,7 @@ Widget _logInButton(BuildContext context) {
         ),
         child: const Center(
           child: Text(
-            'Log In',
+            'Create Account',
             style: TextStyle(
               color: AppColors.backgroundColor,
               fontSize: 20,

@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:liftshare/ui/screens/onboarding/create_account_screen.dart';
 import 'package:liftshare/ui/widgets/app_background.dart';
 import 'package:liftshare/utils/constants.dart';
 import 'package:text_divider/text_divider.dart';
@@ -59,7 +60,7 @@ class WelcomeScreen extends StatelessWidget {
               // Email Sign In Button
               _signInWithEmailButton(context),
               const Spacer(),
-              _signUpTextWidget(),
+              _signUpTextWidget(context),
             ],
           ),
         ),
@@ -163,7 +164,7 @@ Widget _signInWithEmailButton(BuildContext context) {
   );
 }
 
-Widget _signUpTextWidget() {
+Widget _signUpTextWidget(BuildContext context) {
   return RichText(
     text: TextSpan(
       children: <TextSpan>[
@@ -186,7 +187,10 @@ Widget _signUpTextWidget() {
           ),
           recognizer: TapGestureRecognizer()
             ..onTap = () {
-              // TODO: Navigate to Sign Up Screen
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const CreateAccountScreen())
+              );
             },
         ),
       ]
