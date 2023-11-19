@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:liftshare/ui/screens/onboarding/reset_password_screen.dart';
 import 'package:liftshare/utils/constants.dart';
 
 import '../../widgets/app_background.dart';
@@ -155,7 +156,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       alignment: Alignment.centerRight,
                       child: GestureDetector(
                         onTap: () {
-                          // TODO: Navigate to Forgot Password Screen
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const ResetPasswordScreen())
+                          );
                         },
                         child: const Text(
                           'Forgot Password?',
