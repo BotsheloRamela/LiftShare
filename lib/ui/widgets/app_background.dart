@@ -22,7 +22,7 @@ Widget appBackground() {
       Container(
         height: double.infinity,
         width: double.infinity,
-        color: AppColors.backgroundColor.withOpacity(0.6),
+        color: AppColors.backgroundColor.withOpacity(0.7),
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 80, sigmaY: 80),
           child: Container(

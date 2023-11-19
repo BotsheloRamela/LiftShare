@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 
 class AppColors {
@@ -17,4 +19,9 @@ class AppColors {
       gradientColor2,
     ],
   );
+}
+
+class AppValues {
+  static const double screenPadding = 25;
+  static const double largeBorderRadius = 15;
 }

@@ -7,61 +7,65 @@ import 'package:liftshare/ui/widgets/app_background.dart';
 import 'package:liftshare/utils/constants.dart';
 import 'package:text_divider/text_divider.dart';
 
+import 'login_screen.dart';
+
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        appBackground(),
-        Padding(
-          padding: const EdgeInsets.all(25),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(height: 90),
-              SvgPicture.asset(
-                'assets/icons/liftshare_logo.svg',
-                height: 140,
-                width: 140,
-              ),
-              const SizedBox(height: 60),
-              const Text(
-                'Log In',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  decoration: TextDecoration.none,
-                  fontFamily: 'Aeonik',
+    return SafeArea(
+      child: Stack(
+        children: [
+          appBackground(),
+          Padding(
+            padding: const EdgeInsets.all(AppValues.screenPadding),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(height: 90),
+                SvgPicture.asset(
+                  'assets/icons/liftshare_logo.svg',
+                  height: 140,
+                  width: 140,
                 ),
-              ),
-              const SizedBox(height: 20),
-              _socialsSignInButtons(),
-              const SizedBox(height: 40),
-              TextDivider.horizontal(
-                thickness: 1,
-                color: AppColors.highlightColor,
-                text: const Text('Or',
+                const SizedBox(height: 60),
+                const Text(
+                  'Log In',
                   style: TextStyle(
-                    color: AppColors.highlightColor,
-                    fontSize: 16,
+                    color: Colors.white,
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
                     decoration: TextDecoration.none,
-                    fontWeight: FontWeight.normal,
                     fontFamily: 'Aeonik',
                   ),
-                )
-              ),
-              const SizedBox(height: 40),
-              // Email Sign In Button
-              _signInWithEmailButton(),
-              const Spacer(),
-              _signUpTextWidget(),
-            ],
-          ),
-        )
-      ],
+                ),
+                const SizedBox(height: 20),
+                _socialsSignInButtons(),
+                const SizedBox(height: 40),
+                TextDivider.horizontal(
+                  thickness: 1,
+                  color: AppColors.highlightColor,
+                  text: const Text('Or',
+                    style: TextStyle(
+                      color: AppColors.highlightColor,
+                      fontSize: 16,
+                      decoration: TextDecoration.none,
+                      fontWeight: FontWeight.normal,
+                      fontFamily: 'Aeonik',
+                    ),
+                  )
+                ),
+                const SizedBox(height: 40),
+                // Email Sign In Button
+                _signInWithEmailButton(context),
+                const Spacer(),
+                _signUpTextWidget(),
+              ],
+            ),
+          )
+        ],
+      ),
     );
   }
 }
@@ -114,23 +118,26 @@ Widget _socialsSignInButtons() {
   );
 }
 
-Widget _signInWithEmailButton() {
+Widget _signInWithEmailButton(BuildContext context) {
   return GestureDetector(
     onTap: () {
-      // TODO: Navigate to Sign In Screen
+      Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const LoginScreen())
+      );
     },
     child: Container(
       height: 60,
       width: double.infinity,
       decoration: const BoxDecoration(
         gradient: AppColors.gradientBackground,
-        borderRadius: BorderRadius.all(Radius.circular(13)),
+        borderRadius: BorderRadius.all(Radius.circular(AppValues.largeBorderRadius)),
       ),
       child: Container(
         margin: const EdgeInsets.all(2),
         decoration: const BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(12)),
-          color: AppColors.backgroundColor,
+          borderRadius: BorderRadius.all(Radius.circular(AppValues.largeBorderRadius - 1)),
+          color: AppColors.buttonColor,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,

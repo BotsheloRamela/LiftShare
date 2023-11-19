@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:liftshare/ui/screens/onboarding/login_screen.dart';
 import 'package:liftshare/ui/screens/onboarding/welcome_screen.dart';
 
 void main() {
@@ -14,7 +15,11 @@ class MyApp extends StatelessWidget {
       title: 'LiftShare',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(fontFamily: 'Aeonik'),
-      home: SafeArea(child: WelcomeScreen()),
+      home: const WelcomeScreen(),
+      // routes: {
+      //   '/': (context) => const WelcomeScreen(),
+      //   '/login': (context) => const LoginScreen(),
+      // }
     );
   }
 }
