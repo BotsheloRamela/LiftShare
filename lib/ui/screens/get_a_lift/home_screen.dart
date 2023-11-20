@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 
 import '../../../utils/constants.dart';
 import '../../widgets/app_background.dart';
+import '../../widgets/app_bar.dart';
 import '../../widgets/back_button.dart';
 
 class GetALiftHomeScreen extends StatefulWidget {
@@ -36,45 +37,7 @@ class _GetALiftHomeScreenState extends State<GetALiftHomeScreen> {
     return SafeArea(
       child: Scaffold(
         extendBodyBehindAppBar: true,
-        appBar: AppBar(
-          title: const Text(
-            'ShareLift',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 24,
-              fontWeight: FontWeight.w500,
-              decoration: TextDecoration.none,
-              fontFamily: 'Aeonik',
-            ),
-          ),
-          centerTitle: true,
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          leading: _user?.photoURL != null ? GestureDetector(
-            onTap: () {
-              // TODO: Navigate to account/profile screen
-            },
-            child: Container(
-              width: 10,
-              height: 10,
-              margin: const EdgeInsets.only(left: 15, top: 10, bottom: 10),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                image: DecorationImage(
-                  image: NetworkImage(_user!.photoURL ?? ''),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-          ) : Container(
-            height: 25,
-            width: 25,
-            margin: const EdgeInsets.only(left: 15, top: 5, bottom: 5),
-            child: SvgPicture.asset(
-              'assets/icons/user_avatar_icon.svg',
-            ),
-          ),
-        ),
+        appBar: appBar(_user?.photoURL),
         body: DecoratedBox(
           decoration: appBackground(),
           child: Padding(
