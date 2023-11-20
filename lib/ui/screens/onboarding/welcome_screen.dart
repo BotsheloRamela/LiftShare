@@ -26,20 +26,14 @@ class WelcomeScreen extends StatelessWidget {
       try {
         User? user = await _firebaseAuthService.signInWithGoogle();
 
-        if (user != null) {
-          print('User: ${user.displayName}');
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const GetALiftHomeScreen()),
+        if (user == null) {
+          Fluttertoast.showToast(
+            msg: 'Failed to sign in.',
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.TOP,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
           );
-        } else {
-            Fluttertoast.showToast(
-              msg: 'Failed to sign in.',
-              toastLength: Toast.LENGTH_LONG,
-              gravity: ToastGravity.TOP,
-              backgroundColor: Colors.red,
-              textColor: Colors.white,
-            );
         }
       } catch (e) {
         Fluttertoast.showToast(
