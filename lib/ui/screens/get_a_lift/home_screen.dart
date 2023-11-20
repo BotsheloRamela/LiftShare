@@ -16,6 +16,7 @@ class GetALiftHomeScreen extends StatefulWidget {
 
 class _GetALiftHomeScreenState extends State<GetALiftHomeScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  int _selectedNavItemIndex = 1;
 
   User? _user;
 
@@ -32,12 +33,49 @@ class _GetALiftHomeScreenState extends State<GetALiftHomeScreen> {
     });
   }
 
+  void _onNavItemTapped(int index) {
+    setState(() {
+      _selectedNavItemIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+
     return SafeArea(
       child: Scaffold(
         extendBodyBehindAppBar: true,
         appBar: appBar(_user?.photoURL),
+        bottomNavigationBar: BottomNavigationBar(
+          backgroundColor: AppColors.buttonColor,
+          currentIndex: _selectedNavItemIndex,
+          onTap: _onNavItemTapped,
+          selectedItemColor: Colors.white,
+          unselectedItemColor: AppColors.highlightColor,
+          items:  <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset(
+                "assets/icons/car_icon.svg",
+                color: _selectedNavItemIndex == 0 ? Colors.white : AppColors.highlightColor,
+              ),
+              label: 'Offer a Lift',
+            ),
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset(
+                "assets/icons/get_lift_icon.svg",
+                color: _selectedNavItemIndex == 1 ? Colors.white : AppColors.highlightColor,
+              ),
+              label: 'Get a Lift',
+            ),
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset(
+                "assets/icons/reports_icon.svg",
+                color: _selectedNavItemIndex == 2 ? Colors.white : AppColors.highlightColor,
+              ),
+              label: 'Activity',
+            ),
+          ],
+        ),
         body: DecoratedBox(
           decoration: appBackground(),
           child: Padding(
@@ -97,7 +135,7 @@ class _GetALiftHomeScreenState extends State<GetALiftHomeScreen> {
                   ),
                   const SizedBox(height: 10),
                   SizedBox(
-                    height: 370,
+                    height: 310,
                     child: ListView.builder(
                       padding: const EdgeInsets.only(top: 20),
                       itemCount: 5,
