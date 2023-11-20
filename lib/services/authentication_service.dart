@@ -48,22 +48,22 @@ class FirebaseAuthService {
 
       return user;
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'ERROR_USER_NOT_FOUND') {
-        print('The email address is not found.');
-        throw Exception('No matching account found');
-      } else if (e.code == 'ERROR_USER_DISABLED') {
-        print('The user has been disabled.');
-        throw Exception('The user has been disabled.');
+      if (e.code == 'ERROR_USER_NOT_FOUND' || e.code == "user-not-found") {
+        print('User not found.');
+        throw Exception('User not found.');
+      } else if (e.code == 'ERROR_USER_DISABLED' || e.code == "user-disabled") {
+        print('Account has been disabled.');
+        throw Exception('Account has been disabled.');
       } else if (e.code == 'ERROR_TOO_MANY_REQUESTS') {
         print('Too many requests. Try again later.');
         throw Exception('Too many requests. Try again later.');
       } else if (e.code == 'ERROR_OPERATION_NOT_ALLOWED') {
         print('Signing in with Email and Password is not enabled.');
         throw Exception('Signing in with Email and Password is not enabled.');
-      } else if (e.code == 'ERROR_INVALID_EMAIL') {
+      } else if (e.code == 'ERROR_INVALID_EMAIL' || e.code == "invalid-email") {
         print('The email address is not valid.');
         throw Exception('The email address is not valid.');
-      } else if (e.code == 'ERROR_WRONG_PASSWORD') {
+      } else if (e.code == 'ERROR_WRONG_PASSWORD' || e.code == "wrong-password") {
         print('The password is not valid.');
         throw Exception('The password is not valid.');
       } else if (e.code == 'INVALID_LOGIN_CREDENTIALS') {
@@ -73,6 +73,21 @@ class FirebaseAuthService {
         print(e.code);
         throw Exception('An error occurred while signing in.');
       }
+    }
+  }
+
+
+  Future<User?> signInWithGoogle() async {
+    try {
+      GoogleAuthProvider googleProvider = GoogleAuthProvider();
+      UserCredential userCredential = await _auth.signInWithProvider(googleProvider);
+
+      User? user = userCredential.user;
+
+      return user;
+    } catch (e) {
+      print(e);
+      throw Exception('An error occurred while signing in with Google.');
     }
   }
 }

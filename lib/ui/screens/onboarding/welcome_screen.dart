@@ -1,13 +1,17 @@
 import 'dart:ui';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:liftshare/ui/screens/onboarding/create_account_screen.dart';
 import 'package:liftshare/ui/widgets/app_background.dart';
 import 'package:liftshare/utils/constants.dart';
 import 'package:text_divider/text_divider.dart';
 
+import '../../../services/authentication_service.dart';
+import '../get_a_lift/home_screen.dart';
 import 'login_screen.dart';
 
 class WelcomeScreen extends StatelessWidget {
@@ -15,6 +19,40 @@ class WelcomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final FirebaseAuthService _firebaseAuthService = FirebaseAuthService();
+
+    void _signInWithGoogle() async {
+
+      try {
+        User? user = await _firebaseAuthService.signInWithGoogle();
+
+        if (user != null) {
+          print('User: ${user.displayName}');
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const GetALiftHomeScreen()),
+          );
+        } else {
+            Fluttertoast.showToast(
+              msg: 'Failed to sign in.',
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.TOP,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+            );
+        }
+      } catch (e) {
+        Fluttertoast.showToast(
+          msg: e.toString(),
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.TOP,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+        );
+      }
+
+    }
+
     return SafeArea(
       child: DecoratedBox(
         decoration: appBackground(),
@@ -41,7 +79,7 @@ class WelcomeScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              _socialsSignInButtons(),
+              _socialsSignInButtons(_signInWithGoogle),
               const SizedBox(height: 40),
               TextDivider.horizontal(
                 thickness: 1,
@@ -69,14 +107,14 @@ class WelcomeScreen extends StatelessWidget {
   }
 }
 
-Widget _socialsSignInButtons() {
+Widget _socialsSignInButtons(signInWithGoogle) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
       // Google Button
       GestureDetector(
         onTap: () {
-          // TODO: Call Google Sign In Function
+          signInWithGoogle();
         },
         child: Container(
           height: 60,
