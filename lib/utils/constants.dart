@@ -19,6 +19,24 @@ class AppColors {
       gradientColor2,
     ],
   );
+
+  static LinearGradient lightGradientBackground = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [
+      gradientColor1.withOpacity(0.4),
+      gradientColor2.withOpacity(0.4),
+    ],
+  );
+
+  static LinearGradient cardGradientBackground = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [
+      buttonColor,
+      backgroundColor.withOpacity(0.87),
+    ],
+  );
 }
 
 class AppValues {

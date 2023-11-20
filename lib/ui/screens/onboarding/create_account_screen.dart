@@ -49,7 +49,12 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
     try {
       User? user = await _firebaseAuthService.signUpWithEmailAndPassword(email, password, fullName);
 
-      if (user == null) {
+      if (user != null) {
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const GetALiftHomeScreen())
+        );
+      } else {
         Fluttertoast.showToast(
           msg: 'Failed to create account.',
           toastLength: Toast.LENGTH_LONG,

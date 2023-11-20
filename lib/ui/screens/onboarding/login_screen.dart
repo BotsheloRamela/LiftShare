@@ -47,7 +47,12 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       User? user = await _firebaseAuthService.signInWithEmailAndPassword(email, password);
 
-      if (user == null) {
+      if (user != null) {
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const GetALiftHomeScreen())
+        );
+      } else {
         Fluttertoast.showToast(
           msg: 'Failed to sign in.',
           toastLength: Toast.LENGTH_LONG,
