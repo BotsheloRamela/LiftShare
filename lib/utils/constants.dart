@@ -10,6 +10,7 @@ class AppColors {
   static const Color backgroundColor = Color(0xFF011019);
   static const Color buttonColor = Color(0xFF141C27);
   static const Color warningColor = Color(0xFFFF3D00);
+  static Color enabledBorderColor = highlightColor.withOpacity(0.5);
 
   static const LinearGradient gradientBackground = LinearGradient(
     begin: Alignment.topLeft,

@@ -148,7 +148,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                 filled: true,
                                 fillColor: AppColors.buttonColor,
                                 labelStyle: const TextStyle(
-                                  color: Colors.white,
+                                  color: AppColors.highlightColor,
                                   fontSize: 16,
                                   fontWeight: FontWeight.normal,
                                   decoration: TextDecoration.none,
@@ -168,12 +168,12 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                   },
                                 ),
 
-                                enabledBorder: const OutlineInputBorder(
+                                enabledBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
-                                      color: AppColors.highlightColor,
+                                      color: AppColors.enabledBorderColor,
                                       width: 1.5,
                                     ),
-                                    borderRadius: BorderRadius.all(
+                                    borderRadius: const BorderRadius.all(
                                         Radius.circular(
                                             AppValues.largeBorderRadius)
                                     )
@@ -227,12 +227,12 @@ Widget _fullNameTextField(controller) {
   return TextFormField(
     controller: controller,
     keyboardType: TextInputType.name,
-    decoration: const InputDecoration(
+    decoration: InputDecoration(
       labelText: 'Full Name',
       filled: true,
       fillColor: AppColors.buttonColor,
-      labelStyle: TextStyle(
-        color: Colors.white,
+      labelStyle: const TextStyle(
+        color: AppColors.highlightColor,
         fontSize: 16,
         fontWeight: FontWeight.normal,
         decoration: TextDecoration.none,
@@ -240,14 +240,14 @@ Widget _fullNameTextField(controller) {
       ),
       enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(
-            color: AppColors.highlightColor,
+            color: AppColors.enabledBorderColor,
             width: 1.5,
           ),
-          borderRadius: BorderRadius.all(
+          borderRadius: const BorderRadius.all(
               Radius.circular(AppValues.largeBorderRadius)
           )
       ),
-      focusedBorder: OutlineInputBorder(
+      focusedBorder: const OutlineInputBorder(
           borderSide: BorderSide(
             color: Colors.white,
             width: 1.5,
