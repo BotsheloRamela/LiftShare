@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:liftshare/ui/screens/get_a_lift/home_screen.dart';
+import 'package:liftshare/ui/screens/main_screen.dart';
 import 'package:liftshare/ui/screens/onboarding/welcome_screen.dart';
 
 import 'firebase_options.dart';
@@ -47,7 +47,7 @@ class _MyAppState extends State<MyApp> {
       title: 'LiftShare',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(fontFamily: 'Aeonik'),
-      home: _user != null ? const GetALiftHomeScreen() : const WelcomeScreen(),
+      home: _user != null ? MainScreen() : const WelcomeScreen(),
     );
   }
 }

@@ -56,11 +56,12 @@ lib
 |   |   |-- user
 |   |   |   |-- edit_profile_screen.dart
 |   |   |   |-- profile_screen.dart
-|   |-- widgets
-|   |   |-- app_button.dart
-|   |   |-- app_card.dart
-|   |   |-- app_textfield.dart
-|   |   |-- ... (other reusable widgets)
+|   |   |-- main_screen.dart
+|-- widgets
+|   |-- app_button.dart
+|   |-- app_card.dart
+|   |-- app_textfield.dart
+|   |-- ... (other reusable widgets)
 |-- utils
 |   |-- constants.dart
 |   |-- routes.dart
