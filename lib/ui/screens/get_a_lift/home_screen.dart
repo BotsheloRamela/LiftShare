@@ -1,11 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:liftshare/ui/screens/get_a_lift/search_lift_screen.dart';
 
 import '../../../utils/constants.dart';
 import '../../widgets/app_background.dart';
-import '../../widgets/app_bar.dart';
-import '../../widgets/back_button.dart';
+import '../../widgets/home_app_bar.dart';
 
 class GetALiftHomeScreen extends StatefulWidget {
   const GetALiftHomeScreen({super.key});
@@ -16,7 +16,6 @@ class GetALiftHomeScreen extends StatefulWidget {
 
 class _GetALiftHomeScreenState extends State<GetALiftHomeScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  int _selectedNavItemIndex = 1;
 
   User? _user;
 
@@ -39,7 +38,7 @@ class _GetALiftHomeScreenState extends State<GetALiftHomeScreen> {
     return SafeArea(
       child: Scaffold(
         extendBodyBehindAppBar: true,
-        appBar: appBar(_user?.photoURL),
+        appBar: homeAppBar(_user?.photoURL),
         body: DecoratedBox(
           decoration: appBackground(),
           child: Padding(
@@ -129,11 +128,10 @@ class _GetALiftHomeScreenState extends State<GetALiftHomeScreen> {
 Widget whereToButton(BuildContext context) {
   return GestureDetector(
     onTap: () {
-      // TODO: Navigate to search lift screen
-      // Navigator.push(
-      //     context,
-      //     MaterialPageRoute(builder: (context) => const LoginScreen())
-      // );
+      Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const SearchForLiftScreen())
+      );
     },
     child: Container(
         height: 60,
