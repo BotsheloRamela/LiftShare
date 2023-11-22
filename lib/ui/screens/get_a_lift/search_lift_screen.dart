@@ -1,8 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:liftshare/data/models/place_autocomplete_response.dart';
 import 'package:liftshare/ui/widgets/default_app_bar.dart';
 
+import '../../../data/models/autocomplete_prediction.dart';
+import '../../../services/google_maps_service.dart';
 import '../../../utils/constants.dart';
 import '../../widgets/app_background.dart';
 
@@ -17,6 +21,31 @@ class _SearchForLiftScreenState extends State<SearchForLiftScreen> {
 
   final _pickupLocationController = TextEditingController();
   final _destinationLocationController = TextEditingController();
+
+  List<AutocompletePrediction> placePredictions = [];
+
+  void placeAutocomplete(String query) async {
+    Uri uri = Uri.https(
+      "maps.googleapis.com",
+      "maps/api/place/autocomplete/json",
+      {
+        "input": query,
+        "key": dotenv.get("ANDROID_FIREBASE_API_KEY")
+      }
+    );
+    String? response = await GoogleMapsService().fetchPlace(uri);
+
+    if (response != null) {
+      PlaceAutocompleteResponse result =
+          PlaceAutocompleteResponse.parseAutocompleteResult(response);
+
+      if (result.predictions != null) {
+        setState(() {
+          placePredictions = result.predictions!;
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,11 +66,31 @@ class _SearchForLiftScreenState extends State<SearchForLiftScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 70),
-                  tripInfo(_pickupLocationController, _destinationLocationController),
+                  tripInfo(
+                    placeAutocomplete,
+                    _pickupLocationController,
+                    _destinationLocationController),
                   const SizedBox(height: 20),
                   const Divider(color: AppColors.highlightColor, thickness: 1),
                   const SizedBox(height: 20),
-                  locationItem("BCX Head Office", "150 Rivonia Road, Sandton, 2196", "2021-10-10", "08:00", 2, 4),
+                  // TODO: Replace with ListView.builder
+                  // TODO: If there's no specified location then show a button to set location on a map
+                  // TODO: If there's no trip/lift available then display a "No trips/lifts available" message
+                  // locationListItem("BCX Head Office", "150 Rivonia Road, Sandton, 2196", "2021-10-10", "08:00", 2, 4),
+                  Expanded(
+                    child: ListView.builder(
+                      physics: const BouncingScrollPhysics(),
+                      padding: const EdgeInsets.all(0),
+                      itemCount: placePredictions.length,
+                      itemBuilder: (context, index) {
+                        return locationListItem(
+                          placePredictions[index].description as String,
+                          "2021-10-10", "08:00", 2, 4,
+                          context
+                        );
+                      },
+                    ),
+                  )
                 ],
               ),
             )
@@ -52,7 +101,11 @@ class _SearchForLiftScreenState extends State<SearchForLiftScreen> {
   }
 }
 
-Widget tripInfo(TextEditingController pickupLocationController, TextEditingController destinationLocationController) {
+Widget tripInfo(
+  Function(String) placeAutocomplete,
+  TextEditingController pickupLocationController,
+  TextEditingController destinationLocationController,
+  ) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.start,
     children: [
@@ -66,6 +119,7 @@ Widget tripInfo(TextEditingController pickupLocationController, TextEditingContr
           children: [
             TextField(
               controller: pickupLocationController,
+              onChanged: (value) => placeAutocomplete(value),
               keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
                 labelText: 'Pickup location',
@@ -108,7 +162,8 @@ Widget tripInfo(TextEditingController pickupLocationController, TextEditingContr
             ),
             const SizedBox(height: 10),
             TextField(
-              controller: pickupLocationController,
+              controller: destinationLocationController,
+              onChanged: (value) => placeAutocomplete(value),
               keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
                 labelText: 'Destination',
@@ -156,48 +211,68 @@ Widget tripInfo(TextEditingController pickupLocationController, TextEditingContr
   );
 }
 
-Widget locationItem(String location, String address, String date, String time, int seatsAvailable, int seatsTotal) {
-  return Row(
+
+Widget locationListItem(
+    String location,
+    String date,
+    String time,
+    int seatsAvailable,
+    int seatsTotal,
+    BuildContext context) {
+  return Column(
     children: [
-      SvgPicture.asset("assets/icons/location_icon.svg", height: 24,),
-      const SizedBox(width: 20),
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      Row(
         children: [
-          Text(
-            location,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-              decoration: TextDecoration.none,
-              fontFamily: 'Aeonik',
-            ),
-          ),
-          const SizedBox(height: 5),
-          Text(
-            address,
-            style: const TextStyle(
-              color: AppColors.highlightColor,
-              fontSize: 16,
-              fontWeight: FontWeight.normal,
-              decoration: TextDecoration.none,
-              fontFamily: 'Aeonik',
-            ),
-          ),
-          const SizedBox(height: 5),
-          Text(
-            "$date - $time • $seatsAvailable/$seatsTotal Seats Available",
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 15,
-              fontWeight: FontWeight.normal,
-              decoration: TextDecoration.none,
-              fontFamily: 'Aeonik',
+          SvgPicture.asset("assets/icons/location_icon.svg", height: 24,),
+          const SizedBox(width: 20),
+          SizedBox(
+            width: MediaQuery.of(context).size.width - 100,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  location,
+                  maxLines: 2,
+                  softWrap: false,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    decoration: TextDecoration.none,
+                    fontFamily: 'Aeonik',
+                  ),
+                ),
+                const SizedBox(height: 5),
+                Text(
+                  "$date - $time",
+                  style: const TextStyle(
+                    color: AppColors.highlightColor,
+                    fontSize: 15,
+                    fontWeight: FontWeight.normal,
+                    decoration: TextDecoration.none,
+                    fontFamily: 'Aeonik',
+                  ),
+                ),
+                const SizedBox(height: 5),
+                Text(
+                  "$seatsAvailable/$seatsTotal Seats Available",
+                  style: const TextStyle(
+                    color: AppColors.gradientColor2,
+                    fontSize: 15,
+                    fontWeight: FontWeight.normal,
+                    decoration: TextDecoration.none,
+                    fontFamily: 'Aeonik',
+                  ),
+                ),
+              ],
             ),
           ),
         ],
       ),
+      const SizedBox(height: 10),
+      Divider(color: AppColors.enabledBorderColor, thickness: 1),
+      const SizedBox(height: 10),
     ],
   );
 }
