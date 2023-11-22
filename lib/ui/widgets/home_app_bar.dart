@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-PreferredSizeWidget appBar(String? userPhotoUrl) {
+PreferredSizeWidget homeAppBar(String? userPhotoUrl) {
   return AppBar(
     title: const Text(
       'ShareLift',
