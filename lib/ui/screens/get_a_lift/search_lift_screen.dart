@@ -86,7 +86,7 @@ class _SearchForLiftScreenState extends State<SearchForLiftScreen> {
             topRight: Radius.circular(AppValues.largeBorderRadius),
           ),
         ),
-        builder: (context) => Container(
+        builder: (context) => SizedBox(
           height: 350,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
