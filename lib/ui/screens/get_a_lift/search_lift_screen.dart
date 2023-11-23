@@ -1,12 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:liftshare/data/models/place_autocomplete_result.dart';
 import 'package:liftshare/ui/widgets/default_app_bar.dart';
+import 'package:liftshare/viewmodels/search_lift_viewmodel.dart';
+import 'package:provider/provider.dart';
 
-import '../../../data/models/place_prediction.dart';
-import '../../../services/google_maps_service.dart';
 import '../../../utils/constants.dart';
 import '../../widgets/app_background.dart';
 
@@ -19,134 +17,67 @@ class SearchForLiftScreen extends StatefulWidget {
 
 class _SearchForLiftScreenState extends State<SearchForLiftScreen> {
 
-  final _pickupLocationController = TextEditingController();
-  final _destinationLocationController = TextEditingController();
-  TextEditingController _activeLocationController = TextEditingController();
-
-  final FocusNode _pickupLocationFocusNode = FocusNode();
-  final FocusNode _destinationLocationFocusNode = FocusNode();
-
-  List<PlacePrediction> placePredictions = [];
-
-  void placeAutocomplete(String query) async {
-    Uri uri = Uri.https(
-      "maps.googleapis.com",
-      "maps/api/place/autocomplete/json",
-      {
-        "input": query,
-        "key": dotenv.get("ANDROID_FIREBASE_API_KEY")
-      }
-    );
-
-    String? response = await GoogleMapsService().fetchPlace(uri);
-
-    if (response != null) {
-      PlaceAutocompleteResponse result =
-          PlaceAutocompleteResponse.parseAutocompleteResult(response);
-
-      if (result.predictions != null) {
-        setState(() {
-          placePredictions = result.predictions!;
-        });
-      }
-    }
-  }
-
-  void updateActiveLocationController(TextEditingController controller) {
-    setState(() {
-      _activeLocationController = controller;
-    });
-  }
-
-  void onLocationSelected(String selectedLocation) {
-    setState(() {
-      _activeLocationController.text = "";
-      _activeLocationController.text = selectedLocation;
-
-      // Move focus to the next text field
-      if (_activeLocationController == _pickupLocationController) {
-        FocusScope.of(context).requestFocus(_destinationLocationFocusNode);
-        placePredictions = [];
-      } else if (_activeLocationController == _destinationLocationController) {
-        // TODO: Search for trips/lifts
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _pickupLocationController.dispose();
-    _destinationLocationController.dispose();
-    _pickupLocationFocusNode.dispose();
-    _destinationLocationFocusNode.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        extendBodyBehindAppBar: true,
-        appBar: defaultAppBar(context, "Search for a Lift"),
-        body: DecoratedBox(
-          decoration: appBackground(),
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(
-                AppValues.screenPadding, AppValues.screenPadding,
-                AppValues.screenPadding, 0),
-            child: Align(
-              alignment: Alignment.topCenter,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 70),
-                  tripInfo(
-                    placeAutocomplete,
-                    _pickupLocationController,
-                    _destinationLocationController,
-                    _pickupLocationFocusNode,
-                    _destinationLocationFocusNode,
-                    updateActiveLocationController),
-                  const SizedBox(height: 20),
-                  const Divider(color: AppColors.highlightColor, thickness: 1),
-                  const SizedBox(height: 20),
-                  // TODO: Replace with ListView.builder
-                  // TODO: If there's no specified location then show a button to set location on a map
-                  // TODO: If there's no trip/lift available then display a "No trips/lifts available" message
-                  Expanded(
-                    child: ListView.builder(
-                      physics: const BouncingScrollPhysics(),
-                      padding: const EdgeInsets.all(0),
-                      itemCount: placePredictions.length,
-                      itemBuilder: (context, index) {
-                        return locationListItem(
-                          placePredictions[index].structuredFormatting.mainText,
-                          placePredictions[index].structuredFormatting.secondaryText,
-                          context,
-                          onLocationSelected,
-                          _activeLocationController
-                        );
-                      },
+
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<SearchForLiftViewModel>(
+          create: (_) => SearchForLiftViewModel(),
+        ),
+      ],
+      builder: (context, child) {
+         final viewModel = context.watch<SearchForLiftViewModel>();
+        return SafeArea(
+          child: Scaffold(
+            extendBodyBehindAppBar: true,
+            appBar: defaultAppBar(context, "Search for a Lift"),
+            body: DecoratedBox(
+              decoration: appBackground(),
+              child: Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                      AppValues.screenPadding, AppValues.screenPadding,
+                      AppValues.screenPadding, 0),
+                  child: Align(
+                    alignment: Alignment.topCenter,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 70),
+                        tripInfo(context.watch<SearchForLiftViewModel>()),
+                        const SizedBox(height: 20),
+                        const Divider(color: AppColors.highlightColor, thickness: 1),
+                        const SizedBox(height: 20),
+                        // TODO: If there's no specified location then show a button to set location on a map
+                        // TODO: If there's no trip/lift available then display a "No trips/lifts available" message
+                        viewModel.pickupLocationController.text.isNotEmpty
+                            || viewModel.destinationLocationController.text.isNotEmpty
+                            ? Expanded(
+                          child: ListView.builder(
+                            physics: const BouncingScrollPhysics(),
+                            padding: const EdgeInsets.all(0),
+                            itemCount: viewModel.placePredictions.length,
+                            itemBuilder: (context, index) {
+                              return locationListItem(viewModel, index, context);
+                            },
+                          ),
+                        )
+                            : setLocationOnMapButton(context),
+                      ],
                     ),
                   )
-                ],
               ),
-            )
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
 
 Widget tripInfo(
-  Function(String) placeAutocomplete,
-  TextEditingController pickupLocationController,
-  TextEditingController destinationLocationController,
-  FocusNode pickupLocationFocusNode,
-  FocusNode destinationLocationFocusNode,
-  Function(TextEditingController) updateActiveLocationController
+    SearchForLiftViewModel viewModel
   ) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.start,
@@ -160,13 +91,13 @@ Widget tripInfo(
         child: Column(
           children: [
             TextField(
-              controller: pickupLocationController,
-              focusNode: pickupLocationFocusNode,
+              controller: viewModel.pickupLocationController,
+              focusNode: viewModel.pickupLocationFocusNode,
               onChanged: (value) {
-                updateActiveLocationController(pickupLocationController);
-                placeAutocomplete(value);
+                viewModel.setActiveLocationController(viewModel.pickupLocationController);
+                viewModel.placeAutocomplete(value);
               },
-              keyboardType: TextInputType.emailAddress,
+              keyboardType: TextInputType.text,
               decoration: InputDecoration(
                 labelText: 'Pickup location',
                 filled: true,
@@ -208,13 +139,13 @@ Widget tripInfo(
             ),
             const SizedBox(height: 10),
             TextField(
-              controller: destinationLocationController,
-              focusNode: destinationLocationFocusNode,
+              controller: viewModel.destinationLocationController,
+              focusNode: viewModel.destinationLocationFocusNode,
               onChanged: (value) {
-                updateActiveLocationController(destinationLocationController);
-                placeAutocomplete(value);
+                viewModel.setActiveLocationController(viewModel.destinationLocationController);
+                viewModel.placeAutocomplete(value);
               },
-              keyboardType: TextInputType.emailAddress,
+              keyboardType: TextInputType.text,
               decoration: InputDecoration(
                 labelText: 'Destination',
                 filled: true,
@@ -263,14 +194,15 @@ Widget tripInfo(
 
 
 Widget locationListItem(
-    String location,
-    String address,
-    BuildContext context,
-    Function(String) onLocationSelected,
-    TextEditingController controller
+    SearchForLiftViewModel viewModel,
+    int index,
+    BuildContext context
   ) {
   return GestureDetector(
-    onTap: () => onLocationSelected(location),
+    onTap: () => viewModel.onLocationSelected(
+        viewModel.placePredictions[index].structuredFormatting.mainText,
+        context
+    ),
     child: Column(
       children: [
         Row(
@@ -283,7 +215,7 @@ Widget locationListItem(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    location,
+                    viewModel.placePredictions[index].structuredFormatting.mainText,
                     maxLines: 2,
                     softWrap: false,
                     overflow: TextOverflow.ellipsis,
@@ -297,7 +229,7 @@ Widget locationListItem(
                   ),
                   const SizedBox(height: 5),
                   Text(
-                    address,
+                    viewModel.placePredictions[index].structuredFormatting.secondaryText,
                     maxLines: 1,
                     softWrap: false,
                     overflow: TextOverflow.ellipsis,
@@ -319,5 +251,35 @@ Widget locationListItem(
         const SizedBox(height: 10),
       ],
     ),
+  );
+}
+
+Widget setLocationOnMapButton(BuildContext context,) {
+  return Column(
+    children: [
+      Row(
+        children: [
+          SvgPicture.asset("assets/icons/location_icon.svg", height: 24,),
+          const SizedBox(width: 20),
+          SizedBox(
+            width: MediaQuery.of(context).size.width - 100,
+            child: const Text(
+              "Set location on map",
+              maxLines: 2,
+              softWrap: false,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                decoration: TextDecoration.none,
+                fontFamily: 'Aeonik',
+              ),
+            ),
+          ),
+        ],
+      ),
+      const SizedBox(height: 10),
+    ],
   );
 }
