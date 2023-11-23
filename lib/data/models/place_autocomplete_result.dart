@@ -1,23 +1,24 @@
 
 import 'dart:convert';
 
-import 'autocomplete_prediction.dart';
+import 'place_prediction.dart';
 
 class PlaceAutocompleteResponse {
 
   final String? status;
-  final List<AutocompletePrediction>? predictions;
-
+  final List<PlacePrediction>? predictions;
 
   PlaceAutocompleteResponse({this.status, this.predictions});
 
   factory PlaceAutocompleteResponse.fromJson(Map<String, dynamic> json) =>
       PlaceAutocompleteResponse(
       status: json["status"] as String?,
-      predictions: json["predictions"] != null
-          ? json["predictions"]
-            .map<AutocompletePrediction>(
-              (json) => AutocompletePrediction.fromJson(json)).toList()
+        predictions: json["predictions"] != null
+          ? List<PlacePrediction>.from(
+              json["predictions"].map(
+                    (json) => PlacePrediction.fromJson(json),
+              ),
+            )
           : null,
     );
 
