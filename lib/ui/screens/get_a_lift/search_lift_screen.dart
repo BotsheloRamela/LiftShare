@@ -2,10 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:liftshare/data/models/place_autocomplete_response.dart';
+import 'package:liftshare/data/models/place_autocomplete_result.dart';
 import 'package:liftshare/ui/widgets/default_app_bar.dart';
 
-import '../../../data/models/autocomplete_prediction.dart';
+import '../../../data/models/place_prediction.dart';
 import '../../../services/google_maps_service.dart';
 import '../../../utils/constants.dart';
 import '../../widgets/app_background.dart';
@@ -21,8 +21,12 @@ class _SearchForLiftScreenState extends State<SearchForLiftScreen> {
 
   final _pickupLocationController = TextEditingController();
   final _destinationLocationController = TextEditingController();
+  TextEditingController _activeLocationController = TextEditingController();
 
-  List<AutocompletePrediction> placePredictions = [];
+  final FocusNode _pickupLocationFocusNode = FocusNode();
+  final FocusNode _destinationLocationFocusNode = FocusNode();
+
+  List<PlacePrediction> placePredictions = [];
 
   void placeAutocomplete(String query) async {
     Uri uri = Uri.https(
@@ -33,6 +37,7 @@ class _SearchForLiftScreenState extends State<SearchForLiftScreen> {
         "key": dotenv.get("ANDROID_FIREBASE_API_KEY")
       }
     );
+
     String? response = await GoogleMapsService().fetchPlace(uri);
 
     if (response != null) {
@@ -45,6 +50,36 @@ class _SearchForLiftScreenState extends State<SearchForLiftScreen> {
         });
       }
     }
+  }
+
+  void updateActiveLocationController(TextEditingController controller) {
+    setState(() {
+      _activeLocationController = controller;
+    });
+  }
+
+  void onLocationSelected(String selectedLocation) {
+    setState(() {
+      _activeLocationController.text = "";
+      _activeLocationController.text = selectedLocation;
+
+      // Move focus to the next text field
+      if (_activeLocationController == _pickupLocationController) {
+        FocusScope.of(context).requestFocus(_destinationLocationFocusNode);
+        placePredictions = [];
+      } else if (_activeLocationController == _destinationLocationController) {
+        // TODO: Search for trips/lifts
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _pickupLocationController.dispose();
+    _destinationLocationController.dispose();
+    _pickupLocationFocusNode.dispose();
+    _destinationLocationFocusNode.dispose();
+    super.dispose();
   }
 
   @override
@@ -69,14 +104,16 @@ class _SearchForLiftScreenState extends State<SearchForLiftScreen> {
                   tripInfo(
                     placeAutocomplete,
                     _pickupLocationController,
-                    _destinationLocationController),
+                    _destinationLocationController,
+                    _pickupLocationFocusNode,
+                    _destinationLocationFocusNode,
+                    updateActiveLocationController),
                   const SizedBox(height: 20),
                   const Divider(color: AppColors.highlightColor, thickness: 1),
                   const SizedBox(height: 20),
                   // TODO: Replace with ListView.builder
                   // TODO: If there's no specified location then show a button to set location on a map
                   // TODO: If there's no trip/lift available then display a "No trips/lifts available" message
-                  // locationListItem("BCX Head Office", "150 Rivonia Road, Sandton, 2196", "2021-10-10", "08:00", 2, 4),
                   Expanded(
                     child: ListView.builder(
                       physics: const BouncingScrollPhysics(),
@@ -84,9 +121,11 @@ class _SearchForLiftScreenState extends State<SearchForLiftScreen> {
                       itemCount: placePredictions.length,
                       itemBuilder: (context, index) {
                         return locationListItem(
-                          placePredictions[index].description as String,
-                          "2021-10-10", "08:00", 2, 4,
-                          context
+                          placePredictions[index].structuredFormatting.mainText,
+                          placePredictions[index].structuredFormatting.secondaryText,
+                          context,
+                          onLocationSelected,
+                          _activeLocationController
                         );
                       },
                     ),
@@ -105,6 +144,9 @@ Widget tripInfo(
   Function(String) placeAutocomplete,
   TextEditingController pickupLocationController,
   TextEditingController destinationLocationController,
+  FocusNode pickupLocationFocusNode,
+  FocusNode destinationLocationFocusNode,
+  Function(TextEditingController) updateActiveLocationController
   ) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.start,
@@ -119,7 +161,11 @@ Widget tripInfo(
           children: [
             TextField(
               controller: pickupLocationController,
-              onChanged: (value) => placeAutocomplete(value),
+              focusNode: pickupLocationFocusNode,
+              onChanged: (value) {
+                updateActiveLocationController(pickupLocationController);
+                placeAutocomplete(value);
+              },
               keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
                 labelText: 'Pickup location',
@@ -163,7 +209,11 @@ Widget tripInfo(
             const SizedBox(height: 10),
             TextField(
               controller: destinationLocationController,
-              onChanged: (value) => placeAutocomplete(value),
+              focusNode: destinationLocationFocusNode,
+              onChanged: (value) {
+                updateActiveLocationController(destinationLocationController);
+                placeAutocomplete(value);
+              },
               keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
                 labelText: 'Destination',
@@ -214,65 +264,60 @@ Widget tripInfo(
 
 Widget locationListItem(
     String location,
-    String date,
-    String time,
-    int seatsAvailable,
-    int seatsTotal,
-    BuildContext context) {
-  return Column(
-    children: [
-      Row(
-        children: [
-          SvgPicture.asset("assets/icons/location_icon.svg", height: 24,),
-          const SizedBox(width: 20),
-          SizedBox(
-            width: MediaQuery.of(context).size.width - 100,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  location,
-                  maxLines: 2,
-                  softWrap: false,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    decoration: TextDecoration.none,
-                    fontFamily: 'Aeonik',
+    String address,
+    BuildContext context,
+    Function(String) onLocationSelected,
+    TextEditingController controller
+  ) {
+  return GestureDetector(
+    onTap: () => onLocationSelected(location),
+    child: Column(
+      children: [
+        Row(
+          children: [
+            SvgPicture.asset("assets/icons/location_icon.svg", height: 24,),
+            const SizedBox(width: 20),
+            SizedBox(
+              width: MediaQuery.of(context).size.width - 100,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    location,
+                    maxLines: 2,
+                    softWrap: false,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      decoration: TextDecoration.none,
+                      fontFamily: 'Aeonik',
+                    ),
                   ),
-                ),
-                const SizedBox(height: 5),
-                Text(
-                  "$date - $time",
-                  style: const TextStyle(
-                    color: AppColors.highlightColor,
-                    fontSize: 15,
-                    fontWeight: FontWeight.normal,
-                    decoration: TextDecoration.none,
-                    fontFamily: 'Aeonik',
+                  const SizedBox(height: 5),
+                  Text(
+                    address,
+                    maxLines: 1,
+                    softWrap: false,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: AppColors.highlightColor,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      decoration: TextDecoration.none,
+                      fontFamily: 'Aeonik',
+                    ),
                   ),
-                ),
-                const SizedBox(height: 5),
-                Text(
-                  "$seatsAvailable/$seatsTotal Seats Available",
-                  style: const TextStyle(
-                    color: AppColors.gradientColor2,
-                    fontSize: 15,
-                    fontWeight: FontWeight.normal,
-                    decoration: TextDecoration.none,
-                    fontFamily: 'Aeonik',
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
-      ),
-      const SizedBox(height: 10),
-      Divider(color: AppColors.enabledBorderColor, thickness: 1),
-      const SizedBox(height: 10),
-    ],
+          ],
+        ),
+        const SizedBox(height: 10),
+        Divider(color: AppColors.enabledBorderColor, thickness: 1),
+        const SizedBox(height: 10),
+      ],
+    ),
   );
 }
