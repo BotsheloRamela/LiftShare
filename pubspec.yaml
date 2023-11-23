@@ -42,6 +42,7 @@ dependencies:
   google_maps_flutter: ^2.5.0
   http: ^1.1.0
   provider: ^6.1.1
+  lottie: ^2.7.0
 
 dev_dependencies:
   flutter_test:
@@ -70,6 +71,7 @@ flutter:
    - assets/fonts/
    - assets/icons/
    - assets/images/
+   - assets/animations/
    - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see

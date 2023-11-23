@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:liftshare/ui/widgets/default_app_bar.dart';
 import 'package:liftshare/viewmodels/search_lift_viewmodel.dart';
 import 'package:provider/provider.dart';
+import 'package:lottie/lottie.dart';
 
 import '../../../utils/constants.dart';
 import '../../widgets/app_background.dart';
@@ -16,14 +17,14 @@ class SearchForLiftScreen extends StatefulWidget {
 }
 
 class _SearchForLiftScreenState extends State<SearchForLiftScreen> {
-
   @override
   Widget build(BuildContext context) {
-
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<SearchForLiftViewModel>(
-          create: (_) => SearchForLiftViewModel(),
+          create: (_) => SearchForLiftViewModel(
+            liftsSearchCallback: () => _displayBottomSheet(context),
+          ),
         ),
       ],
       builder: (context, child) {
@@ -49,8 +50,6 @@ class _SearchForLiftScreenState extends State<SearchForLiftScreen> {
                         const SizedBox(height: 20),
                         const Divider(color: AppColors.highlightColor, thickness: 1),
                         const SizedBox(height: 20),
-                        // TODO: If there's no specified location then show a button to set location on a map
-                        // TODO: If there's no trip/lift available then display a "No trips/lifts available" message
                         viewModel.pickupLocationController.text.isNotEmpty
                             || viewModel.destinationLocationController.text.isNotEmpty
                             ? Expanded(
@@ -72,6 +71,58 @@ class _SearchForLiftScreenState extends State<SearchForLiftScreen> {
           ),
         );
       },
+    );
+  }
+  
+  Future<void> _displayBottomSheet(BuildContext context) {
+    // TODO: Add functionality to check if lifts are available or not and display appropriate message
+    // TODO: If there are lifts available, display them in a list
+    return showModalBottomSheet(
+        context: context,
+        backgroundColor: AppColors.buttonColor,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(AppValues.largeBorderRadius),
+            topRight: Radius.circular(AppValues.largeBorderRadius),
+          ),
+        ),
+        builder: (context) => Container(
+          height: 350,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(height: 10),
+              Lottie.asset(
+                'assets/animations/not_found.json',
+                height: 150,
+                width: 150,
+                fit: BoxFit.cover,
+              ),
+              const SizedBox(height: 10),
+              const Text(
+                "Oops, no lifts available for this trip",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                  decoration: TextDecoration.none,
+                  fontFamily: 'Aeonik',
+                ),
+              ),
+              const SizedBox(height: 10),
+              const Text(
+                "Try searching for another trip",
+                style: TextStyle(
+                  color: AppColors.highlightColor,
+                  fontSize: 16,
+                  fontWeight: FontWeight.normal,
+                  decoration: TextDecoration.none,
+                  fontFamily: 'Aeonik',
+                ),
+              ),
+            ],
+          ),
+        )
     );
   }
 }
@@ -254,6 +305,7 @@ Widget locationListItem(
   );
 }
 
+
 Widget setLocationOnMapButton(BuildContext context,) {
   return Column(
     children: [
@@ -283,3 +335,5 @@ Widget setLocationOnMapButton(BuildContext context,) {
     ],
   );
 }
+
+
