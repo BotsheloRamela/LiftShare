@@ -1,14 +1,14 @@
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:liftshare/data/repositories/lift_repository.dart';
+import 'package:liftshare/viewmodels/base_lift_viewmodel.dart';
 
 import '../data/models/lift.dart';
 import '../data/models/place_autocomplete_result.dart';
 import '../data/models/place_prediction.dart';
 import '../services/google_maps_service.dart';
 
-class SearchForLiftViewModel extends ChangeNotifier {
+class SearchForLiftViewModel extends BaseLiftViewModel with ChangeNotifier {
   // TextControllers and FocusNodes
   final TextEditingController _pickupLocationController = TextEditingController();
   final TextEditingController _destinationLocationController = TextEditingController();
@@ -16,10 +16,14 @@ class SearchForLiftViewModel extends ChangeNotifier {
   final FocusNode _pickupLocationFocusNode = FocusNode();
   final FocusNode _destinationLocationFocusNode = FocusNode();
 
+  @override
   TextEditingController get pickupLocationController => _pickupLocationController;
+  @override
   TextEditingController get destinationLocationController => _destinationLocationController;
   TextEditingController get activeLocationController => _activeLocationController;
+  @override
   FocusNode get pickupLocationFocusNode => _pickupLocationFocusNode;
+  @override
   FocusNode get destinationLocationFocusNode => _destinationLocationFocusNode;
 
   // Place predictions
@@ -41,6 +45,7 @@ class SearchForLiftViewModel extends ChangeNotifier {
 
   /// Sets the active location controller to the controller that is currently
   /// being edited
+  @override
   void setActiveLocationController(TextEditingController controller) {
     if (controller == pickupLocationController) {
       _activeLocationController = _pickupLocationController;
@@ -51,6 +56,7 @@ class SearchForLiftViewModel extends ChangeNotifier {
   }
 
   /// Places autocomplete
+  @override
   void searchPlace(String query) async {
     String? response = await GoogleMapsService().searchPlace(query);
 

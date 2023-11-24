@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:liftshare/ui/screens/offer_a_lift/offer_lift_screen.dart';
 import 'package:liftshare/viewmodels/offer_lift_viewmodel.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
@@ -68,7 +69,12 @@ class _OfferALiftHomeScreenState extends State<OfferALiftHomeScreen> {
                 width: 24,
               ),
               onPressed: () {
-                // TODO: Navigate to offer a lift screen
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const OfferLiftScreen(),
+                  ),
+                );
               },
 
             ),
