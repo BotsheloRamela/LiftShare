@@ -90,6 +90,7 @@ class SearchForLiftViewModel extends ChangeNotifier {
           && _destinationLocationController.text.isNotEmpty) {
         await searchLifts();
         liftsSearchCallback();
+        _placePredictions = [];
       }
     }
     notifyListeners();

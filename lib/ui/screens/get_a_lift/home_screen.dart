@@ -2,7 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:liftshare/ui/screens/get_a_lift/search_lift_screen.dart';
+import 'package:provider/provider.dart';
 
+import '../../../providers/user_provider.dart';
 import '../../../utils/constants.dart';
 import '../../widgets/app_background.dart';
 import '../../widgets/available_lift_item.dart';
@@ -16,8 +18,6 @@ class GetALiftHomeScreen extends StatefulWidget {
 }
 
 class _GetALiftHomeScreenState extends State<GetALiftHomeScreen> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
   User? _user;
 
   @override
@@ -27,9 +27,9 @@ class _GetALiftHomeScreenState extends State<GetALiftHomeScreen> {
   }
 
   Future<void> _getUser() async {
-    User? user = _auth.currentUser;
+    UserProvider userProvider = Provider.of<UserProvider>(context, listen: true);
     setState(() {
-      _user = user;
+      _user = userProvider.user as User?;
     });
   }
 

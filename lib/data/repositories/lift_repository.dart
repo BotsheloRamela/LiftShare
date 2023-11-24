@@ -21,4 +21,21 @@ class LiftRepository {
       return [];
     }
   }
+
+  Future<List<Lift>> getUpcomingLiftsByUserId(String userId) async {
+    try {
+      var querySnapshot = await _firestore
+          .collection("lifts")
+          .where("driverId", isEqualTo: userId)
+          .where("isLiftCompleted", isEqualTo: false)
+          .get();
+
+      List<Lift> lifts = querySnapshot.docs.map((doc) => Lift.fromDocument(doc)).toList();
+
+      return lifts;
+    } catch (e) {
+      print('Error searching lifts: $e');
+      return [];
+    }
+  }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:liftshare/ui/screens/get_a_lift/home_screen.dart';
+import 'package:liftshare/ui/screens/offer_a_lift/home_screen.dart';
 
 import '../../utils/constants.dart';
 
@@ -12,7 +13,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 1;
   final List<Widget> _children = [
-    const GetALiftHomeScreen(),
+    const OfferALiftHomeScreen(),
     const GetALiftHomeScreen(),
     const GetALiftHomeScreen()
   ];
