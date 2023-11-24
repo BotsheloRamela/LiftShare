@@ -51,17 +51,8 @@ class SearchForLiftViewModel extends ChangeNotifier {
   }
 
   /// Places autocomplete
-  void placeAutocomplete(String query) async {
-    Uri uri = Uri.https(
-        "maps.googleapis.com",
-        "maps/api/place/autocomplete/json",
-        {
-          "input": query,
-          "key": dotenv.get("ANDROID_FIREBASE_API_KEY")
-        }
-    );
-
-    String? response = await GoogleMapsService().fetchPlace(uri);
+  void searchPlace(String query) async {
+    String? response = await GoogleMapsService().searchPlace(query);
 
     if (response != null) {
       PlaceAutocompleteResponse result =

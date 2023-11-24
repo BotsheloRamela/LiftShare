@@ -28,7 +28,7 @@ class _SearchForLiftScreenState extends State<SearchForLiftScreen> {
         ),
       ],
       builder: (context, child) {
-         final viewModel = context.watch<SearchForLiftViewModel>();
+        final viewModel = context.watch<SearchForLiftViewModel>();
         return SafeArea(
           child: Scaffold(
             extendBodyBehindAppBar: true,
@@ -146,7 +146,7 @@ Widget tripInfo(
               focusNode: viewModel.pickupLocationFocusNode,
               onChanged: (value) {
                 viewModel.setActiveLocationController(viewModel.pickupLocationController);
-                viewModel.placeAutocomplete(value);
+                viewModel.searchPlace(value);
               },
               keyboardType: TextInputType.text,
               decoration: InputDecoration(
@@ -194,7 +194,7 @@ Widget tripInfo(
               focusNode: viewModel.destinationLocationFocusNode,
               onChanged: (value) {
                 viewModel.setActiveLocationController(viewModel.destinationLocationController);
-                viewModel.placeAutocomplete(value);
+                viewModel.searchPlace(value);
               },
               keyboardType: TextInputType.text,
               decoration: InputDecoration(

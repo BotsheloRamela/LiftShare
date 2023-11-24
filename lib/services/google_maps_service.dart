@@ -1,3 +1,4 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
 class GoogleMapsService {
@@ -21,6 +22,20 @@ class GoogleMapsService {
       rethrow;
     }
     return null;
+  }
+
+
+  Future<String?> searchPlace(String query) async {
+    Uri uri = Uri.https(
+      "maps.googleapis.com",
+      "maps/api/place/autocomplete/json",
+      {
+        "input": query,
+        "key": dotenv.get("ANDROID_FIREBASE_API_KEY"),
+      },
+    );
+
+    return fetchPlace(uri);
   }
 
 }
