@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
@@ -36,6 +38,101 @@ class GoogleMapsService {
     );
 
     return fetchPlace(uri);
+  }
+
+
+  Future<String> getLocationName(String placeId) async {
+    Uri uri = Uri.https(
+      "maps.googleapis.com",
+      "maps/api/place/details/json",
+      {
+        "place_id": placeId,
+        "fields": "name",
+        "key": dotenv.get("ANDROID_FIREBASE_API_KEY"),
+      },
+    );
+
+    String? response = await fetchPlace(uri);
+    if (response != null) {
+      // Parse the JSON response
+      Map<String, dynamic> jsonResponse = json.decode(response);
+
+      if (jsonResponse["status"] == "OK") {
+        // Get the name of the location
+        String locationName = jsonResponse["result"]["name"];
+        return locationName;
+      } else {
+        throw Exception("Failed to fetch location details");
+      }
+    } else {
+      throw Exception("Failed to fetch location details");
+    }
+  }
+
+
+  Future<Map<String, double>> getLocationCoordinates(String placeId) async {
+    Uri uri = Uri.https(
+      "maps.googleapis.com",
+      "maps/api/place/details/json",
+      {
+        "place_id": placeId,
+        "fields": "geometry",
+        "key": dotenv.get("ANDROID_FIREBASE_API_KEY"),
+      },
+    );
+
+    String? response = await fetchPlace(uri);
+    if (response != null) {
+      // Parse the JSON response
+      Map<String, dynamic> jsonResponse = json.decode(response);
+
+      if (jsonResponse["status"] == "OK") {
+        // Get the location coordinates
+        Map<String, double> locationCoordinates = {
+          "latitude": jsonResponse["result"]["geometry"]["location"]["lat"],
+          "longitude": jsonResponse["result"]["geometry"]["location"]["lng"],
+        };
+        return locationCoordinates;
+      } else {
+        throw Exception("Failed to fetch location details");
+      }
+    } else {
+      throw Exception("Failed to fetch location details");
+    }
+  }
+
+
+  Future<String> getLocationPhoto(String placeId) async {
+    Uri uri = Uri.https(
+      "maps.googleapis.com",
+      "maps/api/place/details/json",
+      {
+        "place_id": placeId,
+        "fields": "photo",
+        "key": dotenv.get("ANDROID_FIREBASE_API_KEY"),
+      },
+    );
+
+    String? response = await fetchPlace(uri);
+    if (response != null) {
+      // Parse the JSON response
+      Map<String, dynamic> jsonResponse = json.decode(response);
+
+      if (jsonResponse["status"] == "OK") {
+        // Get the first photo reference
+        List<dynamic> photos = jsonResponse["result"]["photos"];
+        if (photos.isNotEmpty) {
+          String firstPhotoReference = photos[0]["photo_reference"];
+          return firstPhotoReference;
+        } else {
+          throw Exception("No photos available for this location");
+        }
+      } else {
+        throw Exception("Failed to fetch location details");
+      }
+    } else {
+      throw Exception("Failed to fetch location details");
+    }
   }
 
 }
