@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../data/models/lift.dart';
@@ -47,6 +48,22 @@ class BaseLiftViewModel extends ChangeNotifier {
   String get pickupLocationID => _pickupLocationID;
   String get destinationLocationID => _destinationLocationID;
 
+  // Place coordinates
+  GeoPoint _pickupLocationCoordinates = const GeoPoint(0, 0);
+  GeoPoint _destinationLocationCoordinates = const GeoPoint(0, 0);
+  GeoPoint get pickupLocationCoordinates => _pickupLocationCoordinates;
+  GeoPoint get destinationLocationCoordinates => _destinationLocationCoordinates;
+
+  // Place photos
+  String _destinationLocationPhoto = "";
+  String get destinationLocationPhoto => _destinationLocationPhoto;
+
+  // PLace names
+  String _pickupLocationName = "";
+  String _destinationLocationName = "";
+  String get pickupLocationName => _pickupLocationName;
+  String get destinationLocationName => _destinationLocationName;
+
   void setLiftsSearchCallback(VoidCallback callback) {
     _liftsSearchCallback = callback;
   }
@@ -69,9 +86,8 @@ class BaseLiftViewModel extends ChangeNotifier {
 
       if (result.predictions != null) {
         _placePredictions = result.predictions!;
-        String placeId = _placePredictions[0].placeId!;
+        // String placeId = _placePredictions[0].placeId!;
         notifyListeners();
-        print("Result: ${result.predictions!.length}");
       }
     }
   }
@@ -79,12 +95,15 @@ class BaseLiftViewModel extends ChangeNotifier {
   void onLocationSelected(int selectedLocationIndex, String selectedLocation, BuildContext context) async {
     _activeLocationController.text = "";
     _activeLocationController.text = selectedLocation;
+    GoogleMapsService googleMapsService = GoogleMapsService();
 
     // Move focus to the next text field
     if (_activeLocationController == _pickupLocationController) {
       FocusScope.of(context).requestFocus(_destinationLocationFocusNode);
       _pickupLocationID = _placePredictions[selectedLocationIndex].placeId!;
       _placePredictions = [];
+      _pickupLocationCoordinates = await googleMapsService.getLocationCoordinates(_pickupLocationID);
+      _pickupLocationName = await googleMapsService.getLocationName(_pickupLocationID);
       _isPickupLocationSelected = true;
     } else if (_activeLocationController == _destinationLocationController) {
       FocusScope.of(context).unfocus();
@@ -94,9 +113,10 @@ class BaseLiftViewModel extends ChangeNotifier {
         _destinationLocationID = _placePredictions[selectedLocationIndex].placeId!;
         _liftsSearchCallback();
         _placePredictions = [];
+        _destinationLocationCoordinates = await googleMapsService.getLocationCoordinates(_destinationLocationID);
+        _destinationLocationName = await googleMapsService.getLocationName(_destinationLocationID);
+        _destinationLocationPhoto = await googleMapsService.getLocationPhoto(_destinationLocationID);
         _isDestinationLocationSelected = true;
-        print("Pickup location ID: $_pickupLocationID");
-        print("Destination location ID: $_destinationLocationID");
       }
     }
     notifyListeners();

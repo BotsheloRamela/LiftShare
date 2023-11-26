@@ -4,6 +4,11 @@ class Lift {
   final String driverId;
   final String pickupLocationID;
   final String destinationLocationID;
+  final String pickupLocationName;
+  final String destinationLocationName;
+  final GeoPoint pickupLocationCoordinates;
+  final GeoPoint destinationLocationCoordinates;
+  final String destinationLocationPhoto;
   final Timestamp departureTime;
   final int availableSeats;
   final int bookedSeats;
@@ -14,6 +19,11 @@ class Lift {
     required this.driverId,
     required this.pickupLocationID,
     required this.destinationLocationID,
+    required this.pickupLocationName,
+    required this.destinationLocationName,
+    required this.pickupLocationCoordinates,
+    required this.destinationLocationCoordinates,
+    required this.destinationLocationPhoto,
     required this.departureTime,
     required this.availableSeats,
     required this.bookedSeats,
@@ -26,6 +36,11 @@ class Lift {
       driverId: doc["driverId"],
       pickupLocationID: doc["pickupLocationID"],
       destinationLocationID: doc["destinationLocationID"],
+      pickupLocationName: doc["pickupLocationName"],
+      destinationLocationName: doc["destinationLocationName"],
+      pickupLocationCoordinates: doc["pickupLocationCoordinates"],
+      destinationLocationCoordinates: doc["destinationLocationCoordinates"],
+      destinationLocationPhoto: doc["destinationLocationPhoto"],
       departureTime: doc["departureTime"],
       availableSeats: doc["availableSeats"],
       bookedSeats: doc["bookedSeats"],
@@ -38,6 +53,11 @@ class Lift {
     "driverId": driverId,
     "pickupLocationID": pickupLocationID,
     "destinationLocationID": destinationLocationID,
+    "pickupLocationName": pickupLocationName,
+    "destinationLocationName": destinationLocationName,
+    "pickupLocationCoordinates": pickupLocationCoordinates,
+    "destinationLocationCoordinates": destinationLocationCoordinates,
+    "destinationLocationPhoto": destinationLocationPhoto,
     "departureTime": departureTime,
     "availableSeats": availableSeats,
     "bookedSeats": bookedSeats,

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
@@ -70,7 +71,7 @@ class GoogleMapsService {
   }
 
 
-  Future<Map<String, double>> getLocationCoordinates(String placeId) async {
+  Future<GeoPoint> getLocationCoordinates(String placeId) async {
     Uri uri = Uri.https(
       "maps.googleapis.com",
       "maps/api/place/details/json",
@@ -88,10 +89,10 @@ class GoogleMapsService {
 
       if (jsonResponse["status"] == "OK") {
         // Get the location coordinates
-        Map<String, double> locationCoordinates = {
-          "latitude": jsonResponse["result"]["geometry"]["location"]["lat"],
-          "longitude": jsonResponse["result"]["geometry"]["location"]["lng"],
-        };
+        GeoPoint locationCoordinates = GeoPoint(
+          jsonResponse["result"]["geometry"]["location"]["lat"],
+          jsonResponse["result"]["geometry"]["location"]["lng"],
+        );
         return locationCoordinates;
       } else {
         throw Exception("Failed to fetch location details");
@@ -102,7 +103,7 @@ class GoogleMapsService {
   }
 
 
-  Future<String> getLocationPhoto(String placeId) async {
+  Future<String> getLocationPhotoReference(String placeId) async {
     Uri uri = Uri.https(
       "maps.googleapis.com",
       "maps/api/place/details/json",
@@ -133,6 +134,22 @@ class GoogleMapsService {
     } else {
       throw Exception("Failed to fetch location details");
     }
+  }
+
+  Future<String> getLocationPhoto(String placeId) async {
+    String photoReference = await getLocationPhotoReference(placeId);
+
+    Uri uri = Uri.https(
+      "maps.googleapis.com",
+      "maps/api/place/photo",
+      {
+        "maxwidth": "400",
+        "photo_reference": photoReference,
+        "key": dotenv.get("ANDROID_FIREBASE_API_KEY"),
+      },
+    );
+
+    return uri.toString();
   }
 
 }

@@ -1,6 +1,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:liftshare/services/google_maps_service.dart';
 import 'package:liftshare/viewmodels/base_lift_viewmodel.dart';
 
 import '../data/models/lift.dart';
@@ -46,6 +47,11 @@ class OfferLiftViewModel extends BaseLiftViewModel{
       driverId: _userID,
       pickupLocationID: super.pickupLocationID,
       destinationLocationID: super.destinationLocationID,
+      pickupLocationName: super.pickupLocationName,
+      destinationLocationName: super.destinationLocationName,
+      pickupLocationCoordinates: super.pickupLocationCoordinates,
+      destinationLocationCoordinates: super.destinationLocationCoordinates,
+      destinationLocationPhoto: super.destinationLocationPhoto??"",
       departureTime: timestamp,
       availableSeats: int.parse(_liftSeatsController.text),
       bookedSeats: 0,

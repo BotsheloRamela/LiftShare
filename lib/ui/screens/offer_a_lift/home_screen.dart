@@ -129,8 +129,8 @@ class _OfferALiftHomeScreenState extends State<OfferALiftHomeScreen> {
                                 itemBuilder: (context, index) {
                                   Lift lift = offerLiftViewModel.getLifts[index];
                                   return offeredLiftListItem(
-                                    "Lift #$index",  // Use actual data fields
-                                    null,
+                                    lift.destinationLocationName,  // Use actual data fields
+                                    lift.destinationLocationPhoto,
                                     lift.departureTime,
                                   );
                                 },
@@ -156,13 +156,14 @@ class _OfferALiftHomeScreenState extends State<OfferALiftHomeScreen> {
 Widget noUpcomingLifts() {
   return Column(
     children: [
-      Lottie.asset(
-        'assets/animations/not_found.json',
-        height: 150,
-        width: 150,
-        frameRate: FrameRate(60),
-        fit: BoxFit.cover,
-      ),
+      // TODO: Fix lottie animation freezing
+      // Lottie.asset(
+      //   'assets/animations/not_found.json',
+      //   height: 150,
+      //   width: 150,
+      //   frameRate: FrameRate(60),
+      //   fit: BoxFit.cover,
+      // ),
       const SizedBox(height: 20),
       const Text(
         "No upcoming lifts",
