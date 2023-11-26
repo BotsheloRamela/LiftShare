@@ -13,6 +13,7 @@ Widget locationListItem(
     ) {
   return GestureDetector(
     onTap: () => viewModel.onLocationSelected(
+        index,
         viewModel.placePredictions[index].structuredFormatting.mainText,
         context
     ),

@@ -1,9 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:liftshare/ui/screens/get_a_lift/search_lift_screen.dart';
 import 'package:provider/provider.dart';
 
+import '../../../data/models/app_user.dart';
 import '../../../providers/user_provider.dart';
 import '../../../utils/constants.dart';
 import '../../widgets/app_background.dart';
@@ -18,7 +18,7 @@ class GetALiftHomeScreen extends StatefulWidget {
 }
 
 class _GetALiftHomeScreenState extends State<GetALiftHomeScreen> {
-  User? _user;
+  late AppUser _user;
 
   @override
   void initState() {
@@ -27,9 +27,9 @@ class _GetALiftHomeScreenState extends State<GetALiftHomeScreen> {
   }
 
   Future<void> _getUser() async {
-    UserProvider userProvider = Provider.of<UserProvider>(context, listen: true);
+    UserProvider userProvider = Provider.of<UserProvider>(context, listen: false);
     setState(() {
-      _user = userProvider.user as User?;
+      _user = (userProvider.user)!;
     });
   }
 
@@ -39,7 +39,7 @@ class _GetALiftHomeScreenState extends State<GetALiftHomeScreen> {
     return SafeArea(
       child: Scaffold(
         extendBodyBehindAppBar: true,
-        appBar: homeAppBar(_user?.photoURL),
+        appBar: homeAppBar(_user.photoURL),
         body: DecoratedBox(
           decoration: appBackground(),
           child: Padding(
@@ -53,7 +53,7 @@ class _GetALiftHomeScreenState extends State<GetALiftHomeScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 60),
-                  whereToButton(context),
+                  whereToButton(context, _user.uid ?? ""),
 
                   const SizedBox(height: 40),
                   const Text(
@@ -126,12 +126,12 @@ class _GetALiftHomeScreenState extends State<GetALiftHomeScreen> {
   }
 }
 
-Widget whereToButton(BuildContext context) {
+Widget whereToButton(BuildContext context, String userUid) {
   return GestureDetector(
     onTap: () {
       Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const SearchForLiftScreen())
+          MaterialPageRoute(builder: (context) => SearchForLiftScreen(userUid: userUid))
       );
     },
     child: Container(

@@ -1,8 +1,12 @@
-import 'package:firebase_auth/firebase_auth.dart';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:liftshare/data/models/app_user.dart';
+import 'package:liftshare/data/models/lift.dart';
 import 'package:liftshare/ui/screens/offer_a_lift/offer_lift_screen.dart';
+import 'package:liftshare/utils/firebase_utils.dart';
 import 'package:liftshare/viewmodels/offer_lift_viewmodel.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
@@ -20,7 +24,7 @@ class OfferALiftHomeScreen extends StatefulWidget {
 }
 
 class _OfferALiftHomeScreenState extends State<OfferALiftHomeScreen> {
-  User? _user;
+  late AppUser _user;
 
   @override
   void initState() {
@@ -29,9 +33,9 @@ class _OfferALiftHomeScreenState extends State<OfferALiftHomeScreen> {
   }
 
   Future<void> _getUser() async {
-    UserProvider userProvider = Provider.of<UserProvider>(context, listen: true);
+    UserProvider userProvider = Provider.of<UserProvider>(context, listen: false);
     setState(() {
-      _user = userProvider.user as User?;
+      _user = (userProvider.user)!;
     });
   }
 
@@ -40,13 +44,15 @@ class _OfferALiftHomeScreenState extends State<OfferALiftHomeScreen> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<OfferLiftViewModel>(
-          create: (_) => OfferLiftViewModel(),
+          create: (_) => OfferLiftViewModel(
+            _user.uid ?? "",
+          ),
         )
       ],
       builder: (context, child) {
-        final OfferLiftViewModel _offerLiftViewModel =
-            Provider.of<OfferLiftViewModel>(context);
-        _offerLiftViewModel.getUpcomingLifts(_user?.uid ?? "");
+        final OfferLiftViewModel offerLiftViewModel =
+            Provider.of<OfferLiftViewModel>(context, listen: true);
+        offerLiftViewModel.getUpcomingLifts();
         return SafeArea(
           child: Scaffold(
             extendBodyBehindAppBar: true,
@@ -72,13 +78,15 @@ class _OfferALiftHomeScreenState extends State<OfferALiftHomeScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const OfferLiftScreen(),
+                    builder: (context) => OfferLiftScreen(
+                      userUid: _user.uid ?? "",
+                    ),
                   ),
                 );
               },
 
             ),
-            appBar: homeAppBar(_user?.photoURL),
+            appBar: homeAppBar(_user.photoURL),
             body: DecoratedBox(
               decoration: appBackground(),
               child: Padding(
@@ -86,38 +94,54 @@ class _OfferALiftHomeScreenState extends State<OfferALiftHomeScreen> {
                     AppValues.screenPadding, AppValues.screenPadding,
                     AppValues.screenPadding, 0),
                 child: Column(
-                  mainAxisAlignment: _offerLiftViewModel.getLifts.isNotEmpty
+                  mainAxisAlignment: offerLiftViewModel.getLifts.isNotEmpty
                       ? MainAxisAlignment.start
                       : MainAxisAlignment.center,
-                  crossAxisAlignment: _offerLiftViewModel.getLifts.isNotEmpty
+                  crossAxisAlignment: offerLiftViewModel.getLifts.isNotEmpty
                       ? CrossAxisAlignment.start
                       : CrossAxisAlignment.center,
                   children: [
                     const SizedBox(height: 60),
-                    _offerLiftViewModel.getLifts.isNotEmpty ? Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          "Upcoming Lifts",
-                          style: TextStyle(
-                            color: AppColors.highlightColor,
-                            fontSize: 24,
-                            fontWeight: FontWeight.w500,
-                            decoration: TextDecoration.none,
-                            fontFamily: 'Aeonik',
-                          ),
-                        ),
-                        const SizedBox(height: 30),
-                        offeredLiftListItem(
-                          "The Zone @ Rosebank",
-                          null,
-                          "2021-09-30",
-                          "10:00"
-                        ),
-                      ],
-                    ) : Center(
-                        child: noUpcomingLifts()),
+                    FutureBuilder<Lift>(
+                      future: offerLiftViewModel.getOfferedLifts().then((value) => value.first),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "Upcoming Lifts",
+                                style: TextStyle(
+                                  color: AppColors.highlightColor,
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w500,
+                                  decoration: TextDecoration.none,
+                                  fontFamily: 'Aeonik',
+                                ),
+                              ),
+                              const SizedBox(height: 30),
+                              ListView.builder(
+                                shrinkWrap: true,
+                                physics: const BouncingScrollPhysics(),
+                                padding: const EdgeInsets.all(0),
+                                itemCount: offerLiftViewModel.getLifts.length,
+                                itemBuilder: (context, index) {
+                                  Lift lift = offerLiftViewModel.getLifts[index];
+                                  return offeredLiftListItem(
+                                    "Lift #$index",  // Use actual data fields
+                                    null,
+                                    lift.departureTime,
+                                  );
+                                },
+                              ),
+                            ],
+                          );
+                        } else {
+                          return Center(child: noUpcomingLifts());
+                        }
+                      }
+                    ),
                   ],
                 ),
               ),
@@ -134,9 +158,9 @@ Widget noUpcomingLifts() {
     children: [
       Lottie.asset(
         'assets/animations/not_found.json',
-        repeat: true,
         height: 150,
         width: 150,
+        frameRate: FrameRate(60),
         fit: BoxFit.cover,
       ),
       const SizedBox(height: 20),
@@ -157,12 +181,13 @@ Widget noUpcomingLifts() {
 Widget offeredLiftListItem(
     String locationName,
     String? locationImageUrl,
-    String date,
-    String time,
+    Timestamp date,
   ) {
+  String _date = formatFirebaseTimestamp(date);
   return Container(
     height: 80,
     width: double.infinity,
+    margin: const EdgeInsets.only(bottom: 15),
     padding: const EdgeInsets.all(2),
     decoration: BoxDecoration(
       borderRadius: const BorderRadius.all(Radius.circular(AppValues.largeBorderRadius - 6)),
@@ -213,7 +238,7 @@ Widget offeredLiftListItem(
                 ),
               ),
               Text(
-                "$date - $time",
+                _date,
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 14,
@@ -224,23 +249,6 @@ Widget offeredLiftListItem(
               ),
             ],
           ),
-          const Spacer(),
-          // const Text(
-          //   "View",
-          //   style: TextStyle(
-          //     color: Colors.white,
-          //     fontSize: 14,
-          //     fontWeight: FontWeight.normal,
-          //     decoration: TextDecoration.none,
-          //     fontFamily: 'Aeonik',
-          //   ),
-          // ),
-          // const SizedBox(width: 10),
-          // const Icon(
-          //   Icons.arrow_forward_ios,
-          //   color: Colors.white,
-          //   size: 14,
-          // ),
         ],
       ),
     ),

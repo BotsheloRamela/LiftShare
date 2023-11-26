@@ -32,10 +32,19 @@ class LiftRepository {
 
       List<Lift> lifts = querySnapshot.docs.map((doc) => Lift.fromDocument(doc)).toList();
 
+      // print("Retrieved lifts: ${lifts.length}");
       return lifts;
     } catch (e) {
       print('Error searching lifts: $e');
       return [];
+    }
+  }
+
+  Future<void> createLift(Lift lift) async {
+    try {
+      await _firestore.collection("lifts").add(lift.toJson());
+    } catch (e) {
+      print('Error creating lift: $e');
     }
   }
 }

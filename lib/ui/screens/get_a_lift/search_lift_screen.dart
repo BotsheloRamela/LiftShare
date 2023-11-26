@@ -12,7 +12,8 @@ import '../../widgets/app_background.dart';
 import '../../widgets/location_list_item.dart';
 
 class SearchForLiftScreen extends StatefulWidget {
-  const SearchForLiftScreen({super.key});
+  final String userUid;
+  const SearchForLiftScreen({super.key, required this.userUid});
 
   @override
   State<SearchForLiftScreen> createState() => _SearchForLiftScreenState();
@@ -24,7 +25,9 @@ class _SearchForLiftScreenState extends State<SearchForLiftScreen> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<SearchForLiftViewModel>(
-          create: (_) => SearchForLiftViewModel(),
+          create: (_) => SearchForLiftViewModel(
+            widget.userUid,
+          ),
         ),
       ],
       builder: (context, child) {
@@ -52,17 +55,19 @@ class _SearchForLiftScreenState extends State<SearchForLiftScreen> {
                         const Divider(color: AppColors.highlightColor, thickness: 1),
                         const SizedBox(height: 20),
                         viewModel.pickupLocationController.text.isNotEmpty
-                            || viewModel.destinationLocationController.text.isNotEmpty
-                            ? Expanded(
-                          child: ListView.builder(
-                            physics: const BouncingScrollPhysics(),
-                            padding: const EdgeInsets.all(0),
-                            itemCount: viewModel.placePredictions.length,
-                            itemBuilder: (context, index) {
-                              return locationListItem(viewModel, index, context);
-                            },
-                          ),
-                        )
+                          || viewModel.destinationLocationController.text.isNotEmpty
+                          || !viewModel.isPickupLocationSelected
+                          || !viewModel.isDestinationLocationSelected
+                          ? Expanded(
+                              child: ListView.builder(
+                                physics: const BouncingScrollPhysics(),
+                                padding: const EdgeInsets.all(0),
+                                itemCount: viewModel.placePredictions.length,
+                                itemBuilder: (context, index) {
+                                  return locationListItem(viewModel, index, context);
+                                },
+                              ),
+                            )
                             : setLocationOnMapButton(context),
                       ],
                     ),
@@ -97,6 +102,7 @@ class _SearchForLiftScreenState extends State<SearchForLiftScreen> {
                 'assets/animations/not_found.json',
                 height: 150,
                 width: 150,
+                frameRate: FrameRate(60),
                 fit: BoxFit.cover,
               ),
               const SizedBox(height: 10),

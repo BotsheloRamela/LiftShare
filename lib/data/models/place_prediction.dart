@@ -22,7 +22,7 @@ class PlacePrediction  {
   }
 }
 
-class PlaceFormatting  {
+class PlaceFormatting {
   final String mainText;
   final String secondaryText;
 

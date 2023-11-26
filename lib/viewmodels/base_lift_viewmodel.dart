@@ -35,9 +35,17 @@ class BaseLiftViewModel extends ChangeNotifier {
   VoidCallback _liftsSearchCallback = () {};
   VoidCallback get liftsSearchCallback => _liftsSearchCallback;
 
-  // void notifyListenersInBase(VoidCallback notifyListeners) {
-  //   notifyListeners();
-  // }
+  // Location selected
+  bool _isPickupLocationSelected = false;
+  bool _isDestinationLocationSelected = false;
+  bool get isPickupLocationSelected => _isPickupLocationSelected;
+  bool get isDestinationLocationSelected => _isDestinationLocationSelected;
+
+  // Place ids
+  String _pickupLocationID = "";
+  String _destinationLocationID = "";
+  String get pickupLocationID => _pickupLocationID;
+  String get destinationLocationID => _destinationLocationID;
 
   void setLiftsSearchCallback(VoidCallback callback) {
     _liftsSearchCallback = callback;
@@ -61,27 +69,34 @@ class BaseLiftViewModel extends ChangeNotifier {
 
       if (result.predictions != null) {
         _placePredictions = result.predictions!;
+        String placeId = _placePredictions[0].placeId!;
         notifyListeners();
         print("Result: ${result.predictions!.length}");
       }
     }
   }
 
-  void onLocationSelected(String selectedLocation, BuildContext context) async {
+  void onLocationSelected(int selectedLocationIndex, String selectedLocation, BuildContext context) async {
     _activeLocationController.text = "";
     _activeLocationController.text = selectedLocation;
 
     // Move focus to the next text field
     if (_activeLocationController == _pickupLocationController) {
       FocusScope.of(context).requestFocus(_destinationLocationFocusNode);
+      _pickupLocationID = _placePredictions[selectedLocationIndex].placeId!;
       _placePredictions = [];
+      _isPickupLocationSelected = true;
     } else if (_activeLocationController == _destinationLocationController) {
       FocusScope.of(context).unfocus();
       if (_pickupLocationController.text.isNotEmpty
           && _destinationLocationController.text.isNotEmpty) {
         await searchLifts();
+        _destinationLocationID = _placePredictions[selectedLocationIndex].placeId!;
         _liftsSearchCallback();
         _placePredictions = [];
+        _isDestinationLocationSelected = true;
+        print("Pickup location ID: $_pickupLocationID");
+        print("Destination location ID: $_destinationLocationID");
       }
     }
     notifyListeners();

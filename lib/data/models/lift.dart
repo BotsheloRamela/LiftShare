@@ -2,18 +2,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Lift {
   final String driverId;
-  final String pickupLocation;
-  final String destinationLocation;
-  final String departureTime;
+  final String pickupLocationID;
+  final String destinationLocationID;
+  final Timestamp departureTime;
   final int availableSeats;
   final int bookedSeats;
-  final int tripPrice;
+  final double tripPrice;
   final bool isLiftCompleted;
 
   Lift({
     required this.driverId,
-    required this.pickupLocation,
-    required this.destinationLocation,
+    required this.pickupLocationID,
+    required this.destinationLocationID,
     required this.departureTime,
     required this.availableSeats,
     required this.bookedSeats,
@@ -24,8 +24,8 @@ class Lift {
   factory Lift.fromDocument(DocumentSnapshot doc) {
     return Lift(
       driverId: doc["driverId"],
-      pickupLocation: doc["pickupLocation"],
-      destinationLocation: doc["destinationLocation"],
+      pickupLocationID: doc["pickupLocationID"],
+      destinationLocationID: doc["destinationLocationID"],
       departureTime: doc["departureTime"],
       availableSeats: doc["availableSeats"],
       bookedSeats: doc["bookedSeats"],
@@ -33,4 +33,15 @@ class Lift {
       isLiftCompleted: doc["isLiftCompleted"],
     );
   }
+
+  Map<String, dynamic> toJson() => {
+    "driverId": driverId,
+    "pickupLocationID": pickupLocationID,
+    "destinationLocationID": destinationLocationID,
+    "departureTime": departureTime,
+    "availableSeats": availableSeats,
+    "bookedSeats": bookedSeats,
+    "tripPrice": tripPrice,
+    "isLiftCompleted": isLiftCompleted,
+  };
 }
