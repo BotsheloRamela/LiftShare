@@ -18,8 +18,7 @@ class OfferLiftViewModel extends BaseLiftViewModel{
   // Lift repository
   final LiftRepository _liftRepository = LiftRepository();
 
-  final DateTime _selectedDate = DateTime.now();
-
+  DateTime _selectedDate = DateTime.now();
   DateTime get getSelectedDate => _selectedDate;
 
   List<Lift> _offeredLifts = [];
@@ -27,6 +26,11 @@ class OfferLiftViewModel extends BaseLiftViewModel{
 
   final String _userID;
   OfferLiftViewModel(this._userID);
+
+  void setLiftDate(DateTime date) {
+    _selectedDate = date;
+    notifyListeners();
+  }
 
   void getUpcomingLifts() async {
     _offeredLifts = await _liftRepository.getUpcomingLiftsByUserId(_userID);

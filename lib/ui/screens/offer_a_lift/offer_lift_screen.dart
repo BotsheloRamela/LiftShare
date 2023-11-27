@@ -24,14 +24,6 @@ class OfferLiftScreen extends StatefulWidget {
 
 class _OfferLiftScreenState extends State<OfferLiftScreen> {
 
-  DateTime _selectedDate = DateTime.now();
-
-  void setSelectedDate(DateTime date) {
-    setState(() {
-      _selectedDate = date;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -90,7 +82,7 @@ class _OfferLiftScreenState extends State<OfferLiftScreen> {
                                 style: TextStyle(
                                     color: AppColors.highlightColor, fontSize: 18)),
                             const SizedBox(height: 10),
-                            departureDateButton(context),
+                            departureDateButton(context, viewModel),
                             const SizedBox(height: 30),
                             additionalLiftInfoInputs(viewModel),
                             const Spacer(),
@@ -124,7 +116,7 @@ class _OfferLiftScreenState extends State<OfferLiftScreen> {
     );
   }
 
-  Container departureDateButton(BuildContext context) {
+  Container departureDateButton(BuildContext context, OfferLiftViewModel viewModel) {
     return Container(
       height: 60,
       padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -139,7 +131,7 @@ class _OfferLiftScreenState extends State<OfferLiftScreen> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            DateFormat('dd MMM y \'at\' HH:mm').format(_selectedDate),
+            DateFormat('dd MMM y \'at\' HH:mm').format(viewModel.getSelectedDate),
             style: const TextStyle(
               color: Colors.white,
               fontFamily: 'Aeonik', fontSize: 18
@@ -151,7 +143,7 @@ class _OfferLiftScreenState extends State<OfferLiftScreen> {
               DatePickerBdaya.showDateTimePicker(context,
                   showTitleActions: true,
                   minTime: DateTime.now(),
-                  onConfirm: (date) => setSelectedDate(date),
+                  onConfirm: (date) => viewModel.setLiftDate(date),
                   currentTime: DateTime.now(), locale: LocaleType.en,
                   theme: const DatePickerThemeBdaya(
                     backgroundColor: AppColors.buttonColor,
