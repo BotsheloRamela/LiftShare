@@ -1,8 +1,10 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class FirebaseAuthService {
   FirebaseAuth _auth = FirebaseAuth.instance;
+  FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<User?> signUpWithEmailAndPassword(String email, String password, String name) async {
     try {
@@ -14,6 +16,15 @@ class FirebaseAuthService {
 
       if (user != null) {
         await user.updateDisplayName(name);
+        DocumentSnapshot doc = await _firestore.collection("users").doc(user.uid).get();
+        if (!doc.exists) {
+          await _firestore.collection("users").doc(user.uid).set({
+            "uid": user.uid,
+            "name": name,
+            "email": email,
+            "profilePhoto": user.photoURL,
+          });
+        }
       }
 
       return user;
@@ -45,6 +56,13 @@ class FirebaseAuthService {
         password: password,
       );
       User? user = userCredential.user;
+
+      if (user != null) {
+        DocumentSnapshot doc = await _firestore.collection("users").doc(user.uid).get();
+        if (!doc.exists) {
+          return null;
+        }
+      }
 
       return user;
     } on FirebaseAuthException catch (e) {
@@ -83,6 +101,18 @@ class FirebaseAuthService {
       UserCredential userCredential = await _auth.signInWithProvider(googleProvider);
 
       User? user = userCredential.user;
+
+      if (user != null) {
+        DocumentSnapshot doc = await _firestore.collection("users").doc(user.uid).get();
+        if (!doc.exists) {
+          await _firestore.collection("users").doc(user.uid).set({
+            "uid": user.uid,
+            "name": user.displayName,
+            "email": user.email,
+            "profilePhoto": user.photoURL,
+          });
+        }
+      }
 
       return user;
     } catch (e) {
