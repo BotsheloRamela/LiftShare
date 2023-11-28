@@ -6,7 +6,7 @@ import 'package:flutter_svg/svg.dart';
 PreferredSizeWidget homeAppBar(String? userPhotoUrl) {
   return AppBar(
     title: const Text(
-      'ShareLift',
+      'LiftShare',
       style: TextStyle(
         color: Colors.white,
         fontSize: 24,
