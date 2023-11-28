@@ -1,13 +1,12 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:liftshare/services/google_maps_service.dart';
-import 'package:liftshare/viewmodels/base_lift_viewmodel.dart';
+import 'package:liftshare/viewmodels/lift_viewmodel.dart';
 
 import '../data/models/lift.dart';
 import '../data/repositories/lift_repository.dart';
 
-class OfferLiftViewModel extends BaseLiftViewModel{
+class LiftOfferViewModel extends LiftViewModel{
   // TextControllers and FocusNodes
   final TextEditingController _liftPriceController = TextEditingController();
   final TextEditingController _liftSeatsController = TextEditingController();
@@ -25,7 +24,7 @@ class OfferLiftViewModel extends BaseLiftViewModel{
   List<Lift> get getLifts => _offeredLifts;
 
   final String _userID;
-  OfferLiftViewModel(this._userID);
+  LiftOfferViewModel(this._userID);
 
   void setLiftDate(DateTime date) {
     _selectedDate = date;

@@ -7,7 +7,7 @@ import '../data/models/place_prediction.dart';
 import '../data/repositories/lift_repository.dart';
 import '../services/google_maps_service.dart';
 
-class BaseLiftViewModel extends ChangeNotifier {
+class LiftViewModel extends ChangeNotifier {
   // Example properties, replace with your actual properties
   final TextEditingController _pickupLocationController = TextEditingController();
   final TextEditingController _destinationLocationController = TextEditingController();

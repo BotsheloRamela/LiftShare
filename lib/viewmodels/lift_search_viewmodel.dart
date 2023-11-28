@@ -1,11 +1,11 @@
 
 import 'package:flutter/cupertino.dart';
-import 'package:liftshare/viewmodels/base_lift_viewmodel.dart';
+import 'package:liftshare/viewmodels/lift_viewmodel.dart';
 
-class SearchForLiftViewModel extends BaseLiftViewModel {
+class LiftSearchViewModel extends LiftViewModel {
 
   final String _userID;
-  SearchForLiftViewModel(this._userID);
+  LiftSearchViewModel(this._userID);
 
   @override
   void setActiveLocationController(TextEditingController controller) {
