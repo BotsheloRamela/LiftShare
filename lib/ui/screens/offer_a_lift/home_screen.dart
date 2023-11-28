@@ -5,9 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:liftshare/data/models/app_user.dart';
 import 'package:liftshare/data/models/lift.dart';
+import 'package:liftshare/ui/screens/offer_a_lift/confirmed_lift_offer_screen.dart';
 import 'package:liftshare/ui/screens/offer_a_lift/offer_lift_screen.dart';
 import 'package:liftshare/utils/firebase_utils.dart';
-import 'package:liftshare/viewmodels/offer_lift_viewmodel.dart';
+import 'package:liftshare/viewmodels/lift_offer_viewmodel.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
@@ -43,15 +44,15 @@ class _OfferALiftHomeScreenState extends State<OfferALiftHomeScreen> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<OfferLiftViewModel>(
-          create: (_) => OfferLiftViewModel(
+        ChangeNotifierProvider<LiftOfferViewModel>(
+          create: (_) => LiftOfferViewModel(
             _user.uid ?? "",
           ),
         )
       ],
       builder: (context, child) {
-        final OfferLiftViewModel offerLiftViewModel =
-            Provider.of<OfferLiftViewModel>(context, listen: true);
+        final LiftOfferViewModel offerLiftViewModel =
+            Provider.of<LiftOfferViewModel>(context, listen: true);
         offerLiftViewModel.getUpcomingLifts();
         return SafeArea(
           child: Scaffold(
@@ -128,10 +129,20 @@ class _OfferALiftHomeScreenState extends State<OfferALiftHomeScreen> {
                                 itemCount: offerLiftViewModel.getLifts.length,
                                 itemBuilder: (context, index) {
                                   Lift lift = offerLiftViewModel.getLifts[index];
-                                  return offeredLiftListItem(
-                                    lift.destinationLocationName,  // Use actual data fields
-                                    lift.destinationLocationPhoto,
-                                    lift.departureTime,
+                                  return GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => ConfirmedLiftOfferScreen(lift: lift)
+                                        ),
+                                      );
+                                    },
+                                    child: offeredLiftListItem(
+                                      lift.destinationLocationName,  // Use actual data fields
+                                      lift.destinationLocationPhoto,
+                                      lift.departureTime,
+                                    ),
                                   );
                                 },
                               ),

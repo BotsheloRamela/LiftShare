@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
 import '../../../utils/constants.dart';
-import '../../../viewmodels/offer_lift_viewmodel.dart';
+import '../../../viewmodels/lift_offer_viewmodel.dart';
 import '../../widgets/action_button.dart';
 import '../../widgets/app_background.dart';
 import '../../widgets/default_app_bar.dart';
@@ -28,13 +28,13 @@ class _OfferLiftScreenState extends State<OfferLiftScreen> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<OfferLiftViewModel>(
-          create: (context) => OfferLiftViewModel(widget.userUid),
+        ChangeNotifierProvider<LiftOfferViewModel>(
+          create: (context) => LiftOfferViewModel(widget.userUid),
         ),
       ],
       builder: (context, child) {
-        final OfferLiftViewModel viewModel =
-            Provider.of<OfferLiftViewModel>(context, listen: false);
+        final LiftOfferViewModel viewModel =
+            Provider.of<LiftOfferViewModel>(context, listen: false);
         return SafeArea(
           child: Scaffold(
             extendBodyBehindAppBar: true,
@@ -52,8 +52,8 @@ class _OfferLiftScreenState extends State<OfferLiftScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(height: 70),
-                      LocationInputForm<OfferLiftViewModel>(
-                          viewModel: context.watch<OfferLiftViewModel>()
+                      LocationInputForm<LiftOfferViewModel>(
+                          viewModel: context.watch<LiftOfferViewModel>()
                       ),
                       const SizedBox(height: 20),
                       const Divider(color: AppColors.highlightColor, thickness: 1),
@@ -116,7 +116,7 @@ class _OfferLiftScreenState extends State<OfferLiftScreen> {
     );
   }
 
-  Container departureDateButton(BuildContext context, OfferLiftViewModel viewModel) {
+  Container departureDateButton(BuildContext context, LiftOfferViewModel viewModel) {
     return Container(
       height: 60,
       padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -165,7 +165,7 @@ class _OfferLiftScreenState extends State<OfferLiftScreen> {
     );
   }
 
-  Row additionalLiftInfoInputs(OfferLiftViewModel viewModel) {
+  Row additionalLiftInfoInputs(LiftOfferViewModel viewModel) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [

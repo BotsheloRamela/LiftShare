@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:liftshare/ui/widgets/default_app_bar.dart';
 import 'package:liftshare/ui/widgets/location_input_form.dart';
-import 'package:liftshare/viewmodels/search_lift_viewmodel.dart';
+import 'package:liftshare/viewmodels/lift_search_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:lottie/lottie.dart';
 
@@ -24,14 +24,14 @@ class _SearchForLiftScreenState extends State<SearchForLiftScreen> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<SearchForLiftViewModel>(
-          create: (_) => SearchForLiftViewModel(
+        ChangeNotifierProvider<LiftSearchViewModel>(
+          create: (_) => LiftSearchViewModel(
             widget.userUid,
           ),
         ),
       ],
       builder: (context, child) {
-        final viewModel = context.watch<SearchForLiftViewModel>();
+        final viewModel = context.watch<LiftSearchViewModel>();
         viewModel.setLiftsSearchCallback(() => _displayBottomSheet(context));
         return SafeArea(
           child: Scaffold(
@@ -50,7 +50,7 @@ class _SearchForLiftScreenState extends State<SearchForLiftScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const SizedBox(height: 70),
-                        LocationInputForm<SearchForLiftViewModel>(viewModel: context.watch<SearchForLiftViewModel>()),
+                        LocationInputForm<LiftSearchViewModel>(viewModel: context.watch<LiftSearchViewModel>()),
                         const SizedBox(height: 20),
                         const Divider(color: AppColors.highlightColor, thickness: 1),
                         const SizedBox(height: 20),

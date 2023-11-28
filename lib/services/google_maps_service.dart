@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
+import '../data/models/directions.dart';
+
 class GoogleMapsService {
 
   Future<String?> getCurrentLocation() async {
@@ -150,6 +152,39 @@ class GoogleMapsService {
     );
 
     return uri.toString();
+  }
+
+  // Get directions from the pickup location to the destination location
+  Future<Directions> getDirections(GeoPoint pickupLocationCoordinates, GeoPoint destinationLocationCoordinates) async {
+    Uri uri = Uri.https(
+      "maps.googleapis.com",
+      "maps/api/directions/json",
+      {
+        "origin": "${pickupLocationCoordinates.latitude},${pickupLocationCoordinates.longitude}",
+        "destination": "${destinationLocationCoordinates.latitude},${destinationLocationCoordinates.longitude}",
+        "key": dotenv.get("ANDROID_FIREBASE_API_KEY"),
+      },
+    );
+
+    try {
+      final response = await http.get(uri);
+      if (response.statusCode == 200) {
+        // Parse the JSON response
+        Map<String, dynamic> jsonResponse = json.decode(response.body);
+
+        if (jsonResponse["status"] == "OK") {
+          // Get the encoded polyline
+          Directions directions = Directions.fromMap(jsonResponse);
+          return directions;
+        } else {
+          throw Exception("Failed to fetch directions");
+        }
+      } else {
+        throw Exception("Failed to fetch directions");
+      }
+    } catch (e) {
+      rethrow;
+    }
   }
 
 }

@@ -46,6 +46,7 @@ dependencies:
   flutter_datetime_picker_bdaya: ^3.0.2
   intl: ^0.18.1
   flutter_config: ^2.0.2
+  flutter_polyline_points: ^2.0.0
 
 dev_dependencies:
   flutter_test:
