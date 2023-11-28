@@ -8,6 +8,8 @@ class Lift {
   final String destinationLocationName;
   final GeoPoint pickupLocationCoordinates;
   final GeoPoint destinationLocationCoordinates;
+  final String pickupLocationAddress;
+  final String destinationLocationAddress;
   final String destinationLocationPhoto;
   final Timestamp departureTime;
   final int availableSeats;
@@ -23,6 +25,8 @@ class Lift {
     required this.destinationLocationName,
     required this.pickupLocationCoordinates,
     required this.destinationLocationCoordinates,
+    required this.pickupLocationAddress,
+    required this.destinationLocationAddress,
     required this.destinationLocationPhoto,
     required this.departureTime,
     required this.availableSeats,
@@ -40,6 +44,8 @@ class Lift {
       destinationLocationName: doc["destinationLocationName"],
       pickupLocationCoordinates: doc["pickupLocationCoordinates"],
       destinationLocationCoordinates: doc["destinationLocationCoordinates"],
+      pickupLocationAddress: doc["pickupLocationAddress"],
+      destinationLocationAddress: doc["destinationLocationAddress"],
       destinationLocationPhoto: doc["destinationLocationPhoto"],
       departureTime: doc["departureTime"],
       availableSeats: doc["availableSeats"],
@@ -57,6 +63,8 @@ class Lift {
     "destinationLocationName": destinationLocationName,
     "pickupLocationCoordinates": pickupLocationCoordinates,
     "destinationLocationCoordinates": destinationLocationCoordinates,
+    "pickupLocationAddress": pickupLocationAddress,
+    "destinationLocationAddress": destinationLocationAddress,
     "destinationLocationPhoto": destinationLocationPhoto,
     "departureTime": departureTime,
     "availableSeats": availableSeats,

@@ -64,6 +64,12 @@ class BaseLiftViewModel extends ChangeNotifier {
   String get pickupLocationName => _pickupLocationName;
   String get destinationLocationName => _destinationLocationName;
 
+  // Place addresses
+  String _pickupLocationAddress = "";
+  String _destinationLocationAddress = "";
+  String get pickupLocationAddress => _pickupLocationAddress;
+  String get destinationLocationAddress => _destinationLocationAddress;
+
   void setLiftsSearchCallback(VoidCallback callback) {
     _liftsSearchCallback = callback;
   }
@@ -101,6 +107,7 @@ class BaseLiftViewModel extends ChangeNotifier {
     if (_activeLocationController == _pickupLocationController) {
       FocusScope.of(context).requestFocus(_destinationLocationFocusNode);
       _pickupLocationID = _placePredictions[selectedLocationIndex].placeId!;
+      _pickupLocationAddress = _placePredictions[selectedLocationIndex].structuredFormatting.secondaryText;
       _placePredictions = [];
       _pickupLocationCoordinates = await googleMapsService.getLocationCoordinates(_pickupLocationID);
       _pickupLocationName = await googleMapsService.getLocationName(_pickupLocationID);
@@ -111,6 +118,7 @@ class BaseLiftViewModel extends ChangeNotifier {
           && _destinationLocationController.text.isNotEmpty) {
         await searchLifts();
         _destinationLocationID = _placePredictions[selectedLocationIndex].placeId!;
+        _destinationLocationAddress = _placePredictions[selectedLocationIndex].structuredFormatting.secondaryText;
         _liftsSearchCallback();
         _placePredictions = [];
         _destinationLocationCoordinates = await googleMapsService.getLocationCoordinates(_destinationLocationID);

@@ -55,6 +55,8 @@ class OfferLiftViewModel extends BaseLiftViewModel{
       destinationLocationName: super.destinationLocationName,
       pickupLocationCoordinates: super.pickupLocationCoordinates,
       destinationLocationCoordinates: super.destinationLocationCoordinates,
+      pickupLocationAddress: super.pickupLocationAddress,
+      destinationLocationAddress: super.destinationLocationAddress,
       destinationLocationPhoto: super.destinationLocationPhoto??"",
       departureTime: timestamp,
       availableSeats: int.parse(_liftSeatsController.text),
