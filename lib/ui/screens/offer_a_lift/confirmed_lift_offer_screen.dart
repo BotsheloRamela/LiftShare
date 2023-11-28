@@ -21,13 +21,12 @@ class ConfirmedLiftOfferScreen extends StatefulWidget {
 }
 
 class _ConfirmedLiftOfferScreenState extends State<ConfirmedLiftOfferScreen> {
-  late GoogleMapController _mapController;
   final Set<Marker> _markers = {};
   final Set<Polyline> _polylines = {};
 
   @override
   void dispose() {
-    _mapController.dispose();
+    // _mapController.dispose();
     _markers.clear();
     _polylines.clear();
     super.dispose();
@@ -112,11 +111,9 @@ class _ConfirmedLiftOfferScreenState extends State<ConfirmedLiftOfferScreen> {
             zoom: 15,
           ),
           onMapCreated: (controller) async {
-            _mapController = controller;
             _markers.addAll(await viewModel.getMarkers(lift));
             _polylines.add(await viewModel.getPolyline(lift));
             setState(() {});
-
           },
           markers: _markers,
           polylines: _polylines,
