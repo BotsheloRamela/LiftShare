@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import '../data/models/directions.dart';
 import '../data/models/lift.dart';
 import '../data/models/place_autocomplete_result.dart';
 import '../data/models/place_prediction.dart';
@@ -143,6 +146,59 @@ class LiftViewModel extends ChangeNotifier {
         notifyListeners();
       }
     }
+  }
+
+  Future<Directions> getDirections(GeoPoint pickupLocationCoordinates, GeoPoint destinationLocationCoordinates) async {
+    return await GoogleMapsService().getDirections(pickupLocationCoordinates, destinationLocationCoordinates);
+  }
+
+  Future<Set<Marker>> getMarkers(Lift lift) async {
+    Set<Marker> markers = {};
+
+    Marker pickupMarker = Marker(
+      markerId: const MarkerId("pickup"),
+      position: LatLng(
+        lift.pickupLocationCoordinates.latitude,
+        lift.pickupLocationCoordinates.longitude,
+      ),
+      infoWindow: InfoWindow(
+        title: lift.pickupLocationName,
+        snippet: lift.pickupLocationAddress,
+      ),
+      icon: BitmapDescriptor.defaultMarker,
+    );
+
+    Marker destinationMarker = Marker(
+      markerId: const MarkerId("destination"),
+      position: LatLng(
+        lift.destinationLocationCoordinates.latitude,
+        lift.destinationLocationCoordinates.longitude,
+      ),
+      infoWindow: InfoWindow(
+        title: lift.destinationLocationName,
+        snippet: lift.destinationLocationAddress,
+      ),
+      icon: BitmapDescriptor.defaultMarker,
+    );
+
+    markers.add(pickupMarker);
+    markers.add(destinationMarker);
+
+    return markers;
+  }
+
+  Future<Polyline> getPolyline(Lift lift) async {
+    Directions directions =
+        await getDirections(lift.pickupLocationCoordinates, lift.destinationLocationCoordinates);
+
+    return Polyline(
+      polylineId: const PolylineId("route"),
+      points: directions.polylinePoints
+          .map((e) => LatLng(e.latitude, e.longitude))
+          .toList(),
+      color: Colors.blue,
+      width: 2,
+    );
   }
 
   @override

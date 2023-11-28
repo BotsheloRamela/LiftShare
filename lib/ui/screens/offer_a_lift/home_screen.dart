@@ -134,7 +134,10 @@ class _OfferALiftHomeScreenState extends State<OfferALiftHomeScreen> {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) => ConfirmedLiftOfferScreen(lift: lift)
+                                          builder: (context) => ConfirmedLiftOfferScreen(
+                                            lift: lift,
+                                            offerLiftViewModel: offerLiftViewModel,
+                                          )
                                         ),
                                       );
                                     },
