@@ -45,6 +45,7 @@ dependencies:
   lottie: ^2.7.0
   flutter_datetime_picker_bdaya: ^3.0.2
   intl: ^0.18.1
+  flutter_config: ^2.0.2
 
 dev_dependencies:
   flutter_test:

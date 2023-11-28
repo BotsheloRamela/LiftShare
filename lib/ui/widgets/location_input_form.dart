@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:liftshare/viewmodels/base_lift_viewmodel.dart';
+import 'package:liftshare/viewmodels/lift_viewmodel.dart';
 
 import '../../utils/constants.dart';
 
-class LocationInputForm<T extends BaseLiftViewModel> extends StatelessWidget {
+class LocationInputForm<T extends LiftViewModel> extends StatelessWidget {
   final T viewModel;
 
   const LocationInputForm({super.key, required this.viewModel});

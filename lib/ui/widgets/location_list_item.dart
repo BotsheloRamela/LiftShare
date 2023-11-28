@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../utils/constants.dart';
-import '../../viewmodels/base_lift_viewmodel.dart';
+import '../../viewmodels/lift_viewmodel.dart';
 
 Widget locationListItem(
-    BaseLiftViewModel viewModel,
+    LiftViewModel viewModel,
     int index,
     BuildContext context
     ) {

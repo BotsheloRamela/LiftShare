@@ -8,12 +8,14 @@ import 'package:liftshare/providers/user_provider.dart';
 import 'package:liftshare/ui/screens/main_screen.dart';
 import 'package:liftshare/ui/screens/onboarding/welcome_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_config/flutter_config.dart';
 
 import 'firebase_options.dart';
 
 Future<void> main() async {
   await dotenv.load(fileName: ".env");
   WidgetsFlutterBinding.ensureInitialized();
+  await FlutterConfig.loadEnvVariables();
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
