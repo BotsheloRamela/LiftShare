@@ -24,6 +24,8 @@ lib
 |   |   |-- lift_repository.dart
 |   |   |-- notification_repository.dart
 |   |   |-- user_repository.dart
+|-- providers
+|   |-- user_provider.dart
 |-- services
 |   |-- authentication_service.dart
 |   |-- firebase_service.dart
@@ -64,12 +66,13 @@ lib
 |   |   |-- ... (other reusable widgets)
 |-- utils
 |   |-- constants.dart
-|   |-- routes.dart
+|   |-- firebase_utils.dart
 |-- viewmodels
 |   |-- confirm_cancel_viewmodel.dart
 |   |-- lift_viewmodel.dart
 |   |-- onboarding_viewmodel.dart
 |   |-- search_viewmodel.dart
+|-- firebase_options.dart
 |-- main.dart
 ```
 
@@ -101,21 +104,19 @@ Explanation:
 Create a `.env` file in the root directory of the project and add the following:
 
 ```env
-# Firebase Configuration
-FIREBASE_API_KEY=your_firebase_api_key
-FIREBASE_PROJECT_ID=your_firebase_project_id
-FIREBASE_AUTH_DOMAIN=your_firebase_auth_domain
-FIREBASE_DATABASE_URL=your_firebase_database_url
-FIREBASE_STORAGE_BUCKET=your_firebase_storage_bucket
-FIREBASE_MESSAGING_SENDER_ID=your_firebase_messaging_sender_id
-FIREBASE_APP_ID=your_firebase_app_id
+# Firebase & Google Cloud Configuration
+ANDROID_FIREBASE_API_KEY=
+ANDROID_FIREBASE_APP_ID=
+IOS_FIREBASE_API_KEY=
+IOS_FIREBASE_APP_ID=
+FIREBASE_MESSAGING_SENDER_ID=
+FIREBASE_PROJECT_ID=
+FIREBASE_STORAGE_BUCKET=
+FIREBASE_IOS_BUNDLED_ID=
+GOOGLE_CLOUD_MAP_ID=
 
 # PayStack Configuration
 PAYSTACK_API_KEY=your_paystack_api_key
-
-# Google Maps Configuration
-GOOGLE_MAPS_API_KEY=your_google_maps_api_key
-
 ```
 
 Replace the placeholder values with your actual API keys and Firebase configuration.
