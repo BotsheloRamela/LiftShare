@@ -1,7 +1,13 @@
+import 'dart:math';
+import 'dart:typed_data';
+import 'dart:ui';
+import 'dart:ui' as ui;
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:liftshare/utils/constants.dart';
 
 import '../data/models/directions.dart';
 import '../data/models/lift.dart';
@@ -148,7 +154,7 @@ class LiftViewModel extends ChangeNotifier {
     }
   }
 
-  Future<Directions> getDirections(GeoPoint pickupLocationCoordinates, GeoPoint destinationLocationCoordinates) async {
+  Future<Directions> _getDirections(GeoPoint pickupLocationCoordinates, GeoPoint destinationLocationCoordinates) async {
     return await GoogleMapsService().getDirections(pickupLocationCoordinates, destinationLocationCoordinates);
   }
 
@@ -165,7 +171,7 @@ class LiftViewModel extends ChangeNotifier {
         title: lift.pickupLocationName,
         snippet: lift.pickupLocationAddress,
       ),
-      icon: BitmapDescriptor.defaultMarker,
+      icon: await _getMarkerIcon(lift.pickupLocationName, "Pickup"),
     );
 
     Marker destinationMarker = Marker(
@@ -178,7 +184,7 @@ class LiftViewModel extends ChangeNotifier {
         title: lift.destinationLocationName,
         snippet: lift.destinationLocationAddress,
       ),
-      icon: BitmapDescriptor.defaultMarker,
+      icon: await _getMarkerIcon(lift.destinationLocationName, "Destination"),
     );
 
     markers.add(pickupMarker);
@@ -187,19 +193,108 @@ class LiftViewModel extends ChangeNotifier {
     return markers;
   }
 
+  Future<BitmapDescriptor> _getMarkerIcon(String locationName, String caption) async {
+    final ui.PictureRecorder pictureRecorder = ui.PictureRecorder();
+    final Canvas canvas = Canvas(pictureRecorder);
+
+    const double width = 400.0;
+    const double height = 150.0;
+    const double borderRadius = 20.0;
+
+    final RRect roundedRect = RRect.fromRectAndRadius(
+      Rect.fromPoints(const Offset(0.0, 0.0), const Offset(width, height)),
+      const Radius.circular(borderRadius),
+    );
+
+    // Draw the rectangle
+    final Paint paintRect = Paint()..color = AppColors.buttonColor;
+    canvas.drawRRect(roundedRect, paintRect);
+
+    // Calculate responsive font size
+    final double fontSize = _calculateResponsiveFontSize(locationName, width, height);
+
+    final TextPainter textPainter = TextPainter(
+      text: TextSpan(
+        text: locationName,
+        style: TextStyle(fontSize: fontSize, color: Colors.white),
+      ),
+      textAlign: TextAlign.center,
+      textDirection: TextDirection.ltr,
+    );
+
+    textPainter.layout(minWidth: width, maxWidth: width);
+    textPainter.paint(canvas, Offset(0.0, (height - textPainter.height) - 13));
+
+    // Draw caption
+    const double captionFontSize = 38.0;
+    final TextPainter captionTextPainter = TextPainter(
+      text: TextSpan(
+        text: caption,
+        style: const TextStyle(fontSize: captionFontSize, color: AppColors.highlightColor), // Adjust color as needed
+      ),
+      textAlign: TextAlign.center,
+      textDirection: TextDirection.ltr,
+    );
+
+    captionTextPainter.layout(minWidth: width, maxWidth: width);
+    captionTextPainter.paint(
+        canvas,
+        Offset(0.0, (height + textPainter.height ) / 3 - captionTextPainter.height)
+    );
+
+    final img = await pictureRecorder.endRecording().toImage(width.toInt(), height.toInt());
+    final data = await img.toByteData(format: ui.ImageByteFormat.png);
+
+    return BitmapDescriptor.fromBytes(Uint8List.view(data!.buffer));
+  }
+
+  double _calculateResponsiveFontSize(String text, double width, double height) {
+    // Adjust this factor to control the responsiveness
+    const double responsivenessFactor = 0.8;
+
+    final double maxSize = min(width, height) * responsivenessFactor;
+
+    double fontSize = 48.0; // Default font size
+
+    while (true) {
+      final painter = TextPainter(
+        text: TextSpan(
+          text: text,
+          style: TextStyle(fontSize: fontSize),
+        ),
+        textDirection: TextDirection.ltr,
+      )..layout();
+
+      if (painter.width < width && painter.height < height) {
+        // The text fits within the marker
+        break;
+      }
+
+      fontSize -= 1.0;
+
+      if (fontSize < 8.0) {
+        // Minimum font size to prevent an infinite loop
+        break;
+      }
+    }
+
+    return fontSize;
+  }
+
   Future<Polyline> getPolyline(Lift lift) async {
     Directions directions =
-        await getDirections(lift.pickupLocationCoordinates, lift.destinationLocationCoordinates);
+        await _getDirections(lift.pickupLocationCoordinates, lift.destinationLocationCoordinates);
 
     return Polyline(
       polylineId: const PolylineId("route"),
       points: directions.polylinePoints
           .map((e) => LatLng(e.latitude, e.longitude))
           .toList(),
-      color: Colors.blue,
-      width: 2,
+      color: Colors.white,
+      width: 4,
     );
   }
+
 
   @override
   void dispose() {

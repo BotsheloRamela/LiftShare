@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -7,7 +8,6 @@ import 'package:liftshare/viewmodels/lift_offer_viewmodel.dart';
 
 import '../../../data/models/lift.dart';
 import '../../../utils/constants.dart';
-import '../../widgets/app_background.dart';
 import '../../widgets/default_app_bar.dart';
 
 class ConfirmedLiftOfferScreen extends StatefulWidget {
@@ -22,8 +22,8 @@ class ConfirmedLiftOfferScreen extends StatefulWidget {
 
 class _ConfirmedLiftOfferScreenState extends State<ConfirmedLiftOfferScreen> {
   GoogleMapController? _mapController;
-  final Set<Marker> _markers = {};
-  final Set<Polyline> _polylines = {};
+  Set<Marker> _markers = {};
+  Set<Polyline> _polylines = {};
   bool _isLoading = true;
 
   @override
@@ -62,63 +62,84 @@ class _ConfirmedLiftOfferScreenState extends State<ConfirmedLiftOfferScreen> {
         extendBodyBehindAppBar: true,
         backgroundColor: AppColors.backgroundColor,
         appBar: defaultAppBar(context, null),
-        body: Expanded(
-          child: Stack(
-            children: [
-              SizedBox(
-                height: 500,
-                width: double.infinity,
-                child: _isLoading
-                  ? const Center(
-                      child: CircularProgressIndicator(
-                        color: AppColors.gradientColor2,
-                      ),
-                    )
-                  : googleMap(lift, viewModel)
+        body: Stack(
+          children: [
+            SizedBox(
+              height: 500,
+              width: double.infinity,
+              child: _isLoading
+                ? const Center(
+                    child: CircularProgressIndicator(
+                      color: AppColors.gradientColor2,
+                    ),
+                  )
+                : googleMap(lift, viewModel)
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: SizedBox(
+                height: 400,
+                child: liftDetailsCard(lift)
               ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: SizedBox(
-                  height: 400,
-                  child: liftDetailsCard(lift)
-                ),
-              ),
-              // const Spacer(),
-              // GestureDetector(
-              //   onTap: () {
-              //     // TODO: Cancel lift
-              //   },
-              //   child: Container(
-              //     width: double.infinity,
-              //     alignment: Alignment.center,
-              //     height: 50,
-              //     decoration: BoxDecoration(
-              //       borderRadius: BorderRadius.circular(AppValues.largeBorderRadius),
-              //       border: Border.all(
-              //         color: AppColors.warningColor,
-              //         width: 1,
-              //       ),
-              //       color: AppColors.buttonColor,
-              //     ),
-              //     child: const Text(
-              //       "Cancel Lift",
-              //       style: TextStyle(
-              //         fontSize: 18,
-              //         fontWeight: FontWeight.w500,
-              //         color: AppColors.warningColor,
-              //       ),
-              //     ),
-              //   ),
-              // ),
-              // const SizedBox(height: 20),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 
+  GoogleMap googleMap(Lift lift, LiftOfferViewModel viewModel) {
+    // TODO: Make this a reusable widget
+
+    LatLng minLatLng(GeoPoint a, GeoPoint b) {
+      return LatLng(
+        a.latitude < b.latitude ? a.latitude : b.latitude,
+        a.longitude < b.longitude ? a.longitude : b.longitude,
+      );
+    }
+
+    LatLng maxLatLng(GeoPoint a, GeoPoint b) {
+      return LatLng(
+        a.latitude > b.latitude ? a.latitude : b.latitude,
+        a.longitude > b.longitude ? a.longitude : b.longitude,
+      );
+    }
+
+    // Calculate the bounds that include both pickup and destination locations
+    LatLngBounds bounds = LatLngBounds(
+      southwest: minLatLng(
+        lift.pickupLocationCoordinates,
+        lift.destinationLocationCoordinates,
+      ),
+      northeast: maxLatLng(
+        lift.pickupLocationCoordinates,
+        lift.destinationLocationCoordinates,
+      ),
+    );
+
+    return GoogleMap(
+      cloudMapId: dotenv.get("GOOGLE_CLOUD_MAP_ID"),
+      zoomControlsEnabled: false,
+      myLocationButtonEnabled: false,
+      initialCameraPosition: CameraPosition(
+        target: LatLng(
+          bounds.southwest.latitude + (bounds.northeast.latitude - bounds.southwest.latitude) / 2,
+          bounds.southwest.longitude + (bounds.northeast.longitude - bounds.southwest.longitude) / 2,
+        ),
+        zoom: 12,
+      ),
+      onMapCreated: (controller) {
+        setState(() {
+          _mapController = controller;
+        });
+      },
+      markers: _markers,
+      polylines: _polylines,
+    );
+  }
+
   Container liftDetailsCard(Lift lift) {
+    // TODO: Add a share lift button
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: const BoxDecoration(
@@ -139,32 +160,73 @@ class _ConfirmedLiftOfferScreenState extends State<ConfirmedLiftOfferScreen> {
             ),
           ),
           const SizedBox(height: 25),
-          liftInfo(lift)
+          liftInfo(lift),
+          const Spacer(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                child: GestureDetector(
+                  onTap: () {
+                    // TODO: Cancel lift
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(AppValues.largeBorderRadius),
+                      border: Border.all(
+                        color: AppColors.warningColor,
+                        width: 1,
+                      ),
+                      color: AppColors.backgroundColor.withOpacity(0.2),
+                    ),
+                    child: const Text(
+                      "Cancel Lift",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.warningColor,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 20),
+              GestureDetector(
+                onTap: () {
+                  // TODO: Launch Google Maps with directions
+                },
+                // TODO: Make this icon container a reusable widget
+                child: Container(
+                  width: 50,
+                  alignment: Alignment.center,
+                  height: 50,
+                  padding: const EdgeInsets.all(1),
+                  decoration: const BoxDecoration(
+                  gradient: AppColors.gradientBackground,
+                  borderRadius: BorderRadius.all(Radius.circular(AppValues.largeBorderRadius)),
+                  ),
+                  child: Container(
+                    margin: const EdgeInsets.all(1),
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(AppValues.largeBorderRadius - 3)),
+                      color: AppColors.buttonColor,
+                    ),
+                    alignment: Alignment.center,
+                    child: const Icon(
+                      Icons.directions,
+                      color: Colors.white,
+                      size: 30,
+                    ),
+                  )
+                ),
+              )
+            ]
+          ),
+          const SizedBox(height: 20),
         ],
       ),
-    );
-  }
-
-  GoogleMap googleMap(Lift lift, LiftOfferViewModel viewModel) {
-    // TODO: Make this a reusable widget
-    return GoogleMap(
-      cloudMapId: dotenv.get("GOOGLE_CLOUD_MAP_ID"),
-      zoomControlsEnabled: false,
-      myLocationButtonEnabled: false,
-      initialCameraPosition: CameraPosition(
-        target: LatLng(
-          lift.pickupLocationCoordinates.latitude,
-          lift.pickupLocationCoordinates.longitude,
-        ),
-        zoom: 15,
-      ),
-      onMapCreated: (controller) {
-        setState(() {
-          _mapController = controller;
-        });
-      },
-      markers: _markers,
-      polylines: _polylines,
     );
   }
 
@@ -173,56 +235,6 @@ class _ConfirmedLiftOfferScreenState extends State<ConfirmedLiftOfferScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  "Pickup",
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.highlightColor,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  lift.pickupLocationName,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-              ],
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  "Destination",
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.highlightColor,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  lift.destinationLocationName,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-              ],
-            )
-          ],
-        ),
         const SizedBox(height: 20),
         const Text(
           "Pickup Time",

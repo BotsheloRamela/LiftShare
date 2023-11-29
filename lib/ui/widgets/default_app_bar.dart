@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 
 import 'back_button.dart';
 
-PreferredSizeWidget defaultAppBar(BuildContext context, String screenName) {
+PreferredSizeWidget defaultAppBar(BuildContext context, String? screenName) {
   return AppBar(
     title: Text(
-      screenName,
+      screenName ?? "",
       style: const TextStyle(
         color: Colors.white,
         fontSize: 20,
