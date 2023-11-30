@@ -91,9 +91,13 @@ class LiftOfferViewModel extends LiftViewModel{
     notifyListeners();
   }
 
+  void deleteLift(String liftId) async {
+    await _liftRepository.deleteLift(liftId);
+    notifyListeners();
+  }
+
   void launchGoogleMaps(GeoPoint pickupLocationCoordinates, GeoPoint destinationLocationCoordinates) async {
     if (Platform.isAndroid) {
-      // Launch Google maps with geopoints on drive mode
       final AndroidIntent intent = AndroidIntent(
         action: 'action_view',
         data: Uri.encodeFull(

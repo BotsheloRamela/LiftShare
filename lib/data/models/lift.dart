@@ -16,6 +16,7 @@ class Lift {
   final int bookedSeats;
   final double tripPrice;
   final bool isLiftCompleted;
+  String? documentId;
 
   Lift({
     required this.driverId,

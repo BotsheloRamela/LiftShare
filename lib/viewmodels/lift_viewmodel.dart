@@ -101,7 +101,6 @@ class LiftViewModel extends ChangeNotifier {
 
       if (result.predictions != null) {
         _placePredictions = result.predictions!;
-        // String placeId = _placePredictions[0].placeId!;
         notifyListeners();
       }
     }
@@ -294,7 +293,6 @@ class LiftViewModel extends ChangeNotifier {
       width: 4,
     );
   }
-
 
   @override
   void dispose() {

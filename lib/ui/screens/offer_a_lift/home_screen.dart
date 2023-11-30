@@ -106,7 +106,7 @@ class _OfferALiftHomeScreenState extends State<OfferALiftHomeScreen> {
                     FutureBuilder<Lift>(
                       future: offerLiftViewModel.getOfferedLifts().then((value) => value.first),
                       builder: (context, snapshot) {
-                        if (snapshot.hasData) {
+                         if (snapshot.hasData) {
                           return Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -171,13 +171,13 @@ Widget noUpcomingLifts() {
   return Column(
     children: [
       // TODO: Fix lottie animation freezing
-      // Lottie.asset(
-      //   'assets/animations/not_found.json',
-      //   height: 150,
-      //   width: 150,
-      //   frameRate: FrameRate(60),
-      //   fit: BoxFit.cover,
-      // ),
+      Lottie.asset(
+        'assets/animations/not_found.json',
+        height: 150,
+        width: 150,
+        frameRate: FrameRate(60),
+        fit: BoxFit.cover,
+      ),
       const SizedBox(height: 20),
       const Text(
         "No upcoming lifts",

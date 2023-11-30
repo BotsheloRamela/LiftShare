@@ -168,7 +168,8 @@ class _ConfirmedLiftOfferScreenState extends State<ConfirmedLiftOfferScreen> {
               Expanded(
                 child: GestureDetector(
                   onTap: () {
-                    // TODO: Cancel lift
+                    viewModel.deleteLift(lift.documentId!);
+                    Navigator.pop(context);
                   },
                   child: Container(
                     alignment: Alignment.center,

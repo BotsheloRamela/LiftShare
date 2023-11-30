@@ -30,9 +30,12 @@ class LiftRepository {
           .where("isLiftCompleted", isEqualTo: false)
           .get();
 
-      List<Lift> lifts = querySnapshot.docs.map((doc) => Lift.fromDocument(doc)).toList();
+      List<Lift> lifts = querySnapshot.docs.map((doc) {
+        Lift lift = Lift.fromDocument(doc);
+        lift.documentId = doc.id;
+        return lift;
+      }).toList();
 
-      // print("Retrieved lifts: ${lifts.length}");
       return lifts;
     } catch (e) {
       print('Error searching lifts: $e');
@@ -45,6 +48,16 @@ class LiftRepository {
       await _firestore.collection("lifts").add(lift.toJson());
     } catch (e) {
       print('Error creating lift: $e');
+    }
+  }
+
+  Future<bool> deleteLift(String liftId) async {
+    try {
+      await _firestore.collection("lifts").doc(liftId).delete();
+      return true;
+    } catch (e) {
+      print('Error deleting lift: $e');
+      return false;
     }
   }
 }
