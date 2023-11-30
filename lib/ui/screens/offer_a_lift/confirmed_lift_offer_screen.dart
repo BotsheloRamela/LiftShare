@@ -79,7 +79,7 @@ class _ConfirmedLiftOfferScreenState extends State<ConfirmedLiftOfferScreen> {
               alignment: Alignment.bottomCenter,
               child: SizedBox(
                 height: 400,
-                child: liftDetailsCard(lift)
+                child: liftDetailsCard(lift, viewModel)
               ),
             ),
           ],
@@ -138,7 +138,7 @@ class _ConfirmedLiftOfferScreenState extends State<ConfirmedLiftOfferScreen> {
     );
   }
 
-  Container liftDetailsCard(Lift lift) {
+  Container liftDetailsCard(Lift lift, LiftOfferViewModel viewModel) {
     // TODO: Add a share lift button
     return Container(
       padding: const EdgeInsets.all(20),
@@ -195,7 +195,10 @@ class _ConfirmedLiftOfferScreenState extends State<ConfirmedLiftOfferScreen> {
               const SizedBox(width: 20),
               GestureDetector(
                 onTap: () {
-                  // TODO: Launch Google Maps with directions
+                  viewModel.launchGoogleMaps(
+                    lift.pickupLocationCoordinates,
+                    lift.destinationLocationCoordinates,
+                  );
                 },
                 // TODO: Make this icon container a reusable widget
                 child: Container(

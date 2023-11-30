@@ -1,4 +1,7 @@
 
+import 'dart:io';
+
+import 'package:android_intent/android_intent.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -86,5 +89,19 @@ class LiftOfferViewModel extends LiftViewModel{
   void onLocationSelected(int selectedLocationIndex,  String selectedLocation, BuildContext context) async {
     super.onLocationSelected(selectedLocationIndex, selectedLocation, context);
     notifyListeners();
+  }
+
+  void launchGoogleMaps(GeoPoint pickupLocationCoordinates, GeoPoint destinationLocationCoordinates) async {
+    if (Platform.isAndroid) {
+      // Launch Google maps with geopoints on drive mode
+      final AndroidIntent intent = AndroidIntent(
+        action: 'action_view',
+        data: Uri.encodeFull(
+            "https://www.google.com/maps/dir/?api=1&origin=${pickupLocationCoordinates.latitude},${pickupLocationCoordinates.longitude}&destination=${destinationLocationCoordinates.latitude},${destinationLocationCoordinates.longitude}&travelmode=driving&dir_action=navigate"),
+        package: 'com.google.android.apps.maps',
+      );
+
+      await intent.launch();
+    }
   }
 }

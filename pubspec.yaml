@@ -47,6 +47,7 @@ dependencies:
   intl: ^0.18.1
   flutter_config: ^2.0.2
   flutter_polyline_points: ^2.0.0
+  android_intent: ^2.0.2
 
 dev_dependencies:
   flutter_test:
