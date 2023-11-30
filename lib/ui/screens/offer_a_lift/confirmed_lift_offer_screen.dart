@@ -1,7 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:liftshare/utils/firebase_utils.dart';
 import 'package:liftshare/viewmodels/lift_offer_viewmodel.dart';
@@ -9,6 +7,7 @@ import 'package:liftshare/viewmodels/lift_offer_viewmodel.dart';
 import '../../../data/models/lift.dart';
 import '../../../utils/constants.dart';
 import '../../widgets/default_app_bar.dart';
+import '../../widgets/google_map.dart';
 
 class ConfirmedLiftOfferScreen extends StatefulWidget {
   final Lift lift;
@@ -21,7 +20,6 @@ class ConfirmedLiftOfferScreen extends StatefulWidget {
 }
 
 class _ConfirmedLiftOfferScreenState extends State<ConfirmedLiftOfferScreen> {
-  GoogleMapController? _mapController;
   Set<Marker> _markers = {};
   Set<Polyline> _polylines = {};
   bool _isLoading = true;
@@ -46,7 +44,6 @@ class _ConfirmedLiftOfferScreenState extends State<ConfirmedLiftOfferScreen> {
 
   @override
   void dispose() {
-    _mapController?.dispose();
     _markers.clear();
     _polylines.clear();
     super.dispose();
@@ -73,7 +70,7 @@ class _ConfirmedLiftOfferScreenState extends State<ConfirmedLiftOfferScreen> {
                       color: AppColors.gradientColor2,
                     ),
                   )
-                : googleMap(lift, viewModel)
+                : googleMap(lift, viewModel, _markers, _polylines)
             ),
             Align(
               alignment: Alignment.bottomCenter,
@@ -85,56 +82,6 @@ class _ConfirmedLiftOfferScreenState extends State<ConfirmedLiftOfferScreen> {
           ],
         ),
       ),
-    );
-  }
-
-  GoogleMap googleMap(Lift lift, LiftOfferViewModel viewModel) {
-    // TODO: Make this a reusable widget
-
-    LatLng minLatLng(GeoPoint a, GeoPoint b) {
-      return LatLng(
-        a.latitude < b.latitude ? a.latitude : b.latitude,
-        a.longitude < b.longitude ? a.longitude : b.longitude,
-      );
-    }
-
-    LatLng maxLatLng(GeoPoint a, GeoPoint b) {
-      return LatLng(
-        a.latitude > b.latitude ? a.latitude : b.latitude,
-        a.longitude > b.longitude ? a.longitude : b.longitude,
-      );
-    }
-
-    // Calculate the bounds that include both pickup and destination locations
-    LatLngBounds bounds = LatLngBounds(
-      southwest: minLatLng(
-        lift.pickupLocationCoordinates,
-        lift.destinationLocationCoordinates,
-      ),
-      northeast: maxLatLng(
-        lift.pickupLocationCoordinates,
-        lift.destinationLocationCoordinates,
-      ),
-    );
-
-    return GoogleMap(
-      cloudMapId: dotenv.get("GOOGLE_CLOUD_MAP_ID"),
-      zoomControlsEnabled: false,
-      myLocationButtonEnabled: false,
-      initialCameraPosition: CameraPosition(
-        target: LatLng(
-          bounds.southwest.latitude + (bounds.northeast.latitude - bounds.southwest.latitude) / 2,
-          bounds.southwest.longitude + (bounds.northeast.longitude - bounds.southwest.longitude) / 2,
-        ),
-        zoom: 12,
-      ),
-      onMapCreated: (controller) {
-        setState(() {
-          _mapController = controller;
-        });
-      },
-      markers: _markers,
-      polylines: _polylines,
     );
   }
 
