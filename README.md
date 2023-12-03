@@ -105,15 +105,15 @@ Create a `.env` file in the root directory of the project and add the following:
 
 ```env
 # Firebase & Google Cloud Configuration
-ANDROID_FIREBASE_API_KEY=
-ANDROID_FIREBASE_APP_ID=
-IOS_FIREBASE_API_KEY=
-IOS_FIREBASE_APP_ID=
-FIREBASE_MESSAGING_SENDER_ID=
-FIREBASE_PROJECT_ID=
-FIREBASE_STORAGE_BUCKET=
-FIREBASE_IOS_BUNDLED_ID=
-GOOGLE_CLOUD_MAP_ID=
+ANDROID_FIREBASE_API_KEY=your_firebase_api_key
+ANDROID_FIREBASE_APP_ID=your_firebase_app_id
+IOS_FIREBASE_API_KEY=your_firebase_api_key
+IOS_FIREBASE_APP_ID=your_firebase_app_id
+FIREBASE_MESSAGING_SENDER_ID=your_firebase_messaging_sender_id
+FIREBASE_PROJECT_ID=your_firebase_project_id
+FIREBASE_STORAGE_BUCKET=your_firebase_storage_bucket
+FIREBASE_IOS_BUNDLED_ID=your_firebase_ios_bundled_id
+GOOGLE_CLOUD_MAP_ID=your_google_cloud_map_id
 
 # PayStack Configuration
 PAYSTACK_API_KEY=your_paystack_api_key
