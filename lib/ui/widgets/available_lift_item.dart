@@ -5,8 +5,7 @@ import 'package:flutter/material.dart';
 import '../../utils/constants.dart';
 
 Widget availableLiftItem(
-    String driverImageUrl,
-    String driverName,
+    String locationImageUrl,
     String locationName,
     String date,
     int bookedSeats,
@@ -16,6 +15,7 @@ Widget availableLiftItem(
     height: 80,
     width: double.infinity,
     padding: const EdgeInsets.all(2),
+    margin: const EdgeInsets.only(bottom: 15),
     decoration: BoxDecoration(
       borderRadius: const BorderRadius.all(Radius.circular(AppValues.largeBorderRadius - 6)),
       gradient: AppColors.lightGradientBackground,
@@ -36,8 +36,7 @@ Widget availableLiftItem(
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               image: DecorationImage(
-                // TODO: Add functionality to check if driver image url is null and use default image if it is
-                image: NetworkImage(driverImageUrl),
+                image: NetworkImage(locationImageUrl),
                 fit: BoxFit.cover,
               ),
             ),
@@ -48,7 +47,10 @@ Widget availableLiftItem(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                driverName,
+                locationName,
+                maxLines: 1,
+                softWrap: false,
+                overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 18,
@@ -58,7 +60,7 @@ Widget availableLiftItem(
                 ),
               ),
               Text(
-                "$locationName - $date",
+                date,
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 14,
