@@ -46,17 +46,22 @@ Widget availableLiftItem(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                locationName,
-                maxLines: 1,
-                softWrap: false,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
-                  decoration: TextDecoration.none,
-                  fontFamily: 'Aeonik',
+              Container(
+                constraints: const BoxConstraints(
+                  maxWidth: 200,
+                ),
+                child: Text(
+                  locationName,
+                  maxLines: 1,
+                  softWrap: false,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                    decoration: TextDecoration.none,
+                    fontFamily: 'Aeonik',
+                  ),
                 ),
               ),
               Text(

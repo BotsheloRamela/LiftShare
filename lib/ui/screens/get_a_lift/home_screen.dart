@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:liftshare/data/models/lift.dart';
 import 'package:liftshare/ui/screens/get_a_lift/search_lift_screen.dart';
+import 'package:liftshare/ui/widgets/no_lifts_error.dart';
+import 'package:liftshare/utils/enums.dart';
+import 'package:liftshare/utils/firebase_utils.dart';
+import 'package:liftshare/viewmodels/lift_join_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 import '../../../data/models/app_user.dart';
@@ -36,92 +41,141 @@ class _GetALiftHomeScreenState extends State<GetALiftHomeScreen> {
   @override
   Widget build(BuildContext context) {
 
-    return SafeArea(
-      child: Scaffold(
-        extendBodyBehindAppBar: true,
-        appBar: homeAppBar(_user.photoURL),
-        body: DecoratedBox(
-          decoration: appBackground(),
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(
-                AppValues.screenPadding, AppValues.screenPadding,
-                AppValues.screenPadding, 0),
-            child: Align(
-              alignment: Alignment.topCenter,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 60),
-                  whereToButton(context, _user.uid ?? ""),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<LiftJoinViewModel>(
+          create: (_) => LiftJoinViewModel(_user.uid ?? ""),
+        )],
+      builder: (context, child) {
+        final LiftJoinViewModel viewModel = Provider.of<LiftJoinViewModel>(context, listen: true);
+        viewModel.getBookings();
+        viewModel.getAvailableLifts();
+        // print("Length: ${viewModel.getLifts.length}");
+        // print("UID ${_user.uid}");
+        return SafeArea(
+          child: Scaffold(
+              extendBodyBehindAppBar: true,
+              appBar: homeAppBar(_user.photoURL),
+              body: DecoratedBox(
+                decoration: appBackground(),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                      AppValues.screenPadding, AppValues.screenPadding,
+                      AppValues.screenPadding, 0),
+                  child: Align(
+                    alignment: Alignment.topCenter,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 60),
+                        whereToButton(context, _user.uid ?? ""),
+                        const SizedBox(height: 40),
 
-                  const SizedBox(height: 40),
-                  const Text(
-                    "Booked Lifts",
-                    style: TextStyle(
-                      color: AppColors.highlightColor,
-                      fontSize: 24,
-                      fontWeight: FontWeight.w500,
-                      decoration: TextDecoration.none,
-                      fontFamily: 'Aeonik',
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  SizedBox(
-                    height: 150,
-                    child: ListView.builder(
-                      itemCount: 5,
-                      scrollDirection: Axis.horizontal,
-                      physics: const BouncingScrollPhysics(),
-                      itemBuilder: (context, int index) {
-                        return Padding(
-                          padding: const EdgeInsets.only(right: 20.0), // Adjust the spacing as needed
-                          child: bookedLiftItem(
-                              "https://thezoneatrosebank.co.za/the_zone/uploads/EMB-2.jpg",
-                              "Rosebank Mall",
-                              "12 Dec 2023",
-                              "12:00 PM"
+                        viewModel.getLifts.isEmpty && viewModel.getBookedLifts.isEmpty ?
+                          Center(child: noLiftsFound(ErrorScreen.getALift)) :
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+
+                              FutureBuilder<Lift>(
+                                future: viewModel.getBookings().then((value) => value.first),
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasData) {
+                                    return Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        const Text(
+                                          "Booked Lifts",
+                                          style: TextStyle(
+                                            color: AppColors.highlightColor,
+                                            fontSize: 24,
+                                            fontWeight: FontWeight.w500,
+                                            decoration: TextDecoration.none,
+                                            fontFamily: 'Aeonik',
+                                          ),
+                                        ),
+                                        const SizedBox(height: 20),
+                                        ListView.builder(
+                                          shrinkWrap: true,
+                                          physics: const BouncingScrollPhysics(),
+                                          padding: const EdgeInsets.all(0),
+                                          itemCount: viewModel.getBookedLifts.length,
+                                          scrollDirection: Axis.horizontal,
+                                          itemBuilder: (context, index) {
+                                            Lift lift = viewModel.getBookedLifts[index];
+                                            return Padding(
+                                              padding: const EdgeInsets.only(right: 20.0),
+                                              child: bookedLiftItem(
+                                                  lift.destinationLocationPhoto,
+                                                  lift.destinationLocationName,
+                                                  formatFirebaseTimestamp(lift.departureTime),
+                                                  "12:00 PM"
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                        const SizedBox(height: 30),
+                                      ],
+                                    );
+                                  } else {
+                                    return const SizedBox(height: 0);
+                                  }
+                                },
+                              ),
+                              FutureBuilder<Lift>(
+                                  future: viewModel.getAvailableLifts().then((value) => value.first),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.hasData) {
+                                      return Column(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          const Text(
+                                            "Available Lifts",
+                                            style: TextStyle(
+                                              color: AppColors.highlightColor,
+                                              fontSize: 24,
+                                              fontWeight: FontWeight.w500,
+                                              decoration: TextDecoration.none,
+                                              fontFamily: 'Aeonik',
+                                            ),
+                                          ),
+                                          const SizedBox(height: 10),
+                                          ListView.builder(
+                                            shrinkWrap: true,
+                                            physics: const BouncingScrollPhysics(),
+                                            padding: const EdgeInsets.all(0),
+                                            itemCount: viewModel.getLifts.length,
+                                            itemBuilder: (context, index) {
+                                              Lift lift = viewModel.getLifts[index];
+                                              return availableLiftItem(
+                                                  lift.destinationLocationPhoto,
+                                                  lift.destinationLocationName,
+                                                  formatFirebaseTimestamp(lift.departureTime),
+                                                  lift.bookedSeats, lift.availableSeats
+                                              );
+                                            },
+                                          )
+                                        ],
+                                      );
+                                    } else {
+                                      return const SizedBox(height: 0);
+                                    }
+                                  }
+                              )
+                            ],
                           ),
-                        );
-                      },
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 30),
-                  const Text(
-                    "Available Lifts",
-                    style: TextStyle(
-                      color: AppColors.highlightColor,
-                      fontSize: 24,
-                      fontWeight: FontWeight.w500,
-                      decoration: TextDecoration.none,
-                      fontFamily: 'Aeonik',
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  SizedBox(
-                    height: 310,
-                    child: ListView.builder(
-                      padding: const EdgeInsets.only(top: 20),
-                      itemCount: 5,
-                      scrollDirection: Axis.vertical,
-                      physics: const BouncingScrollPhysics(),
-                      itemBuilder: (context, int index) {
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 20.0), // Adjust the spacing as needed
-                          child: availableLiftItem(
-                            "https://images.unsplash.com/photo-1565990315145-9b2f389b0927?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                            "John Doe", "Rosebank Mall", "12 Dec", 3, 4
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ),
+                ),
+              )
           ),
-        )
-      ),
+        );
+      },
     );
   }
 }

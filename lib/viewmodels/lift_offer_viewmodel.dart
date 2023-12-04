@@ -5,10 +5,8 @@ import 'package:android_intent/android_intent.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:liftshare/viewmodels/lift_viewmodel.dart';
 
-import '../data/models/directions.dart';
 import '../data/models/lift.dart';
 import '../data/repositories/lift_repository.dart';
 
@@ -86,7 +84,7 @@ class LiftOfferViewModel extends LiftViewModel{
   }
 
   @override
-  void onLocationSelected(int selectedLocationIndex,  String selectedLocation, BuildContext context) async {
+  void onLocationSelected(int selectedLocationIndex, String selectedLocation, BuildContext context) async {
     super.onLocationSelected(selectedLocationIndex, selectedLocation, context);
     notifyListeners();
   }

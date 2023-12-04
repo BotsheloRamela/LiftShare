@@ -60,4 +60,45 @@ class LiftRepository {
       return false;
     }
   }
+
+  Future<List<Lift>> getBookingsByUserId(String userId) async {
+    try {
+      var querySnapshot = await _firestore
+          .collection("bookings")
+          .where("userId", isEqualTo: userId)
+          .get();
+
+      List<Lift> lifts = querySnapshot.docs.map((doc) {
+        Lift lift = Lift.fromDocument(doc);
+        lift.documentId = doc.id;
+        return lift;
+      }).toList();
+
+      return lifts;
+    } catch (e) {
+      print('Error searching lifts: $e');
+      return [];
+    }
+  }
+
+  Future<List<Lift>> getAvailableLifts(String userId) async {
+    try {
+      var querySnapshot = await _firestore
+          .collection("lifts")
+          .where("isLiftCompleted", isEqualTo: false)
+          .where("driverId", isNotEqualTo: userId)
+          .get();
+
+      List<Lift> lifts = querySnapshot.docs.map((doc) {
+        Lift lift = Lift.fromDocument(doc);
+        lift.documentId = doc.id;
+        return lift;
+      }).toList();
+
+      return lifts;
+    } catch (e) {
+      print('Error searching lifts: $e');
+      return [];
+    }
+  }
 }

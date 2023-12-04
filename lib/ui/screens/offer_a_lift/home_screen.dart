@@ -7,6 +7,7 @@ import 'package:liftshare/data/models/app_user.dart';
 import 'package:liftshare/data/models/lift.dart';
 import 'package:liftshare/ui/screens/offer_a_lift/confirmed_lift_offer_screen.dart';
 import 'package:liftshare/ui/screens/offer_a_lift/offer_lift_screen.dart';
+import 'package:liftshare/ui/widgets/no_lifts_error.dart';
 import 'package:liftshare/utils/firebase_utils.dart';
 import 'package:liftshare/viewmodels/lift_offer_viewmodel.dart';
 import 'package:lottie/lottie.dart';
@@ -14,6 +15,7 @@ import 'package:provider/provider.dart';
 
 import '../../../providers/user_provider.dart';
 import '../../../utils/constants.dart';
+import '../../../utils/enums.dart';
 import '../../widgets/app_background.dart';
 import '../../widgets/home_app_bar.dart';
 
@@ -45,9 +47,7 @@ class _OfferALiftHomeScreenState extends State<OfferALiftHomeScreen> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<LiftOfferViewModel>(
-          create: (_) => LiftOfferViewModel(
-            _user.uid ?? "",
-          ),
+          create: (_) => LiftOfferViewModel(_user.uid ?? ""),
         )
       ],
       builder: (context, child) {
@@ -152,7 +152,7 @@ class _OfferALiftHomeScreenState extends State<OfferALiftHomeScreen> {
                             ],
                           );
                         } else {
-                          return Center(child: noUpcomingLifts());
+                          return Center(child: noLiftsFound(ErrorScreen.offerALift));
                         }
                       }
                     ),
@@ -167,31 +167,7 @@ class _OfferALiftHomeScreenState extends State<OfferALiftHomeScreen> {
   }
 }
 
-Widget noUpcomingLifts() {
-  return Column(
-    children: [
-      // TODO: Fix lottie animation freezing
-      Lottie.asset(
-        'assets/animations/not_found.json',
-        height: 150,
-        width: 150,
-        frameRate: FrameRate(60),
-        fit: BoxFit.cover,
-      ),
-      const SizedBox(height: 20),
-      const Text(
-        "No upcoming lifts",
-        style: TextStyle(
-          color: AppColors.highlightColor,
-          fontSize: 18,
-          fontWeight: FontWeight.w500,
-          decoration: TextDecoration.none,
-          fontFamily: 'Aeonik',
-        ),
-      ),
-    ],
-  );
-}
+
 
 Widget offeredLiftListItem(
     String locationName,
@@ -242,14 +218,22 @@ Widget offeredLiftListItem(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                locationName,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
-                  decoration: TextDecoration.none,
-                  fontFamily: 'Aeonik',
+              Container(
+                constraints: const BoxConstraints(
+                  maxWidth: 200,
+                ),
+                child: Text(
+                  locationName,
+                  maxLines: 1,
+                  softWrap: false,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                    decoration: TextDecoration.none,
+                    fontFamily: 'Aeonik',
+                  ),
                 ),
               ),
               Text(

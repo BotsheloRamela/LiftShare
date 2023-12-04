@@ -1,0 +1,5 @@
+
+enum ErrorScreen {
+  offerALift,
+  getALift,
+}
