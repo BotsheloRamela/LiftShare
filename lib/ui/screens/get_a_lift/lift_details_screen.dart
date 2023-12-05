@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:liftshare/data/models/lift.dart';
 import 'package:liftshare/ui/widgets/action_button.dart';
@@ -252,10 +253,46 @@ class _LiftDetailsScreenState extends State<LiftDetailsScreen> {
           const Spacer(),
           if (buttonsVisible)
             viewModel.isLiftBooked
-                ? cancelButton("Cancel Lift", () {
-              viewModel.cancelLift(lift.documentId);
-              Navigator.pop(context);
-            })
+                ? Row(
+                  children: [
+                    Expanded(
+                      child: cancelButton("Cancel Lift", () {
+                        viewModel.cancelLift(lift.documentId);
+                        Navigator.pop(context);
+                      }),
+                    ),
+                    const SizedBox(width: 10),
+                    GestureDetector(
+                      onTap: () {
+                        // TODO: Open chat screen
+                      },
+                      child: Container(
+                        width: 50,
+                        alignment: Alignment.center,
+                        height: 50,
+                        padding: const EdgeInsets.all(1),
+                        decoration: const BoxDecoration(
+                          gradient: AppColors.gradientBackground,
+                          borderRadius: BorderRadius.all(Radius.circular(AppValues.largeBorderRadius)),
+                        ),
+                        child: Container(
+                          margin: const EdgeInsets.all(1),
+                          decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(AppValues.largeBorderRadius - 3)),
+                            color: AppColors.buttonColor,
+                          ),
+                          alignment: Alignment.center,
+                          child: SvgPicture.asset(
+                            "assets/icons/chat_icon.svg",
+                            color: Colors.white,
+                            width: 30,
+                            height: 30,
+                          ),
+                        )
+                      ),
+                    )
+                  ],
+                )
                 : actionButton("Join Lift", () {
               viewModel.bookLift(lift.documentId);
               Navigator.pop(context);
