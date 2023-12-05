@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:liftshare/ui/widgets/cancel_button.dart';
 import 'package:liftshare/utils/firebase_utils.dart';
 import 'package:liftshare/viewmodels/lift_offer_viewmodel.dart';
 
@@ -8,6 +9,7 @@ import '../../../data/models/lift.dart';
 import '../../../utils/constants.dart';
 import '../../widgets/default_app_bar.dart';
 import '../../widgets/google_map.dart';
+import '../../widgets/maps_navigate_button.dart';
 
 class ConfirmedLiftOfferScreen extends StatefulWidget {
   final Lift lift;
@@ -76,7 +78,7 @@ class _ConfirmedLiftOfferScreenState extends State<ConfirmedLiftOfferScreen> {
               alignment: Alignment.bottomCenter,
               child: SizedBox(
                 height: 400,
-                child: liftDetailsCard(lift, viewModel)
+                child: _liftDetailsCard(lift, viewModel)
               ),
             ),
           ],
@@ -85,7 +87,7 @@ class _ConfirmedLiftOfferScreenState extends State<ConfirmedLiftOfferScreen> {
     );
   }
 
-  Container liftDetailsCard(Lift lift, LiftOfferViewModel viewModel) {
+  Container _liftDetailsCard(Lift lift, LiftOfferViewModel viewModel) {
     // TODO: Add a share lift button
     return Container(
       padding: const EdgeInsets.all(20),
@@ -113,32 +115,10 @@ class _ConfirmedLiftOfferScreenState extends State<ConfirmedLiftOfferScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Expanded(
-                child: GestureDetector(
-                  onTap: () {
-                    viewModel.deleteLift(lift.documentId!);
-                    Navigator.pop(context);
-                  },
-                  child: Container(
-                    alignment: Alignment.center,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(AppValues.largeBorderRadius),
-                      border: Border.all(
-                        color: AppColors.warningColor,
-                        width: 1,
-                      ),
-                      color: AppColors.backgroundColor.withOpacity(0.2),
-                    ),
-                    child: const Text(
-                      "Cancel Lift",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
-                        color: AppColors.warningColor,
-                      ),
-                    ),
-                  ),
-                ),
+                child: cancelButton("Cancel Lift", () {
+                  viewModel.deleteLift(lift.documentId);
+                  Navigator.pop(context);
+                }),
               ),
               const SizedBox(width: 20),
               GestureDetector(
@@ -148,30 +128,7 @@ class _ConfirmedLiftOfferScreenState extends State<ConfirmedLiftOfferScreen> {
                     lift.destinationLocationCoordinates,
                   );
                 },
-                // TODO: Make this icon container a reusable widget
-                child: Container(
-                  width: 50,
-                  alignment: Alignment.center,
-                  height: 50,
-                  padding: const EdgeInsets.all(1),
-                  decoration: const BoxDecoration(
-                  gradient: AppColors.gradientBackground,
-                  borderRadius: BorderRadius.all(Radius.circular(AppValues.largeBorderRadius)),
-                  ),
-                  child: Container(
-                    margin: const EdgeInsets.all(1),
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(AppValues.largeBorderRadius - 3)),
-                      color: AppColors.buttonColor,
-                    ),
-                    alignment: Alignment.center,
-                    child: const Icon(
-                      Icons.directions,
-                      color: Colors.white,
-                      size: 30,
-                    ),
-                  )
-                ),
+                child: mapsNavigateButton(),
               )
             ]
           ),

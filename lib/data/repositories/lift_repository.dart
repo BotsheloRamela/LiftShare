@@ -17,8 +17,7 @@ class LiftRepository {
 
       return lifts;
     } catch (e) {
-      print('Error searching lifts: $e');
-      return [];
+      rethrow;
     }
   }
 
@@ -32,13 +31,12 @@ class LiftRepository {
 
       List<Lift> lifts = querySnapshot.docs.map((doc) {
         Lift lift = Lift.fromDocument(doc);
-        lift.documentId = doc.id;
         return lift;
       }).toList();
 
       return lifts;
     } catch (e) {
-      print('Error searching lifts: $e');
+      // print('Error searching lifts: $e');
       return [];
     }
   }
@@ -70,13 +68,12 @@ class LiftRepository {
 
       List<Lift> lifts = querySnapshot.docs.map((doc) {
         Lift lift = Lift.fromDocument(doc);
-        lift.documentId = doc.id;
         return lift;
       }).toList();
 
       return lifts;
     } catch (e) {
-      print('Error searching lifts: $e');
+      // print('Error searching lifts: $e');
       return [];
     }
   }
@@ -87,18 +84,104 @@ class LiftRepository {
           .collection("lifts")
           .where("isLiftCompleted", isEqualTo: false)
           .where("driverId", isNotEqualTo: userId)
+          .where("availableSeats", isGreaterThan: 0)
           .get();
 
       List<Lift> lifts = querySnapshot.docs.map((doc) {
         Lift lift = Lift.fromDocument(doc);
-        lift.documentId = doc.id;
         return lift;
       }).toList();
 
       return lifts;
     } catch (e) {
-      print('Error searching lifts: $e');
       return [];
+    }
+  }
+
+  Future<String> getUserImage(String userId) async {
+    try {
+      var querySnapshot = await _firestore
+          .collection("users")
+          .where("uid", isEqualTo: userId)
+          .get();
+
+      String? userImage = querySnapshot.docs.map((doc) => doc["profilePhoto"]).toList()[0];
+
+      userImage ??= "https://johannesippen.com/img/blog/humans-not-users/header.jpg";
+
+      return userImage;
+    } catch (e) {
+      return "https://johannesippen.com/img/blog/humans-not-users/header.jpg";
+    }
+  }
+
+  Future<String> getUserName(String userId) async {
+    try {
+      var querySnapshot = await _firestore
+          .collection("users")
+          .where("uid", isEqualTo: userId)
+          .get();
+
+      String? userName = querySnapshot.docs.map((doc) => doc["name"]).toList()[0];
+
+      return userName ?? "Unknown";
+    } catch (e) {
+      return "Unknown";
+    }
+  }
+
+  Future<void> bookLift(String liftId, String userId) async {
+    try {
+      await _firestore.collection("bookings").add({
+        "liftId": liftId,
+        "userId": userId,
+        "paid": false,
+      });
+      await _firestore.collection("lifts").doc(liftId).update({
+        "bookedSeats": FieldValue.increment(1),
+      });
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> cancelLift(String liftId, String userId) async {
+    try {
+      // delete the booking from the bookings collection where the liftId and userId match
+      var querySnapshot = await _firestore
+          .collection("bookings")
+          .where("liftId", isEqualTo: liftId)
+          .where("userId", isEqualTo: userId)
+          .get();
+      querySnapshot.docs.forEach((doc) async {
+        await _firestore.collection("bookings").doc(doc.id).delete();
+      });
+
+
+      await _firestore.collection("lifts").doc(liftId).update({
+        "bookedSeats": FieldValue.increment(-1),
+      });
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<bool> isLiftBooked(String liftId, String userId) async {
+    try {
+      var querySnapshot = await _firestore
+          .collection("bookings")
+          .where("liftId", isEqualTo: liftId)
+          .where("userId", isEqualTo: userId)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      print('Error checking if lift is booked: $e');
+      return false;
     }
   }
 }

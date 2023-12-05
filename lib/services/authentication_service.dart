@@ -3,8 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class FirebaseAuthService {
-  FirebaseAuth _auth = FirebaseAuth.instance;
-  FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<User?> signUpWithEmailAndPassword(String email, String password, String name) async {
     try {
@@ -107,7 +107,7 @@ class FirebaseAuthService {
         if (!doc.exists) {
           await _firestore.collection("users").doc(user.uid).set({
             "uid": user.uid,
-            "name": user.displayName,
+            "name": user.displayName, // FIXME: This is null
             "email": user.email,
             "profilePhoto": user.photoURL,
           });
@@ -116,8 +116,11 @@ class FirebaseAuthService {
 
       return user;
     } catch (e) {
-      print(e);
       throw Exception('An error occurred while signing in with Google.');
     }
   }
+
+  // TODO: Implement signOut
+
+  // TODO: Implement resetPassword
 }

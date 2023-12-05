@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:liftshare/data/models/lift.dart';
+import 'package:liftshare/ui/screens/get_a_lift/lift_details_screen.dart';
 import 'package:liftshare/ui/screens/get_a_lift/search_lift_screen.dart';
 import 'package:liftshare/ui/widgets/no_lifts_error.dart';
 import 'package:liftshare/utils/enums.dart';
@@ -50,8 +51,7 @@ class _GetALiftHomeScreenState extends State<GetALiftHomeScreen> {
         final LiftJoinViewModel viewModel = Provider.of<LiftJoinViewModel>(context, listen: true);
         viewModel.getBookings();
         viewModel.getAvailableLifts();
-        // print("Length: ${viewModel.getLifts.length}");
-        // print("UID ${_user.uid}");
+
         return SafeArea(
           child: Scaffold(
               extendBodyBehindAppBar: true,
@@ -125,6 +125,7 @@ class _GetALiftHomeScreenState extends State<GetALiftHomeScreen> {
                                   }
                                 },
                               ),
+
                               FutureBuilder<Lift>(
                                   future: viewModel.getAvailableLifts().then((value) => value.first),
                                   builder: (context, snapshot) {
@@ -151,11 +152,23 @@ class _GetALiftHomeScreenState extends State<GetALiftHomeScreen> {
                                             itemCount: viewModel.getLifts.length,
                                             itemBuilder: (context, index) {
                                               Lift lift = viewModel.getLifts[index];
-                                              return availableLiftItem(
-                                                  lift.destinationLocationPhoto,
-                                                  lift.destinationLocationName,
-                                                  formatFirebaseTimestamp(lift.departureTime),
-                                                  lift.bookedSeats, lift.availableSeats
+                                              return GestureDetector(
+                                                onTap: () {
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) => LiftDetailsScreen(
+                                                            lift: lift,
+                                                            joinLiftViewModel: viewModel)
+                                                      )
+                                                  );
+                                                },
+                                                child: availableLiftItem(
+                                                    lift.destinationLocationPhoto,
+                                                    lift.destinationLocationName,
+                                                    formatFirebaseTimestamp(lift.departureTime),
+                                                    lift.bookedSeats, lift.availableSeats
+                                                ),
                                               );
                                             },
                                           )
