@@ -86,35 +86,63 @@ class LiftRepository {
     }
   }
 
-  Future<List<Lift>> getAvailableLifts(String userId) async {
+  Future<List<Lift>> getAvailableLifts(String userId, String? destination) async {
     final liftsCollection = _firestore.collection("lifts");
     final bookingsCollection = _firestore.collection("bookings");
+    List<Lift> availableLifts = [];
 
     try {
-      var liftsSnapshot = await liftsCollection
-          .where("isLiftCompleted", isEqualTo: false)
-          .where("driverId", isNotEqualTo: userId)
-          // .where("bookedSeats", isNotEqualTo: "availableSeats")
-          .get();
-
-      List<Lift> availableLifts = [];
-
-      for (var doc in liftsSnapshot.docs) {
-        Lift lift = Lift.fromDocument(doc);
-        // Check if the lift is already booked by the current user
-        var bookingQuerySnapshot = await bookingsCollection
-            .where("liftId", isEqualTo: lift.documentId)
-            .where("userId", isEqualTo: userId)
+      if (destination != null) {
+        var liftsSnapshot = await liftsCollection
+            .where("isLiftCompleted", isEqualTo: false)
+            .where("destinationLocationName", isEqualTo: destination)
             .get();
 
-        // If the lift is not booked by the current user, add it to the list of available lifts
-        if (bookingQuerySnapshot.docs.isEmpty) {
-          availableLifts.add(lift);
-        }
-      }
+        for (var doc in liftsSnapshot.docs) {
+          if (doc["driverId"] != userId && doc["bookedSeats"] != doc["availableSeats"]) {
+            Lift lift = Lift.fromDocument(doc);
 
-      return availableLifts;
+            // Check if the lift is already booked by the current user
+            var bookingQuerySnapshot = await bookingsCollection
+                .where("liftId", isEqualTo: lift.documentId)
+                .where("userId", isEqualTo: userId)
+                .get();
+
+            // If the lift is not booked by the current user, add it to the list of available lifts
+            if (bookingQuerySnapshot.docs.isEmpty) {
+              availableLifts.add(lift);
+            }
+          }
+        }
+
+        return availableLifts;
+      } else {
+        var liftsSnapshot = await liftsCollection
+            .where("isLiftCompleted", isEqualTo: false)
+            .where("driverId", isNotEqualTo: userId)
+            .get();
+
+        for (var doc in liftsSnapshot.docs) {
+          if (doc["bookedSeats"] != doc["availableSeats"]) {
+            Lift lift = Lift.fromDocument(doc);
+
+            // Check if the lift is already booked by the current user
+            var bookingQuerySnapshot = await bookingsCollection
+                .where("liftId", isEqualTo: lift.documentId)
+                .where("userId", isEqualTo: userId)
+                .get();
+
+            // If the lift is not booked by the current user, add it to the list of available lifts
+            if (bookingQuerySnapshot.docs.isEmpty) {
+              availableLifts.add(lift);
+            }
+          }
+        }
+
+        return availableLifts;
+      }
     } catch (e) {
+      // print('Error getting available lifts: $e');
       return [];
     }
   }
