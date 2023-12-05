@@ -92,55 +92,34 @@ class LiftRepository {
     List<Lift> availableLifts = [];
 
     try {
+      var liftsQuery = liftsCollection.where("isLiftCompleted", isEqualTo: false);
+
       if (destination != null) {
-        var liftsSnapshot = await liftsCollection
-            .where("isLiftCompleted", isEqualTo: false)
-            .where("destinationLocationName", isEqualTo: destination)
-            .get();
-
-        for (var doc in liftsSnapshot.docs) {
-          if (doc["driverId"] != userId && doc["bookedSeats"] != doc["availableSeats"]) {
-            Lift lift = Lift.fromDocument(doc);
-
-            // Check if the lift is already booked by the current user
-            var bookingQuerySnapshot = await bookingsCollection
-                .where("liftId", isEqualTo: lift.documentId)
-                .where("userId", isEqualTo: userId)
-                .get();
-
-            // If the lift is not booked by the current user, add it to the list of available lifts
-            if (bookingQuerySnapshot.docs.isEmpty) {
-              availableLifts.add(lift);
-            }
-          }
-        }
-
-        return availableLifts;
+        liftsQuery = liftsQuery.where("destinationLocationName", isEqualTo: destination);
       } else {
-        var liftsSnapshot = await liftsCollection
-            .where("isLiftCompleted", isEqualTo: false)
-            .where("driverId", isNotEqualTo: userId)
-            .get();
+        liftsQuery = liftsQuery.where("driverId", isNotEqualTo: userId);
+      }
 
-        for (var doc in liftsSnapshot.docs) {
-          if (doc["bookedSeats"] != doc["availableSeats"]) {
-            Lift lift = Lift.fromDocument(doc);
+      var liftsSnapshot = await liftsQuery.get();
 
-            // Check if the lift is already booked by the current user
-            var bookingQuerySnapshot = await bookingsCollection
-                .where("liftId", isEqualTo: lift.documentId)
-                .where("userId", isEqualTo: userId)
-                .get();
+      for (var doc in liftsSnapshot.docs) {
+        if (doc["driverId"] != userId && doc["bookedSeats"] < doc["availableSeats"]) {
+          Lift lift = Lift.fromDocument(doc);
 
-            // If the lift is not booked by the current user, add it to the list of available lifts
-            if (bookingQuerySnapshot.docs.isEmpty) {
-              availableLifts.add(lift);
-            }
+          // Check if the lift is already booked by the current user
+          var bookingQuerySnapshot = await bookingsCollection
+              .where("liftId", isEqualTo: lift.documentId)
+              .where("userId", isEqualTo: userId)
+              .get();
+
+          // If the lift is not booked by the current user, add it to the list of available lifts
+          if (bookingQuerySnapshot.docs.isEmpty) {
+            availableLifts.add(lift);
           }
         }
-
-        return availableLifts;
       }
+
+      return availableLifts;
     } catch (e) {
       // print('Error getting available lifts: $e');
       return [];
