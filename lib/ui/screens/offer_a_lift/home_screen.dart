@@ -10,7 +10,6 @@ import 'package:liftshare/ui/screens/offer_a_lift/offer_lift_screen.dart';
 import 'package:liftshare/ui/widgets/no_lifts_error.dart';
 import 'package:liftshare/utils/firebase_utils.dart';
 import 'package:liftshare/viewmodels/lift_offer_viewmodel.dart';
-import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 import '../../../providers/user_provider.dart';
@@ -96,11 +95,11 @@ class _OfferALiftHomeScreenState extends State<OfferALiftHomeScreen> {
                     AppValues.screenPadding, 0),
                 child: Column(
                   mainAxisAlignment: offerLiftViewModel.getLifts.isNotEmpty
-                      ? MainAxisAlignment.start
-                      : MainAxisAlignment.center,
+                      ? MainAxisAlignment.center
+                      : MainAxisAlignment.start,
                   crossAxisAlignment: offerLiftViewModel.getLifts.isNotEmpty
-                      ? CrossAxisAlignment.start
-                      : CrossAxisAlignment.center,
+                      ? CrossAxisAlignment.center
+                      : CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 60),
                     FutureBuilder<Lift>(
