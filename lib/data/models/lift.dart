@@ -38,6 +38,8 @@ class Lift {
   });
 
   factory Lift.fromDocument(DocumentSnapshot doc) {
+    Timestamp timestamp = doc["departureTime"];
+    DateTime? departureTime = timestamp.toDate();
     return Lift(
       driverId: doc["driverId"],
       pickupLocationID: doc["pickupLocationID"],
@@ -54,7 +56,7 @@ class Lift {
       bookedSeats: doc["bookedSeats"],
       tripPrice: doc["tripPrice"],
       isLiftCompleted: doc["isLiftCompleted"],
-      documentId: doc.id,
+      documentId: doc.id ?? "",
     );
   }
 

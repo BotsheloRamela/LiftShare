@@ -66,33 +66,54 @@ class LiftRepository {
           .where("userId", isEqualTo: userId)
           .get();
 
-      List<Lift> lifts = querySnapshot.docs.map((doc) {
-        Lift lift = Lift.fromDocument(doc);
-        return lift;
-      }).toList();
+      List<Lift> lifts = [];
+
+      for (var doc in querySnapshot.docs) {
+
+        var liftQuerySnapshot = await _firestore
+            .collection("lifts")
+            .doc(doc["liftId"])
+            .get();
+
+        Lift lift = Lift.fromDocument(liftQuerySnapshot);
+
+        lifts.add(lift);
+      }
 
       return lifts;
     } catch (e) {
-      // print('Error searching lifts: $e');
       return [];
     }
   }
 
   Future<List<Lift>> getAvailableLifts(String userId) async {
+    final liftsCollection = _firestore.collection("lifts");
+    final bookingsCollection = _firestore.collection("bookings");
+
     try {
-      var querySnapshot = await _firestore
-          .collection("lifts")
+      var liftsSnapshot = await liftsCollection
           .where("isLiftCompleted", isEqualTo: false)
           .where("driverId", isNotEqualTo: userId)
-          .where("availableSeats", isGreaterThan: 0)
+          // .where("bookedSeats", isNotEqualTo: "availableSeats")
           .get();
 
-      List<Lift> lifts = querySnapshot.docs.map((doc) {
-        Lift lift = Lift.fromDocument(doc);
-        return lift;
-      }).toList();
+      List<Lift> availableLifts = [];
 
-      return lifts;
+      for (var doc in liftsSnapshot.docs) {
+        Lift lift = Lift.fromDocument(doc);
+        // Check if the lift is already booked by the current user
+        var bookingQuerySnapshot = await bookingsCollection
+            .where("liftId", isEqualTo: lift.documentId)
+            .where("userId", isEqualTo: userId)
+            .get();
+
+        // If the lift is not booked by the current user, add it to the list of available lifts
+        if (bookingQuerySnapshot.docs.isEmpty) {
+          availableLifts.add(lift);
+        }
+      }
+
+      return availableLifts;
     } catch (e) {
       return [];
     }

@@ -49,8 +49,8 @@ class _GetALiftHomeScreenState extends State<GetALiftHomeScreen> {
         )],
       builder: (context, child) {
         final LiftJoinViewModel viewModel = Provider.of<LiftJoinViewModel>(context, listen: true);
-        viewModel.getBookings();
-        viewModel.getAvailableLifts();
+        viewModel.getLiftsAvailable();
+        viewModel.getLiftBookings();
 
         return SafeArea(
           child: Scaffold(
@@ -82,7 +82,7 @@ class _GetALiftHomeScreenState extends State<GetALiftHomeScreen> {
                               FutureBuilder<Lift>(
                                 future: viewModel.getBookings().then((value) => value.first),
                                 builder: (context, snapshot) {
-                                  if (snapshot.hasData) {
+                                  if (snapshot.hasData || viewModel.getBookedLifts.isNotEmpty) {
                                     return Column(
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,24 +98,41 @@ class _GetALiftHomeScreenState extends State<GetALiftHomeScreen> {
                                           ),
                                         ),
                                         const SizedBox(height: 20),
-                                        ListView.builder(
-                                          shrinkWrap: true,
-                                          physics: const BouncingScrollPhysics(),
-                                          padding: const EdgeInsets.all(0),
-                                          itemCount: viewModel.getBookedLifts.length,
-                                          scrollDirection: Axis.horizontal,
-                                          itemBuilder: (context, index) {
-                                            Lift lift = viewModel.getBookedLifts[index];
-                                            return Padding(
-                                              padding: const EdgeInsets.only(right: 20.0),
-                                              child: bookedLiftItem(
-                                                  lift.destinationLocationPhoto,
-                                                  lift.destinationLocationName,
-                                                  formatFirebaseTimestamp(lift.departureTime),
-                                                  "12:00 PM"
-                                              ),
-                                            );
-                                          },
+                                        SizedBox(
+                                          height: 150,
+                                          child: ListView.builder(
+                                            shrinkWrap: true,
+                                            physics: const BouncingScrollPhysics(),
+                                            padding: const EdgeInsets.all(0),
+                                            itemCount: viewModel.getBookedLifts.length,
+                                            scrollDirection: Axis.horizontal,
+                                            itemBuilder: (context, index) {
+                                              if (index == viewModel.getBookedLifts.length) {
+
+                                              }
+                                              Lift lift = viewModel.getBookedLifts[index];
+                                              return Padding(
+                                                padding: const EdgeInsets.only(right: 20.0),
+                                                child: GestureDetector(
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) => LiftDetailsScreen(
+                                                                lift: lift,
+                                                                joinLiftViewModel: viewModel)
+                                                        )
+                                                    );
+                                                  },
+                                                  child: bookedLiftItem(
+                                                      lift.destinationLocationPhoto,
+                                                      lift.destinationLocationName,
+                                                      formatFirebaseTimestamp(lift.departureTime)
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          ),
                                         ),
                                         const SizedBox(height: 30),
                                       ],
@@ -129,7 +146,7 @@ class _GetALiftHomeScreenState extends State<GetALiftHomeScreen> {
                               FutureBuilder<Lift>(
                                   future: viewModel.getAvailableLifts().then((value) => value.first),
                                   builder: (context, snapshot) {
-                                    if (snapshot.hasData) {
+                                    if (snapshot.hasData || viewModel.getLifts.isNotEmpty) {
                                       return Column(
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -241,7 +258,7 @@ Widget whereToButton(BuildContext context, String userUid) {
   );
 }
 
-Widget bookedLiftItem(String locationImageUrl, String locationName, String date, String time) {
+Widget bookedLiftItem(String locationImageUrl, String locationName, String date) {
   return Container(
     height: 150,
     width: 150,
@@ -260,42 +277,36 @@ Widget bookedLiftItem(String locationImageUrl, String locationName, String date,
         ),
       ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
             locationName,
+            textAlign: TextAlign.center,
             style: const TextStyle(
               color: Colors.white,
-              fontSize: 16,
+              fontSize: 18,
               fontWeight: FontWeight.w500,
               decoration: TextDecoration.none,
               fontFamily: 'Aeonik',
             ),
           ),
-          const SizedBox(height: 8),
-          Text(
-            date,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 13,
-              fontWeight: FontWeight.normal,
-              decoration: TextDecoration.none,
-              fontFamily: 'Aeonik',
+          const SizedBox(height: 10),
+          SizedBox(
+            width: 90,
+            child: Text(
+              date,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 12,
+                fontWeight: FontWeight.normal,
+                decoration: TextDecoration.none,
+                fontFamily: 'Aeonik',
+              ),
             ),
           ),
-          const SizedBox(height: 1),
-          Text(
-            time,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 13,
-              fontWeight: FontWeight.normal,
-              decoration: TextDecoration.none,
-              fontFamily: 'Aeonik',
-            ),
-          ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 15),
         ],
       ),
     ),

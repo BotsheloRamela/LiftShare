@@ -38,13 +38,11 @@ class LiftOfferViewModel extends LiftViewModel{
   void getUpcomingLifts() async {
     _offeredLifts = await _liftRepository.getUpcomingLiftsByUserId(_userID);
     _offeredLifts.sort((a, b) => a.departureTime.compareTo(b.departureTime));
-    notifyListeners();
   }
 
   Future<List<Lift>> getOfferedLifts() async {
     List<Lift> lifts = await _liftRepository.getUpcomingLiftsByUserId(_userID);
     lifts.sort((a, b) => a.departureTime.compareTo(b.departureTime));
-    notifyListeners();
     return lifts;
   }
 

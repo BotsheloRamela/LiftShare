@@ -32,6 +32,7 @@ class _LiftDetailsScreenState extends State<LiftDetailsScreen> {
   @override
   void initState() {
     super.initState();
+    _loadData();
     // Delay the visibility of buttons by 1 second
     Timer(const Duration(seconds: 1), () {
       setState(() {
@@ -58,6 +59,10 @@ class _LiftDetailsScreenState extends State<LiftDetailsScreen> {
     _markers.clear();
     _polylines.clear();
     super.dispose();
+  }
+
+  void _loadData() {
+
   }
 
   @override
