@@ -95,11 +95,11 @@ class _OfferALiftHomeScreenState extends State<OfferALiftHomeScreen> {
                     AppValues.screenPadding, 0),
                 child: Column(
                   mainAxisAlignment: offerLiftViewModel.getLifts.isNotEmpty
-                      ? MainAxisAlignment.center
-                      : MainAxisAlignment.start,
+                      ? MainAxisAlignment.start
+                      : MainAxisAlignment.center,
                   crossAxisAlignment: offerLiftViewModel.getLifts.isNotEmpty
-                      ? CrossAxisAlignment.center
-                      : CrossAxisAlignment.start,
+                      ? CrossAxisAlignment.start
+                      : CrossAxisAlignment.center,
                   children: [
                     const SizedBox(height: 60),
                     FutureBuilder<Lift>(
@@ -151,7 +151,10 @@ class _OfferALiftHomeScreenState extends State<OfferALiftHomeScreen> {
                             ],
                           );
                         } else {
-                          return Center(child: noLiftsFound(ErrorScreen.offerALift));
+                          return Align(
+                            alignment: Alignment.center,
+                            child: noLiftsFound(ErrorScreen.offerALift)
+                          );
                         }
                       }
                     ),
