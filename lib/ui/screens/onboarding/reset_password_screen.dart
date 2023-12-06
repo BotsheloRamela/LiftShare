@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:liftshare/ui/widgets/default_app_bar.dart';
 
 import '../../../utils/constants.dart';
 import '../../widgets/app_background.dart';
@@ -22,22 +23,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     return SafeArea(
       child: Scaffold(
           extendBodyBehindAppBar: true,
-          appBar: AppBar(
-            title: const Text(
-              'Reset Password',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                decoration: TextDecoration.none,
-                fontFamily: 'Aeonik',
-              ),
-            ),
-            centerTitle: true,
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            leading: backButton(context),
-          ),
+          appBar: defaultAppBar(context, "Reset Password"),
           body: DecoratedBox(
             decoration: appBackground(),
             child: Padding(
