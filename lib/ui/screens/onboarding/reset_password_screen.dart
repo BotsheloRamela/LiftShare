@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:liftshare/ui/screens/onboarding/welcome_screen.dart';
 import 'package:liftshare/ui/widgets/default_app_bar.dart';
 
 import '../../../utils/constants.dart';
@@ -150,7 +151,10 @@ Widget _resetPasswordButton(BuildContext context) {
   return GestureDetector(
     onTap: () {
       // TODO: Implement reset password functionality
-      Navigator.pop(context);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const WelcomeScreen())
+      );
     },
     child: Container(
         height: 60,

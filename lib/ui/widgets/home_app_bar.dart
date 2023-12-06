@@ -2,8 +2,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:liftshare/utils/constants.dart';
 
-PreferredSizeWidget homeAppBar(String? userPhotoUrl) {
+import '../screens/user/profile_screen.dart';
+
+PreferredSizeWidget homeAppBar(String? userPhotoUrl, BuildContext context) {
   return AppBar(
     title: const Text(
       'LiftShare',
@@ -33,29 +36,25 @@ PreferredSizeWidget homeAppBar(String? userPhotoUrl) {
         )
       )
     ],
-    leading: userPhotoUrl != null ? GestureDetector(
+    leading: GestureDetector(
       onTap: () {
-        // TODO: Navigate to account/profile screen
+        Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const ProfileScreen())
+        );
       },
       child: Container(
         width: 10,
         height: 10,
-        margin: const EdgeInsets.only(left: 15, top: 12, bottom: 12),
+        margin: const EdgeInsets.only(left: 13, top: 8, bottom: 8),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           image: DecorationImage(
-            image: NetworkImage(userPhotoUrl ?? ''),
+            image: NetworkImage(userPhotoUrl ?? AppValues.defaultUserImg),
             fit: BoxFit.cover,
           ),
         ),
       ),
-    ) : Container(
-      height: 20,
-      width: 20,
-      margin: const EdgeInsets.only(left: 15, top: 10, bottom: 10),
-      child: SvgPicture.asset(
-        'assets/icons/user_avatar_icon.svg',
-      ),
-    ),
+    )
   );
 }

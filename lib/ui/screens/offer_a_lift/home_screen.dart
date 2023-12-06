@@ -86,7 +86,7 @@ class _OfferALiftHomeScreenState extends State<OfferALiftHomeScreen> {
               },
 
             ),
-            appBar: homeAppBar(_user.photoURL),
+            appBar: homeAppBar(_user.photoURL, context),
             body: DecoratedBox(
               decoration: appBackground(),
               child: Padding(

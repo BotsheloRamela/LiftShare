@@ -43,4 +43,5 @@ class AppColors {
 class AppValues {
   static const double screenPadding = 25;
   static const double largeBorderRadius = 15;
+  static const String defaultUserImg = "https://johannesippen.com/img/blog/humans-not-users/header.jpg";
 }

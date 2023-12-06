@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 
 import '../../utils/constants.dart';
 
-Widget userIcon(String imageUrl, double size) {
+Widget userIcon(String? imageUrl, double size) {
   return Container(
     width: size,
     height: size,
@@ -17,7 +17,7 @@ Widget userIcon(String imageUrl, double size) {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         image: DecorationImage(
-          image: NetworkImage(imageUrl),
+          image: NetworkImage(imageUrl ?? AppValues.defaultUserImg),
           fit: BoxFit.cover,
         ),
       ),

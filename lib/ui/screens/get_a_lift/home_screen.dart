@@ -55,7 +55,7 @@ class _GetALiftHomeScreenState extends State<GetALiftHomeScreen> {
         return SafeArea(
           child: Scaffold(
               extendBodyBehindAppBar: true,
-              appBar: homeAppBar(_user.photoURL),
+              appBar: homeAppBar(_user.photoURL, context),
               body: DecoratedBox(
                 decoration: appBackground(),
                 child: Padding(

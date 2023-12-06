@@ -1,6 +1,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:liftshare/data/models/lift.dart';
+import 'package:liftshare/utils/constants.dart';
 
 class LiftRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -135,11 +136,11 @@ class LiftRepository {
 
       String? userImage = querySnapshot.docs.map((doc) => doc["profilePhoto"]).toList()[0];
 
-      userImage ??= "https://johannesippen.com/img/blog/humans-not-users/header.jpg";
+      userImage ??= AppValues.defaultUserImg;
 
       return userImage;
     } catch (e) {
-      return "https://johannesippen.com/img/blog/humans-not-users/header.jpg";
+      return AppValues.defaultUserImg;
     }
   }
 
