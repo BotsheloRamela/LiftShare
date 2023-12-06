@@ -8,6 +8,7 @@ import 'package:liftshare/data/models/lift.dart';
 import 'package:liftshare/ui/widgets/action_button.dart';
 import 'package:liftshare/ui/widgets/cancel_button.dart';
 import 'package:liftshare/ui/widgets/default_app_bar.dart';
+import 'package:liftshare/ui/widgets/user_icon.dart';
 import 'package:liftshare/utils/firebase_utils.dart';
 import 'package:liftshare/viewmodels/lift_join_viewmodel.dart';
 
@@ -124,25 +125,7 @@ class _LiftDetailsScreenState extends State<LiftDetailsScreen> {
             children: [
               Row(
                 children: [
-                  Container(
-                    width: 60,
-                    alignment: Alignment.center,
-                    height: 60,
-                    padding: const EdgeInsets.all(3),
-                    decoration: const BoxDecoration(
-                      gradient: AppColors.gradientBackground,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          image: NetworkImage(viewModel.getDriverImage),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                  ),
+                  userIcon(viewModel.getDriverImage, 60),
                   const SizedBox(width: 10),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
