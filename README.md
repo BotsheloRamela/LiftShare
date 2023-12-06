@@ -78,15 +78,19 @@ lib
 
 Explanation:
 
-- `app`: Contains the main file (main.dart) that initializes the app.
 - `data`: Manages data-related concerns such as models and repositories.
     - `models`: Data models representing entities like User, Lift, and Notification.
     - `repositories`: Classes responsible for handling data operations for each entity.
-- `ui`: Contains UI-related components, organized by screens and functionality.
-- `screens`: Divided into subfolders based on the user journey or feature.
-- `utils`: Houses constants and route definitions.
-- `viewmodels`: Manages the application's logic, following the MVVM pattern.
+- `providers`: Contains provider classes for managing state.
 - `services`: Handles external services like Firebase, PayStack, Google Maps, and in-app messaging.
+- `ui`: Contains UI-related components, organized by screens and functionality.
+    - `screens`: Divided into sub-folders based on the user journey or feature.
+    - `widgets`: Reusable widgets used across multiple screens.
+- `utils`: Contains utility classes and constants used throughout the app
+- `viewmodels`: Manages the application's logic, following the MVVM pattern.
+- `firebase_options.dart`: Contains Firebase configuration options.
+- `main.dart`: The entry point of the application
+
 
 
 
