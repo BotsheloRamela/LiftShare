@@ -38,13 +38,13 @@ class LiftJoinViewModel extends LiftViewModel {
   }
 
   void getLiftsAvailable() async {
-    _availableLifts = await _liftRepository.getAvailableLifts(_userID);
+    _availableLifts = await _liftRepository.getAvailableLifts(_userID, null);
     _availableLifts.sort((a, b) => a.departureTime.compareTo(b.departureTime));
     notifyListeners();
   }
 
   Future<List<Lift>> getAvailableLifts() async {
-    List<Lift> lifts = await _liftRepository.getAvailableLifts(_userID);
+    List<Lift> lifts = await _liftRepository.getAvailableLifts(_userID, null);
     lifts.sort((a, b) => a.departureTime.compareTo(b.departureTime));
     return lifts;
   }
@@ -72,10 +72,10 @@ class LiftJoinViewModel extends LiftViewModel {
     notifyListeners();
   }
 
-  // @override
-  // void dispose() {
-  //   _availableLifts.clear();
-  //   _bookedLifts.clear();
-  //   super.dispose();
-  // }
+  @override
+  void dispose() {
+    _availableLifts.clear();
+    _bookedLifts.clear();
+    super.dispose();
+  }
 }

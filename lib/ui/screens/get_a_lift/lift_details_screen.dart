@@ -17,8 +17,9 @@ import '../../widgets/google_map.dart';
 class LiftDetailsScreen extends StatefulWidget {
   final Lift lift;
   final LiftJoinViewModel joinLiftViewModel;
+  final VoidCallback? onClose;
 
-  const LiftDetailsScreen({Key? key, required this.lift, required this.joinLiftViewModel}) : super(key: key);
+  LiftDetailsScreen({required this.lift, required this.joinLiftViewModel, this.onClose});
 
   @override
   State<LiftDetailsScreen> createState() => _LiftDetailsScreenState();
@@ -33,7 +34,6 @@ class _LiftDetailsScreenState extends State<LiftDetailsScreen> {
   @override
   void initState() {
     super.initState();
-    _loadData();
     // Delay the visibility of buttons by 1 second
     Timer(const Duration(seconds: 1), () {
       setState(() {
@@ -59,12 +59,10 @@ class _LiftDetailsScreenState extends State<LiftDetailsScreen> {
   void dispose() {
     _markers.clear();
     _polylines.clear();
+    widget.onClose?.call();
     super.dispose();
   }
 
-  void _loadData() {
-
-  }
 
   @override
   Widget build(BuildContext context) {

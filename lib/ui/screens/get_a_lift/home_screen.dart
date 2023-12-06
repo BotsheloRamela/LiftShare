@@ -107,9 +107,7 @@ class _GetALiftHomeScreenState extends State<GetALiftHomeScreen> {
                                             itemCount: viewModel.getBookedLifts.length,
                                             scrollDirection: Axis.horizontal,
                                             itemBuilder: (context, index) {
-                                              if (index == viewModel.getBookedLifts.length) {
 
-                                              }
                                               Lift lift = viewModel.getBookedLifts[index];
                                               return Padding(
                                                 padding: const EdgeInsets.only(right: 20.0),

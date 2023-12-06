@@ -3,13 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:liftshare/ui/widgets/default_app_bar.dart';
 import 'package:liftshare/ui/widgets/location_input_form.dart';
+import 'package:liftshare/viewmodels/lift_join_viewmodel.dart';
 import 'package:liftshare/viewmodels/lift_search_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:lottie/lottie.dart';
 
+import '../../../data/models/lift.dart';
 import '../../../utils/constants.dart';
+import '../../../utils/firebase_utils.dart';
 import '../../widgets/app_background.dart';
+import '../../widgets/available_lift_item.dart';
 import '../../widgets/location_list_item.dart';
+import 'lift_details_screen.dart';
 
 class SearchForLiftScreen extends StatefulWidget {
   final String userUid;
@@ -20,6 +25,7 @@ class SearchForLiftScreen extends StatefulWidget {
 }
 
 class _SearchForLiftScreenState extends State<SearchForLiftScreen> {
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -31,8 +37,9 @@ class _SearchForLiftScreenState extends State<SearchForLiftScreen> {
         ),
       ],
       builder: (context, child) {
-        final viewModel = context.watch<LiftSearchViewModel>();
-        viewModel.setLiftsSearchCallback(() => _displayBottomSheet(context));
+        final viewModel = Provider.of<LiftSearchViewModel>(context, listen: true);
+        viewModel.setLiftsSearchCallback(() => _displayBottomSheet(context, viewModel));
+
         return SafeArea(
           child: Scaffold(
             extendBodyBehindAppBar: true,
@@ -79,57 +86,122 @@ class _SearchForLiftScreenState extends State<SearchForLiftScreen> {
       },
     );
   }
-  
-  Future<void> _displayBottomSheet(BuildContext context) {
-    // TODO: Add functionality to check if lifts are available or not and display appropriate message
-    // TODO: If there are lifts available, display them in a list
+
+  // Callback function to close the bottom sheet
+  void closeBottomSheet() {
+    Navigator.pop(context);
+  }
+
+  Future<void> _displayBottomSheet(BuildContext context, LiftSearchViewModel viewModel) async {
+
     return showModalBottomSheet(
         context: context,
-        backgroundColor: AppColors.buttonColor,
+        backgroundColor: AppColors.backgroundColor,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(AppValues.largeBorderRadius),
             topRight: Radius.circular(AppValues.largeBorderRadius),
           ),
         ),
-        builder: (context) => SizedBox(
-          height: 350,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(height: 10),
-              Lottie.asset(
-                'assets/animations/not_found.json',
-                height: 150,
-                width: 150,
-                frameRate: FrameRate(60),
-                fit: BoxFit.cover,
-              ),
-              const SizedBox(height: 10),
-              const Text(
-                "Oops, no lifts available for this trip",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
-                  decoration: TextDecoration.none,
-                  fontFamily: 'Aeonik',
+        builder: (context) {
+          return SizedBox(
+            height: 350,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(height: 10),
+                FutureBuilder<Lift>(
+                    future: viewModel.getAvailableLiftsByDestination().then((value) => value.first),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData || viewModel.getAvailableLifts.isNotEmpty) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const Text(
+                                "Available Lifts to your Destination",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                  decoration: TextDecoration.none,
+                                  fontFamily: 'Aeonik',
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+                              ListView.builder(
+                                shrinkWrap: true,
+                                physics: const BouncingScrollPhysics(),
+                                padding: const EdgeInsets.all(0),
+                                itemCount: viewModel.getAvailableLifts.length,
+                                itemBuilder: (context, index) {
+                                  Lift lift = viewModel.getAvailableLifts[index];
+                                  return GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => LiftDetailsScreen(
+                                                lift: lift,
+                                                joinLiftViewModel: LiftJoinViewModel(widget.userUid),
+                                                onClose: closeBottomSheet
+                                          )
+                                      ));
+                                    },
+                                    child: availableLiftItem(
+                                        lift.destinationLocationPhoto,
+                                        lift.destinationLocationName,
+                                        formatFirebaseTimestamp(lift.departureTime),
+                                        lift.bookedSeats, lift.availableSeats
+                                    ),
+                                  );
+                                },
+                              )
+                            ],
+                          ),
+                        );
+                      } else {
+                        return Column(
+                          children: [
+                            Lottie.asset(
+                              'assets/animations/not_found.json',
+                              height: 150,
+                              width: 150,
+                              frameRate: FrameRate(60),
+                              fit: BoxFit.cover,
+                            ),
+                            const SizedBox(height: 10),
+                            const Text(
+                              "Oops, no lifts available for this trip",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
+                                decoration: TextDecoration.none,
+                                fontFamily: 'Aeonik',
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            const Text(
+                              "Try searching for another trip",
+                              style: TextStyle(
+                                color: AppColors.highlightColor,
+                                fontSize: 16,
+                                fontWeight: FontWeight.normal,
+                                decoration: TextDecoration.none,
+                                fontFamily: 'Aeonik',
+                              ),
+                            ),
+                          ],
+                        );
+                      }
+                    }
                 ),
-              ),
-              const SizedBox(height: 10),
-              const Text(
-                "Try searching for another trip",
-                style: TextStyle(
-                  color: AppColors.highlightColor,
-                  fontSize: 16,
-                  fontWeight: FontWeight.normal,
-                  decoration: TextDecoration.none,
-                  fontFamily: 'Aeonik',
-                ),
-              ),
-            ],
-          ),
-        )
+              ],
+            ),
+          );
+        }
     );
   }
 }
