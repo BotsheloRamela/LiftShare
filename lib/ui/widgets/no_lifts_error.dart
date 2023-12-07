@@ -17,7 +17,11 @@ Widget noLiftsFound(ErrorScreen errorScreen) {
       ),
       const SizedBox(height: 20),
       Text(
-        errorScreen == ErrorScreen.offerALift ? "No upcoming lifts" : "No Bookings or Lifts Available",
+        errorScreen == ErrorScreen.offerALift
+            ? "No upcoming lifts"
+            : (errorScreen == ErrorScreen.getALift
+              ? "No Bookings or Lifts Available"
+              : "No Activity"),
         style: const TextStyle(
           color: AppColors.highlightColor,
           fontSize: 18,
