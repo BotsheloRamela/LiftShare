@@ -170,8 +170,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 const SizedBox(height: 15),
                 // Delete Account Button
                 GestureDetector(
-                  onTap: () {
-                    // TODO: Call delete account method & navigate to Welcome Screen
+                  onTap: () async {
+                    await _authService.deleteUser();
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (_) => const WelcomeScreen())
+                    );
                   },
                   child: Container(
                     height: 60,
