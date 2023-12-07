@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import '../data/models/directions.dart';
 
 class GoogleMapsService {
-  
+
   Future<String?> fetchPlace(Uri uri, {Map<String, String>? headers}) async {
     try {
       final response = await http.get(uri, headers: headers);

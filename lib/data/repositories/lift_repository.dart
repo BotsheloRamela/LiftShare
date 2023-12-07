@@ -42,6 +42,25 @@ class LiftRepository {
     }
   }
 
+  Future<List<Lift>> getOfferedLiftsByUserId(String userId) async {
+    try {
+      var querySnapshot = await _firestore
+          .collection("lifts")
+          .where("driverId", isEqualTo: userId)
+          .get();
+
+      List<Lift> lifts = querySnapshot.docs.map((doc) {
+        Lift lift = Lift.fromDocument(doc);
+        return lift;
+      }).toList();
+
+      return lifts;
+    } catch (e) {
+      // print('Error searching lifts: $e');
+      return [];
+    }
+  }
+
   Future<void> createLift(Lift lift) async {
     try {
       await _firestore.collection("lifts").add(lift.toJson());
