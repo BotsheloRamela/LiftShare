@@ -120,7 +120,15 @@ class FirebaseAuthService {
     }
   }
 
-  // TODO: Implement signOut
+  Future<void> signOut() async {
+    await _auth.signOut();
+  }
 
-  // TODO: Implement resetPassword
+  Future<void> resetPassword(String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+    } catch (e) {
+      throw Exception('An error occurred while resetting password.');
+    }
+  }
 }
