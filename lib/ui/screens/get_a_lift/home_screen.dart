@@ -30,6 +30,7 @@ class _GetALiftHomeScreenState extends State<GetALiftHomeScreen> {
   void initState() {
     super.initState();
     _getUser();
+    setState(() {});
   }
 
   Future<void> _getUser() async {
