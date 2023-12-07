@@ -108,25 +108,25 @@ class _GetALiftHomeScreenState extends State<GetALiftHomeScreen> {
                                             itemCount: viewModel.getBookedLifts.length,
                                             scrollDirection: Axis.horizontal,
                                             itemBuilder: (context, index) {
-
                                               Lift lift = viewModel.getBookedLifts[index];
+
                                               return Padding(
                                                 padding: const EdgeInsets.only(right: 20.0),
                                                 child: GestureDetector(
                                                   onTap: () {
                                                     Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) => LiftDetailsScreen(
-                                                                lift: lift,
-                                                                joinLiftViewModel: viewModel)
-                                                        )
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) => LiftDetailsScreen(
+                                                          lift: lift,
+                                                          joinLiftViewModel: viewModel)
+                                                      )
                                                     );
                                                   },
                                                   child: bookedLiftItem(
-                                                      lift.destinationLocationPhoto,
-                                                      lift.destinationLocationName,
-                                                      formatFirebaseTimestamp(lift.departureTime)
+                                                    lift.destinationLocationPhoto,
+                                                    lift.destinationLocationName,
+                                                    formatFirebaseTimestamp(lift.departureTime)
                                                   ),
                                                 ),
                                               );

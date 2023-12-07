@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:liftshare/ui/screens/activity/home_screen.dart';
 import 'package:liftshare/ui/screens/get_a_lift/home_screen.dart';
 import 'package:liftshare/ui/screens/offer_a_lift/home_screen.dart';
 
@@ -15,7 +16,7 @@ class _MainScreenState extends State<MainScreen> {
   final List<Widget> _children = [
     const OfferALiftHomeScreen(),
     const GetALiftHomeScreen(),
-    const GetALiftHomeScreen()
+    const ActivityHomeScreen()
   ];
 
   @override
