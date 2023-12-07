@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:liftshare/ui/screens/onboarding/welcome_screen.dart';
 import 'package:liftshare/ui/widgets/default_app_bar.dart';
 
+import '../../../services/authentication_service.dart';
 import '../../../utils/constants.dart';
 import '../../widgets/app_background.dart';
 import '../../widgets/back_button.dart';
@@ -101,80 +102,81 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       ),
     );
   }
-}
 
-Widget _emailTextField(controller) {
-  return TextFormField(
-    controller: controller,
-    keyboardType: TextInputType.emailAddress,
-    decoration: InputDecoration(
-      labelText: 'Email',
-      filled: true,
-      fillColor: AppColors.buttonColor,
-      labelStyle: const TextStyle(
-        color: AppColors.highlightColor,
+  Widget _emailTextField(controller) {
+    return TextFormField(
+      controller: controller,
+      keyboardType: TextInputType.emailAddress,
+      decoration: InputDecoration(
+        labelText: 'Email',
+        filled: true,
+        fillColor: AppColors.buttonColor,
+        labelStyle: const TextStyle(
+          color: AppColors.highlightColor,
+          fontSize: 16,
+          fontWeight: FontWeight.normal,
+          decoration: TextDecoration.none,
+          fontFamily: 'Aeonik',
+        ),
+        enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: AppColors.enabledBorderColor,
+              width: 1.5,
+            ),
+            borderRadius: const BorderRadius.all(
+                Radius.circular(AppValues.largeBorderRadius)
+            )
+        ),
+        focusedBorder: const OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Colors.white,
+              width: 1.5,
+            ),
+            borderRadius: BorderRadius.all(
+                Radius.circular(AppValues.largeBorderRadius)
+            )
+        ),
+      ),
+      style: const TextStyle(
+        color: Colors.white,
         fontSize: 16,
         fontWeight: FontWeight.normal,
         decoration: TextDecoration.none,
         fontFamily: 'Aeonik',
       ),
-      enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: AppColors.enabledBorderColor,
-            width: 1.5,
-          ),
-          borderRadius: const BorderRadius.all(
-              Radius.circular(AppValues.largeBorderRadius)
-          )
-      ),
-      focusedBorder: const OutlineInputBorder(
-          borderSide: BorderSide(
+    );
+  }
+
+  Widget _resetPasswordButton(BuildContext context) {
+    return GestureDetector(
+      onTap: () async {
+        await FirebaseAuthService().resetPassword(emailController.text);
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => const WelcomeScreen())
+        );
+      },
+      child: Container(
+          height: 60,
+          width: double.infinity,
+          decoration: const BoxDecoration(
             color: Colors.white,
-            width: 1.5,
+            borderRadius: BorderRadius.all(Radius.circular(AppValues.largeBorderRadius)),
           ),
-          borderRadius: BorderRadius.all(
-              Radius.circular(AppValues.largeBorderRadius)
+          child: const Center(
+            child: Text(
+              'Reset',
+              style: TextStyle(
+                color: AppColors.backgroundColor,
+                fontSize: 20,
+                decoration: TextDecoration.none,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Aeonik',
+              ),
+            ),
           )
       ),
-    ),
-    style: const TextStyle(
-      color: Colors.white,
-      fontSize: 16,
-      fontWeight: FontWeight.normal,
-      decoration: TextDecoration.none,
-      fontFamily: 'Aeonik',
-    ),
-  );
+    );
+  }
 }
 
-Widget _resetPasswordButton(BuildContext context) {
-  return GestureDetector(
-    onTap: () {
-      // TODO: Implement reset password functionality
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const WelcomeScreen())
-      );
-    },
-    child: Container(
-        height: 60,
-        width: double.infinity,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(AppValues.largeBorderRadius)),
-        ),
-        child: const Center(
-          child: Text(
-            'Reset',
-            style: TextStyle(
-              color: AppColors.backgroundColor,
-              fontSize: 20,
-              decoration: TextDecoration.none,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Aeonik',
-            ),
-          ),
-        )
-    ),
-  );
-}

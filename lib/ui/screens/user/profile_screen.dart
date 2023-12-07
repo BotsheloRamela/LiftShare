@@ -126,7 +126,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 // Reset Password Button
                 GestureDetector(
                   onTap: () async {
-                    await _authService.resetPassword(_user.email!);
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (_) => const ResetPasswordScreen())
