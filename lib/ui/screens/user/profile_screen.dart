@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:liftshare/services/authentication_service.dart';
 import 'package:liftshare/ui/screens/onboarding/reset_password_screen.dart';
+import 'package:liftshare/ui/screens/onboarding/welcome_screen.dart';
 import 'package:liftshare/ui/widgets/default_app_bar.dart';
 import 'package:liftshare/ui/widgets/user_icon.dart';
 import 'package:provider/provider.dart';
@@ -34,9 +36,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
+
+    FirebaseAuthService _authService = FirebaseAuthService();
+
     return SafeArea(
       child: Scaffold(
         extendBodyBehindAppBar: true,
@@ -76,8 +80,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 const Spacer(),
                 // Logout Button
                 GestureDetector(
-                  onTap: () {
-                    // TODO: Call logout function & navigate to Welcome Screen
+                  onTap: () async {
+                    await _authService.signOut();
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (_) => const WelcomeScreen())
+                    );
                   },
                   child: Container(
                     height: 60,
