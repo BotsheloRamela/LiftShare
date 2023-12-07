@@ -7,14 +7,7 @@ import 'package:http/http.dart' as http;
 import '../data/models/directions.dart';
 
 class GoogleMapsService {
-
-  Future<String?> getCurrentLocation() async {
-    // TODO: Implement logic to get the user's current location using the device's location services.
-    // TODO: Return the address or location details.
-    // This can be achieved using packages like location.
-    return null;
-  }
-
+  
   Future<String?> fetchPlace(Uri uri, {Map<String, String>? headers}) async {
     try {
       final response = await http.get(uri, headers: headers);
