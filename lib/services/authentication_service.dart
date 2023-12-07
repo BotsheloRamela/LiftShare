@@ -48,7 +48,6 @@ class FirebaseAuthService {
     }
   }
 
-
   Future<User?> signInWithEmailAndPassword(String email, String password) async {
     try {
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
@@ -94,7 +93,6 @@ class FirebaseAuthService {
     }
   }
 
-
   Future<User?> signInWithGoogle() async {
     try {
       GoogleAuthProvider googleProvider = GoogleAuthProvider();
@@ -129,6 +127,14 @@ class FirebaseAuthService {
       await _auth.sendPasswordResetEmail(email: email);
     } catch (e) {
       throw Exception('An error occurred while resetting password.');
+    }
+  }
+
+  Future<void> deleteUser() async {
+    try {
+      await _auth.currentUser!.delete();
+    } catch (e) {
+      throw Exception('An error occurred while deleting user.');
     }
   }
 }
