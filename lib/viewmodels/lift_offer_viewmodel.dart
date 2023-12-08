@@ -20,8 +20,7 @@ class LiftOfferViewModel extends LiftViewModel{
 
   // Lift repository
   final LiftRepository _liftRepository = LiftRepository();
-
-  DateTime _selectedDate = DateTime.now();
+  DateTime _selectedDate = DateTime.now().add(const Duration(days: 1));
   DateTime get getSelectedDate => _selectedDate;
 
   List<Lift> _offeredLifts = [];
@@ -35,15 +34,12 @@ class LiftOfferViewModel extends LiftViewModel{
     notifyListeners();
   }
 
-  void getUpcomingLifts() async {
-    _offeredLifts = await _liftRepository.getUpcomingLiftsByUserId(_userID);
-    _offeredLifts.sort((a, b) => a.departureTime.compareTo(b.departureTime));
-    notifyListeners();
-  }
-
   Future<List<Lift>> getOfferedLifts() async {
     List<Lift> lifts = await _liftRepository.getUpcomingLiftsByUserId(_userID);
     lifts.sort((a, b) => a.departureTime.compareTo(b.departureTime));
+    _offeredLifts = lifts;
+    notifyListeners();
+
     return lifts;
   }
 

@@ -19,7 +19,7 @@ class Lift {
   final bool isLiftCompleted;
   final String documentId;
 
-  String liftIdentifier;
+  String? liftIdentifier;
 
   Lift({
     required this.driverId,
@@ -45,8 +45,8 @@ class Lift {
   factory Lift.fromDocument(DocumentSnapshot doc) {
     return Lift(
       driverId: doc["driverId"],
-      pickupLocationId: doc["pickupLocationID"],
-      destinationLocationId: doc["destinationLocationID"],
+      pickupLocationId: doc["pickupLocationId"],
+      destinationLocationId: doc["destinationLocationId"],
       pickupLocationName: doc["pickupLocationName"],
       destinationLocationName: doc["destinationLocationName"],
       pickupLocationCoordinates: doc["pickupLocationCoordinates"],
@@ -60,7 +60,7 @@ class Lift {
       bookedSeats: doc["bookedSeats"],
       tripPrice: doc["tripPrice"],
       isLiftCompleted: doc["isLiftCompleted"],
-      documentId: doc.id ?? "",
+      documentId: doc.id,
       liftIdentifier: "",
     );
   }

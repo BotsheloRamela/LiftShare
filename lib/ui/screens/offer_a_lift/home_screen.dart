@@ -52,7 +52,8 @@ class _OfferALiftHomeScreenState extends State<OfferALiftHomeScreen> {
       builder: (context, child) {
         final LiftOfferViewModel offerLiftViewModel =
             Provider.of<LiftOfferViewModel>(context, listen: true);
-        offerLiftViewModel.getUpcomingLifts();
+        offerLiftViewModel.getOfferedLifts();
+
         return SafeArea(
           child: Scaffold(
             extendBodyBehindAppBar: true,

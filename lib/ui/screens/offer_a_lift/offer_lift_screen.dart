@@ -140,18 +140,20 @@ class _OfferLiftScreenState extends State<OfferLiftScreen> {
           const SizedBox(width: 10),
           IconButton(
             onPressed: () {
+              DateTime nextDay = DateTime.now().add(const Duration(days: 1));
+
               DatePickerBdaya.showDateTimePicker(context,
-                  showTitleActions: true,
-                  minTime: DateTime.now(),
-                  onConfirm: (date) => viewModel.setLiftDate(date),
-                  currentTime: DateTime.now(), locale: LocaleType.en,
-                  theme: const DatePickerThemeBdaya(
-                    backgroundColor: AppColors.buttonColor,
-                    itemStyle: TextStyle(color: Colors.white,
-                        fontWeight: FontWeight.bold, fontSize: 18),
-                    cancelStyle: TextStyle(color: AppColors.warningColor,
-                        fontWeight: FontWeight.bold, fontSize: 18),
-                  )
+                showTitleActions: true,
+                minTime: nextDay,
+                onConfirm: (date) => viewModel.setLiftDate(date),
+                currentTime: nextDay, locale: LocaleType.en,
+                theme: const DatePickerThemeBdaya(
+                  backgroundColor: AppColors.buttonColor,
+                  itemStyle: TextStyle(color: Colors.white,
+                      fontWeight: FontWeight.bold, fontSize: 18),
+                  cancelStyle: TextStyle(color: AppColors.warningColor,
+                      fontWeight: FontWeight.bold, fontSize: 18),
+                )
               );
             },
             icon: const Icon(

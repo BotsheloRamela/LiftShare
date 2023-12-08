@@ -37,7 +37,7 @@ class LiftRepository {
 
       return lifts;
     } catch (e) {
-      // print('Error searching lifts: $e');
+      // print('Error getting upcoming lifts: $e');
       return [];
     }
   }
@@ -56,7 +56,7 @@ class LiftRepository {
 
       return lifts;
     } catch (e) {
-      // print('Error searching lifts: $e');
+      // print('Error getting offered lifts: $e');
       return [];
     }
   }
@@ -102,6 +102,7 @@ class LiftRepository {
 
       return lifts;
     } catch (e) {
+      // print('Error getting bookings: $e');
       return [];
     }
   }
@@ -196,16 +197,15 @@ class LiftRepository {
 
   Future<void> cancelLift(String liftId, String userId) async {
     try {
-      // delete the booking from the bookings collection where the liftId and userId match
       var querySnapshot = await _firestore
           .collection("bookings")
           .where("liftId", isEqualTo: liftId)
           .where("userId", isEqualTo: userId)
           .get();
+
       querySnapshot.docs.forEach((doc) async {
         await _firestore.collection("bookings").doc(doc.id).delete();
       });
-
 
       await _firestore.collection("lifts").doc(liftId).update({
         "bookedSeats": FieldValue.increment(-1),
