@@ -26,8 +26,8 @@ class ActivityViewModel extends ChangeNotifier {
     _offeredLifts = await _liftRepository.getOfferedLiftsByUserId(_userID);
     _bookedLifts = await _liftRepository.getBookingsByUserId(_userID);
 
-    _offeredLifts.forEach((lift) => lift.liftIdentifier = "Offered");
-    _bookedLifts.forEach((lift) => lift.liftIdentifier = "Booked");
+    _offeredLifts.forEach((lift) => lift.wasLiftOfferedByUser = true);
+    _bookedLifts.forEach((lift) => lift.wasLiftOfferedByUser = false);
 
     _allLifts = [..._offeredLifts, ..._bookedLifts]; // Concatenate the two lists
     _allLifts.sort((a, b) => b.departureTime.compareTo(a.departureTime));

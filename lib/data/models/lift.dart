@@ -19,7 +19,8 @@ class Lift {
   final bool isLiftCompleted;
   final String documentId;
 
-  String? liftIdentifier;
+  bool wasLiftOfferedByUser;
+  Timestamp? bookingTime;
 
   Lift({
     required this.driverId,
@@ -39,7 +40,8 @@ class Lift {
     required this.tripPrice,
     required this.isLiftCompleted,
     this.documentId = "",
-    this.liftIdentifier = "",
+    this.wasLiftOfferedByUser = false,
+    this.bookingTime,
   });
 
   factory Lift.fromDocument(DocumentSnapshot doc) {
@@ -61,7 +63,8 @@ class Lift {
       tripPrice: doc["tripPrice"],
       isLiftCompleted: doc["isLiftCompleted"],
       documentId: doc.id,
-      liftIdentifier: "",
+      wasLiftOfferedByUser: false,
+      bookingTime: null,
     );
   }
 

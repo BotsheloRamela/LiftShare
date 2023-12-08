@@ -169,7 +169,7 @@ class _ActivityHomeScreenState extends State<ActivityHomeScreen> {
             ),
             const SizedBox(height: 10),
             Text(
-              "${lift.liftIdentifier} for R${lift.tripPrice}",
+              "R${lift.tripPrice}",
               style: const TextStyle(
                 color: AppColors.highlightColor,
                 fontSize: 14,

@@ -84,27 +84,27 @@ class _ActivityDetailsScreenState extends State<ActivityDetailsScreen> {
               children: [
                 const SizedBox(height: 60),
                 SizedBox(
-                    height: 150,
-                    width: double.infinity,
-                    child: _isLoading
-                      ? const Center(
-                        child: CircularProgressIndicator(
-                          color: AppColors.gradientColor2,
-                        ),
+                  height: 150,
+                  width: double.infinity,
+                  child: _isLoading
+                    ? const Center(
+                      child: CircularProgressIndicator(
+                        color: AppColors.gradientColor2,
+                      ),
+                    )
+                    : ClipRRect(
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(AppValues.largeBorderRadius - 8)
+                      ),
+                      child: LayoutBuilder(
+                        builder: (context, constraints) {
+                          return googleMap(lift, _markers, _polylines, constraints);
+                        },
                       )
-                      : ClipRRect(
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(AppValues.largeBorderRadius - 8)
-                        ),
-                        child: LayoutBuilder(
-                          builder: (context, constraints) {
-                            return googleMap(lift, _markers, _polylines, constraints);
-                          },
-                        )
-                      )
+                    )
                 ),
                 const SizedBox(height: 20),
-                if (lift.liftIdentifier == "Offered")
+                if (lift.wasLiftOfferedByUser)
                   const Text(
                     "Offered a Lift",
                     style: TextStyle(
@@ -116,7 +116,7 @@ class _ActivityDetailsScreenState extends State<ActivityDetailsScreen> {
                     ),
                   ),
 
-                if (lift.liftIdentifier == "Booked")
+                if (!lift.wasLiftOfferedByUser)
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -141,19 +141,10 @@ class _ActivityDetailsScreenState extends State<ActivityDetailsScreen> {
                   ),
 
                 const SizedBox(height: 30),
-                // const Text(
-                //   "Trip Price",
-                //   style: TextStyle(
-                //     color: AppColors.highlightColor,
-                //     fontSize: 12,
-                //     fontWeight: FontWeight.normal,
-                //     decoration: TextDecoration.none,
-                //     fontFamily: 'Aeonik',
-                //   ),
-                // ),
-                // const SizedBox(height: 5),
                 Text(
-                  "2 Dec 12:00", // TODO: Change to time of booking/offer
+                  lift.wasLiftOfferedByUser
+                      ? formatFirebaseTimestamp(lift.liftCreatedTime)
+                      : formatFirebaseTimestamp(lift.bookingTime!),
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 16,

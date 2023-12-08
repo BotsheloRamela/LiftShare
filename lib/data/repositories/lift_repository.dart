@@ -96,6 +96,7 @@ class LiftRepository {
             .get();
 
         Lift lift = Lift.fromDocument(liftQuerySnapshot);
+        lift.bookingTime = doc["bookedAt"];
 
         lifts.add(lift);
       }
