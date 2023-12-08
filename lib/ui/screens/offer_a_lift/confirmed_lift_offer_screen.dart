@@ -72,7 +72,7 @@ class _ConfirmedLiftOfferScreenState extends State<ConfirmedLiftOfferScreen> {
                       color: AppColors.gradientColor2,
                     ),
                   )
-                : googleMap(lift, viewModel, _markers, _polylines)
+                : googleMap(lift, _markers, _polylines)
             ),
             Align(
               alignment: Alignment.bottomCenter,

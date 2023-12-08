@@ -2,11 +2,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:liftshare/viewmodels/lift_viewmodel.dart';
 
 import '../../data/models/lift.dart';
 
-GoogleMap googleMap(Lift lift, LiftViewModel viewModel, Set<Marker> markers, Set<Polyline> polylines) {
+GoogleMap googleMap(Lift lift, Set<Marker> markers, Set<Polyline> polylines) {
 
   LatLng minLatLng(GeoPoint a, GeoPoint b) {
     return LatLng(

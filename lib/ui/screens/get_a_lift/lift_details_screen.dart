@@ -89,7 +89,7 @@ class _LiftDetailsScreenState extends State<LiftDetailsScreen> {
                     color: AppColors.gradientColor2,
                   ),
                 )
-                    : googleMap(lift, viewModel, _markers, _polylines)
+                    : googleMap(lift, _markers, _polylines)
             ),
             Align(
               alignment: Alignment.bottomCenter,
