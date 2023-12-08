@@ -5,13 +5,13 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:liftshare/ui/screens/main_screen.dart';
 import 'package:liftshare/ui/screens/onboarding/create_account_screen.dart';
 import 'package:liftshare/ui/widgets/app_background.dart';
 import 'package:liftshare/utils/constants.dart';
 import 'package:text_divider/text_divider.dart';
 
 import '../../../services/authentication_service.dart';
-import '../get_a_lift/home_screen.dart';
 import 'login_screen.dart';
 
 class WelcomeScreen extends StatelessWidget {
@@ -33,6 +33,11 @@ class WelcomeScreen extends StatelessWidget {
             gravity: ToastGravity.TOP,
             backgroundColor: Colors.red,
             textColor: Colors.white,
+          );
+        } else {
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => MainScreen())
           );
         }
       } catch (e) {

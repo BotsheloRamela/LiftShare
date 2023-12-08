@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:liftshare/ui/screens/main_screen.dart';
 import 'package:liftshare/ui/screens/onboarding/reset_password_screen.dart';
 import 'package:liftshare/utils/constants.dart';
 
@@ -50,7 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
       if (user != null) {
         Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => const GetALiftHomeScreen())
+            MaterialPageRoute(builder: (_) => MainScreen())
         );
       } else {
         Fluttertoast.showToast(

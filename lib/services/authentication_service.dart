@@ -127,7 +127,11 @@ class FirebaseAuthService {
   }
 
   Future<void> signOut() async {
-    await _auth.signOut();
+    try {
+      await _auth.signOut();
+    } catch (e) {
+      throw Exception('An error occurred while signing out.');
+    }
   }
 
   Future<void> resetPassword(String email) async {
