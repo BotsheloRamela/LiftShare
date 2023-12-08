@@ -42,9 +42,17 @@ GoogleMap googleMap(Lift lift, Set<Marker> markers, Set<Polyline> polylines) {
         bounds.southwest.latitude + (bounds.northeast.latitude - bounds.southwest.latitude) / 2,
         bounds.southwest.longitude + (bounds.northeast.longitude - bounds.southwest.longitude) / 2,
       ),
-      zoom: 12,
+      zoom: 8,
     ),
     markers: markers,
     polylines: polylines,
+    onMapCreated: (GoogleMapController controller) {
+      controller.animateCamera(
+        CameraUpdate.newLatLngBounds(
+          bounds,
+          100, 
+        ),
+      );
+    },
   );
 }
