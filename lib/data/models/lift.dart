@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Lift {
   final String driverId;
-  final String pickupLocationID;
-  final String destinationLocationID;
+  final String pickupLocationId;
+  final String destinationLocationId;
   final String pickupLocationName;
   final String destinationLocationName;
   final GeoPoint pickupLocationCoordinates;
@@ -23,8 +23,8 @@ class Lift {
 
   Lift({
     required this.driverId,
-    required this.pickupLocationID,
-    required this.destinationLocationID,
+    required this.pickupLocationId,
+    required this.destinationLocationId,
     required this.pickupLocationName,
     required this.destinationLocationName,
     required this.pickupLocationCoordinates,
@@ -45,8 +45,8 @@ class Lift {
   factory Lift.fromDocument(DocumentSnapshot doc) {
     return Lift(
       driverId: doc["driverId"],
-      pickupLocationID: doc["pickupLocationID"],
-      destinationLocationID: doc["destinationLocationID"],
+      pickupLocationId: doc["pickupLocationID"],
+      destinationLocationId: doc["destinationLocationID"],
       pickupLocationName: doc["pickupLocationName"],
       destinationLocationName: doc["destinationLocationName"],
       pickupLocationCoordinates: doc["pickupLocationCoordinates"],
@@ -67,8 +67,8 @@ class Lift {
 
   Map<String, dynamic> toJson() => {
     "driverId": driverId,
-    "pickupLocationID": pickupLocationID,
-    "destinationLocationID": destinationLocationID,
+    "pickupLocationId": pickupLocationId,
+    "destinationLocationId": destinationLocationId,
     "pickupLocationName": pickupLocationName,
     "destinationLocationName": destinationLocationName,
     "pickupLocationCoordinates": pickupLocationCoordinates,

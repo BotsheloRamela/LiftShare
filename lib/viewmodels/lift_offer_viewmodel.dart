@@ -52,8 +52,8 @@ class LiftOfferViewModel extends LiftViewModel{
     Timestamp now = Timestamp.now();
     Lift lift = Lift(
       driverId: _userID,
-      pickupLocationID: super.pickupLocationID,
-      destinationLocationID: super.destinationLocationID,
+      pickupLocationId: super.pickupLocationID,
+      destinationLocationId: super.destinationLocationID,
       pickupLocationName: super.pickupLocationName,
       destinationLocationName: super.destinationLocationName,
       pickupLocationCoordinates: super.pickupLocationCoordinates,
