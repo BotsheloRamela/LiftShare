@@ -105,7 +105,7 @@ class LiftRepository {
 
       return lifts;
     } catch (e) {
-      // print('Error getting bookings: $e');
+      print('Error getting bookings: $e');
       return [];
     }
   }
@@ -116,39 +116,34 @@ class LiftRepository {
     List<Lift> availableLifts = [];
 
     try {
-      var liftsQuery = liftsCollection.where("liftStatus", isEqualTo: "pending");
-
-      if (destination != null) {
-        liftsQuery = liftsQuery.where("destinationLocationName", isEqualTo: destination);
-      } else {
-        liftsQuery = liftsQuery.where("driverId", isNotEqualTo: userId);
-      }
-
-      var liftsSnapshot = await liftsQuery.get();
+      var liftsSnapshot = await liftsCollection.get();
+      var bookingsSnapshot = await bookingsCollection.where("userId", isEqualTo: userId).get();
 
       for (var doc in liftsSnapshot.docs) {
-        if (doc["driverId"] != userId && doc["bookedSeats"] < doc["availableSeats"]) {
-          Lift lift = Lift.fromDocument(doc);
+        Lift lift = Lift.fromDocument(doc);
 
-          // Check if the lift is already booked by the current user
-          var bookingQuerySnapshot = await bookingsCollection
-              .where("liftId", isEqualTo: lift.documentId)
-              .where("userId", isEqualTo: userId)
-              .get();
+        // NOTE: We're avoiding Firebase queries for certain conditions due to a recurring
+        // "[cloud_firestore/failed-precondition] The query requires an index" error. Fetching
+        // all lifts and bookings once and filtering locally helps circumvent this issue.
 
-          // If the lift is not booked by the current user, add it to the list of available lifts
-          if (bookingQuerySnapshot.docs.isEmpty) {
-            availableLifts.add(lift);
-          }
+        if (doc["driverId"] != userId &&
+            (destination != null && doc["destinationLocationName"] == destination ||
+                destination == null && doc["liftStatus"] == "pending") &&
+            doc["bookedSeats"] < doc["availableSeats"] &&
+            bookingsSnapshot.docs
+                .where((bookingDoc) => bookingDoc["liftId"] == doc.id)
+                .isEmpty) {
+          availableLifts.add(lift);
         }
       }
 
       return availableLifts;
     } catch (e) {
-      // print('Error getting available lifts: $e');
+      print('Error getting available lifts: $e');
       return [];
     }
   }
+
 
   Future<String> getUserImage(String userId) async {
     try {

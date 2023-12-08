@@ -158,7 +158,9 @@ class _ActivityHomeScreenState extends State<ActivityHomeScreen> {
             ),
             const SizedBox(height: 23),
             Text(
-              formatFirebaseTimestamp(lift.departureTime),
+              lift.wasLiftOfferedByUser
+                  ? formatFirebaseTimestamp(lift.liftCreatedTime)
+                  : formatFirebaseTimestamp(lift.bookingTime!), // TODO: If offered by user, show creation time
               style: const TextStyle(
                 color: AppColors.highlightColor,
                 fontSize: 14,
@@ -169,18 +171,7 @@ class _ActivityHomeScreenState extends State<ActivityHomeScreen> {
             ),
             const SizedBox(height: 10),
             Text(
-              "R${lift.tripPrice}",
-              style: const TextStyle(
-                color: AppColors.highlightColor,
-                fontSize: 14,
-                fontWeight: FontWeight.normal,
-                decoration: TextDecoration.none,
-                fontFamily: 'Aeonik',
-              ),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              "Status: ${lift.liftStatus}",
+              "R${lift.tripPrice} ${lift.liftStatus == "cancelled" ? " • Cancelled" : ""}",
               style: const TextStyle(
                 color: AppColors.highlightColor,
                 fontSize: 14,
