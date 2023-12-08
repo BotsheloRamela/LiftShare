@@ -96,7 +96,11 @@ class _ActivityDetailsScreenState extends State<ActivityDetailsScreen> {
                         borderRadius: const BorderRadius.all(
                           Radius.circular(AppValues.largeBorderRadius - 8)
                         ),
-                        child: googleMap(lift, _markers, _polylines)
+                        child: LayoutBuilder(
+                          builder: (context, constraints) {
+                            return googleMap(lift, _markers, _polylines, constraints);
+                          },
+                        )
                       )
                 ),
                 const SizedBox(height: 20),

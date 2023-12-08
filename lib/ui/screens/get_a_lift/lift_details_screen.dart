@@ -84,12 +84,16 @@ class _LiftDetailsScreenState extends State<LiftDetailsScreen> {
                 height: 500,
                 width: double.infinity,
                 child: _isLoading
-                    ? const Center(
-                  child: CircularProgressIndicator(
-                    color: AppColors.gradientColor2,
-                  ),
-                )
-                    : googleMap(lift, _markers, _polylines)
+                  ? const Center(
+                    child: CircularProgressIndicator(
+                      color: AppColors.gradientColor2,
+                    ),
+                  )
+                  : LayoutBuilder(
+                    builder: (context, constraints) {
+                      return googleMap(lift, _markers, _polylines, constraints);
+                    },
+                  )
             ),
             Align(
               alignment: Alignment.bottomCenter,
