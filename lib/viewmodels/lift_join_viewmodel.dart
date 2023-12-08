@@ -25,27 +25,20 @@ class LiftJoinViewModel extends LiftViewModel {
 
   final LiftRepository _liftRepository = LiftRepository();
 
-  void getLiftBookings() async {
-    _bookedLifts = await _liftRepository.getBookingsByUserId(_userID);
-    _bookedLifts.sort((a, b) => a.departureTime.compareTo(b.departureTime));
-    notifyListeners();
-  }
-
   Future<List<Lift>> getBookings() async {
     List<Lift> lifts = await _liftRepository.getBookingsByUserId(_userID);
     lifts.sort((a, b) => a.departureTime.compareTo(b.departureTime));
-    return lifts;
-  }
-
-  void getLiftsAvailable() async {
-    _availableLifts = await _liftRepository.getAvailableLifts(_userID, null);
-    _availableLifts.sort((a, b) => a.departureTime.compareTo(b.departureTime));
+    lifts.removeWhere((lift) => lift.liftStatus != "pending");
+    _bookedLifts = lifts;
     notifyListeners();
+    return lifts;
   }
 
   Future<List<Lift>> getAvailableLifts() async {
     List<Lift> lifts = await _liftRepository.getAvailableLifts(_userID, null);
     lifts.sort((a, b) => a.departureTime.compareTo(b.departureTime));
+    _availableLifts = lifts;
+    notifyListeners();
     return lifts;
   }
 

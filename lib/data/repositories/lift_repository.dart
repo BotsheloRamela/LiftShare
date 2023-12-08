@@ -99,10 +99,8 @@ class LiftRepository {
 
         Lift lift = Lift.fromDocument(liftQuerySnapshot);
 
-        if (lift.liftStatus == "pending") {
-          lift.bookingTime = doc["bookedAt"];
-          lifts.add(lift);
-        }
+        lift.bookingTime = doc["bookedAt"];
+        lifts.add(lift);
       }
 
       return lifts;

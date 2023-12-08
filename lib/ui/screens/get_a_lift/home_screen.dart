@@ -50,8 +50,8 @@ class _GetALiftHomeScreenState extends State<GetALiftHomeScreen> {
         )],
       builder: (context, child) {
         final LiftJoinViewModel viewModel = Provider.of<LiftJoinViewModel>(context, listen: true);
-        viewModel.getLiftsAvailable();
-        viewModel.getLiftBookings();
+        viewModel.getAvailableLifts();
+        viewModel.getBookings();
 
         return SafeArea(
           child: Scaffold(
