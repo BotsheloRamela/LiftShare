@@ -16,6 +16,12 @@ class ActivityViewModel extends ChangeNotifier {
   List<Lift> _allLifts = [];
   List<Lift> get allLifts => _allLifts;
 
+  String _driverName = '';
+  String get getDriverName => _driverName;
+
+  String _driverImage = '';
+  String get getDriverImage => _driverImage;
+
   Future<List<Lift>> getAllLifts() async {
     _offeredLifts = await _liftRepository.getOfferedLiftsByUserId(_userID);
     _bookedLifts = await _liftRepository.getBookingsByUserId(_userID);
@@ -28,5 +34,12 @@ class ActivityViewModel extends ChangeNotifier {
     notifyListeners();
 
     return _allLifts;
+  }
+
+  Future getDriverDetails(String uid) async {
+    String name = await _liftRepository.getUserName(uid);
+    String image = await _liftRepository.getUserImage(uid);
+    _driverName = name.split(" ")[0];
+    _driverImage = image;
   }
 }

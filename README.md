@@ -35,8 +35,7 @@ lib
 |-- ui
 |   |-- screens
 |   |   |-- activity
-|   |   |   |-- activity_details_joined_lift_screen.dart
-|   |   |   |-- activity_details_offered_lift_screen.dart
+|   |   |   |-- activity_details_screen.dart
 |   |   |   |-- home_screen.dart
 |   |   |-- chats
 |   |   |   |-- chats_screen.dart

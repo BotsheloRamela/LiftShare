@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:liftshare/ui/screens/activity/activity_details_screen.dart';
 import 'package:liftshare/utils/firebase_utils.dart';
 import 'package:liftshare/viewmodels/activity_viewmodel.dart';
 import 'package:provider/provider.dart';
@@ -97,14 +98,14 @@ class _ActivityHomeScreenState extends State<ActivityHomeScreen> {
                                     padding: const EdgeInsets.only(bottom: 20.0),
                                     child: GestureDetector(
                                       onTap: () {
-                                        // Navigator.push(
-                                        //     context,
-                                        //     MaterialPageRoute(
-                                        //         builder: (context) => LiftDetailsScreen(
-                                        //             lift: lift,
-                                        //             joinLiftViewModel: viewModel)
-                                        //     )
-                                        // );
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => ActivityDetailsScreen(
+                                                lift: lift, viewModel: viewModel
+                                            )
+                                          )
+                                        );
                                       },
                                       child: activityItem(lift),
                                     ),
