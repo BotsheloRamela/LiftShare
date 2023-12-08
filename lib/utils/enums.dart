@@ -4,3 +4,9 @@ enum ErrorScreen {
   getALift,
   activity
 }
+
+enum LiftStatus {
+  pending,
+  cancelled,
+  completed
+}

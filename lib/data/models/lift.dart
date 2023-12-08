@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:liftshare/utils/enums.dart';
 
 class Lift {
   final String driverId;
@@ -16,7 +17,7 @@ class Lift {
   final int availableSeats;
   final int bookedSeats;
   final double tripPrice;
-  final bool isLiftCompleted;
+  final LiftStatus liftStatus;
   final String documentId;
 
   bool wasLiftOfferedByUser;
@@ -38,7 +39,7 @@ class Lift {
     required this.availableSeats,
     required this.bookedSeats,
     required this.tripPrice,
-    required this.isLiftCompleted,
+    required this.liftStatus,
     this.documentId = "",
     this.wasLiftOfferedByUser = false,
     this.bookingTime,
@@ -61,7 +62,7 @@ class Lift {
       availableSeats: doc["availableSeats"],
       bookedSeats: doc["bookedSeats"],
       tripPrice: doc["tripPrice"],
-      isLiftCompleted: doc["isLiftCompleted"],
+      liftStatus: doc["liftStatus"],
       documentId: doc.id,
       wasLiftOfferedByUser: false,
       bookingTime: null,
@@ -84,6 +85,6 @@ class Lift {
     "availableSeats": availableSeats,
     "bookedSeats": bookedSeats,
     "tripPrice": tripPrice,
-    "isLiftCompleted": isLiftCompleted,
+    "liftStatus": liftStatus,
   };
 }

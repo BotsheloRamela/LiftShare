@@ -180,7 +180,7 @@ class _ActivityHomeScreenState extends State<ActivityHomeScreen> {
             ),
             const SizedBox(height: 10),
             Text(
-              "Status: ${lift.isLiftCompleted ? 'COMPLETED' : 'PENDING'}",
+              "Status: ${lift.liftStatus}",
               style: const TextStyle(
                 color: AppColors.highlightColor,
                 fontSize: 14,

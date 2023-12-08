@@ -229,7 +229,7 @@ class _ConfirmedLiftOfferScreenState extends State<ConfirmedLiftOfferScreen> {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  lift.isLiftCompleted ? "Completed" : "Upcoming",
+                  lift.liftStatus as String,
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
