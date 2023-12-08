@@ -20,7 +20,7 @@ class LiftDetailsScreen extends StatefulWidget {
   final LiftJoinViewModel joinLiftViewModel;
   final VoidCallback? onClose;
 
-  LiftDetailsScreen({required this.lift, required this.joinLiftViewModel, this.onClose});
+  const LiftDetailsScreen({super.key, required this.lift, required this.joinLiftViewModel, this.onClose});
 
   @override
   State<LiftDetailsScreen> createState() => _LiftDetailsScreenState();
