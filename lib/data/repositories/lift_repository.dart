@@ -184,6 +184,7 @@ class LiftRepository {
         "liftId": liftId,
         "userId": userId,
         "paid": false,
+        "bookedAt": Timestamp.now(),
       });
       await _firestore.collection("lifts").doc(liftId).update({
         "bookedSeats": FieldValue.increment(1),
