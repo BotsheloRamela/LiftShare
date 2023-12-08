@@ -119,7 +119,7 @@ FIREBASE_IOS_BUNDLED_ID=your_firebase_ios_bundled_id
 GOOGLE_CLOUD_MAP_ID=your_google_cloud_map_id
 
 # PayStack Configuration
-PAYSTACK_API_KEY=your_paystack_api_key
+PAYSTACK_API_PUBLIC_KEY=your_paystack_public_api_key
 ```
 
 Replace the placeholder values with your actual API keys and Firebase configuration.

@@ -160,7 +160,7 @@ class _ActivityHomeScreenState extends State<ActivityHomeScreen> {
             Text(
               lift.wasLiftOfferedByUser
                   ? formatFirebaseTimestamp(lift.liftCreatedTime)
-                  : formatFirebaseTimestamp(lift.bookingTime!), // TODO: If offered by user, show creation time
+                  : formatFirebaseTimestamp(lift.bookingTime!),
               style: const TextStyle(
                 color: AppColors.highlightColor,
                 fontSize: 14,
