@@ -153,6 +153,7 @@ class _ActivityDetailsScreenState extends State<ActivityDetailsScreen> {
                     fontFamily: 'Aeonik',
                   ),
                 ),
+                const SizedBox(height: 8),
                 Text(
                   "R${lift.tripPrice}",
                   style: const TextStyle(
@@ -162,6 +163,28 @@ class _ActivityDetailsScreenState extends State<ActivityDetailsScreen> {
                     decoration: TextDecoration.none,
                     fontFamily: 'Aeonik',
                   ),
+                ),
+                const SizedBox(height: 4),
+                Container(
+                  padding: const EdgeInsets.all(3),
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(4)),
+                    color: lift.liftStatus == "cancelled"
+                        ? AppColors.warningColor
+                        : (lift.liftStatus == "completed"
+                        ? Colors.green
+                        : Colors.orange),
+                  ),
+                  child: Text(
+                    lift.liftStatus.capitalize(),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.normal,
+                      decoration: TextDecoration.none,
+                      fontFamily: 'Aeonik',
+                    ),
+                  )
                 ),
                 const SizedBox(height: 40),
                 const Text(
@@ -250,5 +273,11 @@ class _ActivityDetailsScreenState extends State<ActivityDetailsScreen> {
         ),
       ),
     );
+  }
+}
+
+extension on String {
+  String capitalize() {
+    return "${this[0].toUpperCase()}${substring(1).toLowerCase()}";
   }
 }

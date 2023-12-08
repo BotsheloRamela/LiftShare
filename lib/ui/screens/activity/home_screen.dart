@@ -171,7 +171,7 @@ class _ActivityHomeScreenState extends State<ActivityHomeScreen> {
             ),
             const SizedBox(height: 10),
             Text(
-              "R${lift.tripPrice} ${lift.liftStatus == "cancelled" ? " • Cancelled" : ""}",
+              "R${lift.tripPrice} ${lift.liftStatus == "cancelled" ? "• Cancelled" : ""}",
               style: const TextStyle(
                 color: AppColors.highlightColor,
                 fontSize: 14,
