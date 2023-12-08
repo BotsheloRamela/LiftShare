@@ -5,7 +5,6 @@ import 'package:android_intent/android_intent.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:liftshare/utils/enums.dart';
 import 'package:liftshare/viewmodels/lift_viewmodel.dart';
 
 import '../data/models/lift.dart';
@@ -63,7 +62,7 @@ class LiftOfferViewModel extends LiftViewModel{
       availableSeats: int.parse(_liftSeatsController.text),
       bookedSeats: 0,
       tripPrice: double.parse(_liftPriceController.text),
-      liftStatus: LiftStatus.pending,
+      liftStatus: "pending",
     );
     await _liftRepository.createLift(lift);
     notifyListeners();

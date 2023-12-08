@@ -229,7 +229,7 @@ class _ConfirmedLiftOfferScreenState extends State<ConfirmedLiftOfferScreen> {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  lift.liftStatus as String,
+                  lift.liftStatus.capitalize(),
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -242,5 +242,12 @@ class _ConfirmedLiftOfferScreenState extends State<ConfirmedLiftOfferScreen> {
         ),
       ],
     );
+  }
+
+}
+
+extension on String {
+  String capitalize() {
+    return "${this[0].toUpperCase()}${substring(1).toLowerCase()}";
   }
 }

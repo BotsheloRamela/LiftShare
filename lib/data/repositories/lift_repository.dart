@@ -2,7 +2,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:liftshare/data/models/lift.dart';
 import 'package:liftshare/utils/constants.dart';
-import 'package:liftshare/utils/enums.dart';
 
 class LiftRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -28,7 +27,7 @@ class LiftRepository {
       var querySnapshot = await _firestore
           .collection("lifts")
           .where("driverId", isEqualTo: userId)
-          .where("liftStatus", isEqualTo: LiftStatus.pending.toString())
+          .where("liftStatus", isEqualTo: "pending")
           .get();
 
       List<Lift> lifts = querySnapshot.docs.map((doc) {
@@ -38,7 +37,7 @@ class LiftRepository {
 
       return lifts;
     } catch (e) {
-      // print('Error getting upcoming lifts: $e');
+      print('Error getting upcoming lifts: $e');
       return [];
     }
   }
@@ -57,7 +56,7 @@ class LiftRepository {
 
       return lifts;
     } catch (e) {
-      // print('Error getting offered lifts: $e');
+      print('Error getting offered lifts: $e');
       return [];
     }
   }
@@ -73,11 +72,11 @@ class LiftRepository {
   Future<bool> cancelLift(String liftId) async {
     try {
       await _firestore.collection("lifts").doc(liftId).update({
-        "liftStatus": LiftStatus.cancelled.toString(),
+        "liftStatus": "cancelled",
       });
       return true;
     } catch (e) {
-      print('Error deleting lift: $e');
+      print('Error cancelling lift: $e');
       return false;
     }
   }
@@ -117,7 +116,7 @@ class LiftRepository {
     List<Lift> availableLifts = [];
 
     try {
-      var liftsQuery = liftsCollection.where("liftStatus", isEqualTo: LiftStatus.pending.toString());
+      var liftsQuery = liftsCollection.where("liftStatus", isEqualTo: "pending");
 
       if (destination != null) {
         liftsQuery = liftsQuery.where("destinationLocationName", isEqualTo: destination);
