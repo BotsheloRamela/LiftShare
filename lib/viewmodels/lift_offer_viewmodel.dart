@@ -49,6 +49,7 @@ class LiftOfferViewModel extends LiftViewModel{
 
   void createLift() async {
     Timestamp timestamp = Timestamp.fromDate(_selectedDate);
+    Timestamp now = Timestamp.now();
     Lift lift = Lift(
       driverId: _userID,
       pickupLocationID: super.pickupLocationID,
@@ -61,6 +62,7 @@ class LiftOfferViewModel extends LiftViewModel{
       destinationLocationAddress: super.destinationLocationAddress,
       destinationLocationPhoto: super.destinationLocationPhoto??"",
       departureTime: timestamp,
+      liftCreatedTime: now,
       availableSeats: int.parse(_liftSeatsController.text),
       bookedSeats: 0,
       tripPrice: double.parse(_liftPriceController.text),

@@ -12,6 +12,7 @@ class Lift {
   final String destinationLocationAddress;
   final String destinationLocationPhoto;
   final Timestamp departureTime;
+  final Timestamp liftCreatedTime;
   final int availableSeats;
   final int bookedSeats;
   final double tripPrice;
@@ -32,6 +33,7 @@ class Lift {
     required this.destinationLocationAddress,
     required this.destinationLocationPhoto,
     required this.departureTime,
+    required this.liftCreatedTime,
     required this.availableSeats,
     required this.bookedSeats,
     required this.tripPrice,
@@ -53,6 +55,7 @@ class Lift {
       destinationLocationAddress: doc["destinationLocationAddress"],
       destinationLocationPhoto: doc["destinationLocationPhoto"],
       departureTime: doc["departureTime"],
+      liftCreatedTime: doc["liftCreatedTime"],
       availableSeats: doc["availableSeats"],
       bookedSeats: doc["bookedSeats"],
       tripPrice: doc["tripPrice"],
@@ -74,6 +77,7 @@ class Lift {
     "destinationLocationAddress": destinationLocationAddress,
     "destinationLocationPhoto": destinationLocationPhoto,
     "departureTime": departureTime,
+    "liftCreatedTime": liftCreatedTime,
     "availableSeats": availableSeats,
     "bookedSeats": bookedSeats,
     "tripPrice": tripPrice,
