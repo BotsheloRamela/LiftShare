@@ -2,6 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:liftshare/data/models/lift.dart';
 import 'package:liftshare/utils/constants.dart';
+import 'package:liftshare/utils/enums.dart';
 
 class LiftRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -27,7 +28,7 @@ class LiftRepository {
       var querySnapshot = await _firestore
           .collection("lifts")
           .where("driverId", isEqualTo: userId)
-          .where("isLiftCompleted", isEqualTo: false)
+          .where("liftStatus", isEqualTo: LiftStatus.pending.toString())
           .get();
 
       List<Lift> lifts = querySnapshot.docs.map((doc) {
@@ -69,9 +70,11 @@ class LiftRepository {
     }
   }
 
-  Future<bool> deleteLift(String liftId) async {
+  Future<bool> cancelLift(String liftId) async {
     try {
-      await _firestore.collection("lifts").doc(liftId).delete();
+      await _firestore.collection("lifts").doc(liftId).update({
+        "liftStatus": LiftStatus.cancelled.toString(),
+      });
       return true;
     } catch (e) {
       print('Error deleting lift: $e');
@@ -114,7 +117,7 @@ class LiftRepository {
     List<Lift> availableLifts = [];
 
     try {
-      var liftsQuery = liftsCollection.where("isLiftCompleted", isEqualTo: false);
+      var liftsQuery = liftsCollection.where("liftStatus", isEqualTo: LiftStatus.pending.toString());
 
       if (destination != null) {
         liftsQuery = liftsQuery.where("destinationLocationName", isEqualTo: destination);
@@ -196,7 +199,7 @@ class LiftRepository {
     }
   }
 
-  Future<void> cancelLift(String liftId, String userId) async {
+  Future<void> cancelBooking(String liftId, String userId) async {
     try {
       var querySnapshot = await _firestore
           .collection("bookings")

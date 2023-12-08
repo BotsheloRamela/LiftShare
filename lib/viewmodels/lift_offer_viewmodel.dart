@@ -87,8 +87,8 @@ class LiftOfferViewModel extends LiftViewModel{
     notifyListeners();
   }
 
-  void deleteLift(String liftId) async {
-    await _liftRepository.deleteLift(liftId);
+  void cancelLift(String liftId) async {
+    await _liftRepository.cancelLift(liftId);
     notifyListeners();
   }
 

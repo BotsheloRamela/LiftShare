@@ -120,7 +120,7 @@ class _ConfirmedLiftOfferScreenState extends State<ConfirmedLiftOfferScreen> {
             children: [
               Expanded(
                 child: cancelButton("Cancel Lift", () {
-                  viewModel.deleteLift(lift.documentId);
+                  viewModel.cancelLift(lift.documentId);
                   Navigator.pop(context);
                 }),
               ),

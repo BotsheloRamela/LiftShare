@@ -64,7 +64,7 @@ class LiftJoinViewModel extends LiftViewModel {
   }
 
   Future<void> cancelLift(String liftId) async {
-    await _liftRepository.cancelLift(liftId, _userID);
+    await _liftRepository.cancelBooking(liftId, _userID);
   }
 
   Future<void> isLiftBookedAlready(String liftId) async {
