@@ -112,7 +112,7 @@ class _OfferALiftHomeScreenState extends State<OfferALiftHomeScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const Text(
-                                "Upcoming Lifts",
+                                "Pending Lifts",
                                 style: TextStyle(
                                   color: AppColors.highlightColor,
                                   fontSize: 24,

@@ -86,6 +86,11 @@ class LiftOfferViewModel extends LiftViewModel{
     notifyListeners();
   }
 
+  Future<void> completeLift(String liftId) async {
+    await _liftRepository.completeLift(liftId);
+    notifyListeners();
+  }
+
   void cancelLift(String liftId) async {
     await _liftRepository.cancelLift(liftId);
     notifyListeners();

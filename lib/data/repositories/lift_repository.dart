@@ -231,7 +231,6 @@ class LiftRepository {
     }
   }
 
-  // create a delete account method, which will search for all the lifts that the user has offered and change the lift status to "cancelled". We also search for all the lifts that the user has booked and decrement the number of passengers by 1 if the lift status is "pending".
   Future<void> deleteUserData(String userId) async {
     try {
       final bookingsCollection = _firestore.collection("bookings");
@@ -265,6 +264,52 @@ class LiftRepository {
       }
     } catch (e) {
       print('Error deleting user data: $e');
+    }
+  }
+
+  Future<void> completeLift(String liftId) async {
+    try {
+      final bookingsCollection = _firestore.collection("bookings");
+      final liftsCollection = _firestore.collection("lifts");
+
+      var bookingsSnapshot = await bookingsCollection
+          .where("liftId", isEqualTo: liftId)
+          .get();
+
+      var liftDoc = await liftsCollection.doc(liftId).get();
+
+      double tripPrice = liftDoc["tripPrice"];
+      int bookedSeats = liftDoc["bookedSeats"];
+
+      double amountToDeduct = tripPrice / bookedSeats;
+
+      for (var doc in bookingsSnapshot.docs) {
+        await bookingsCollection.doc(doc.id).update({
+          "paid": true,
+        });
+
+        var userDoc = await _firestore.collection("users").doc(doc["userId"]).get();
+        double userCash = userDoc["cash"];
+        double newCash = userCash - amountToDeduct;
+        await _firestore.collection("users").doc(doc["userId"]).update({
+          "cash": newCash,
+        });
+      }
+
+      var driverDoc = await _firestore.collection("users").doc(liftDoc["driverId"]).get();
+      double driverCash = driverDoc["cash"];
+      double newDriverCash = driverCash + tripPrice;
+      await _firestore.collection("users").doc(liftDoc["driverId"]).update({
+        "cash": newDriverCash,
+      });
+
+      await liftsCollection.doc(liftId).update({
+        "liftStatus": "completed",
+      });
+
+    } catch (e) {
+      print('Error completing lift: $e');
+      rethrow;
     }
   }
 }

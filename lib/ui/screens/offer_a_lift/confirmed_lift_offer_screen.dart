@@ -92,7 +92,6 @@ class _ConfirmedLiftOfferScreenState extends State<ConfirmedLiftOfferScreen> {
   }
 
   Container _liftDetailsCard(Lift lift, LiftOfferViewModel viewModel) {
-    // TODO: Add a share lift button
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: const BoxDecoration(
@@ -125,6 +124,21 @@ class _ConfirmedLiftOfferScreenState extends State<ConfirmedLiftOfferScreen> {
                 }),
               ),
               const SizedBox(width: 20),
+              GestureDetector(
+                onTap: () async {
+                  try {
+                    await viewModel.completeLift(lift.documentId);
+                    Navigator.pop(context);
+                  } catch (e) {
+                    print('Error completing lift: $e');
+                  }
+                },
+                child: actionIconButton(
+                    const Icon(Icons.done, color: Colors.white, size: 30),
+                    50
+                ),
+              ),
+              const SizedBox(width: 10),
               GestureDetector(
                 onTap: () {
                   viewModel.launchGoogleMaps(
