@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:liftshare/ui/screens/activity/home_screen.dart';
 import 'package:liftshare/ui/screens/get_a_lift/home_screen.dart';
 import 'package:liftshare/ui/screens/offer_a_lift/home_screen.dart';
+import 'package:liftshare/ui/screens/wallet/home_screen.dart';
 
 import '../../utils/constants.dart';
 
@@ -16,7 +17,8 @@ class _MainScreenState extends State<MainScreen> {
   final List<Widget> _children = [
     const OfferALiftHomeScreen(),
     const GetALiftHomeScreen(),
-    const ActivityHomeScreen()
+    const ActivityHomeScreen(),
+    const WalletHomeScreen()
   ];
 
   @override
@@ -50,6 +52,13 @@ class _MainScreenState extends State<MainScreen> {
               color: _currentIndex == 2 ? Colors.white : AppColors.highlightColor,
             ),
             label: 'Activity',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.wallet,
+              color: _currentIndex == 3 ? Colors.white : AppColors.highlightColor,
+            ),
+            label: 'Wallet',
           ),
         ],
       )
