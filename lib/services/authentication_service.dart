@@ -155,6 +155,7 @@ class FirebaseAuthService {
 
   Future<void> deleteUser() async {
     try {
+      await _firestore.collection("users").doc(_auth.currentUser!.uid).delete();
       await _auth.currentUser!.delete();
     } catch (e) {
       throw Exception('An error occurred while deleting user.');
