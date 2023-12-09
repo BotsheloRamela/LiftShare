@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 
 import '../../utils/constants.dart';
 
-Widget mapsNavigateButton() {
+Widget actionIconButton(Icon icon, double size) {
   return Container(
-      width: 50,
+      width: size,
+      height: size,
       alignment: Alignment.center,
-      height: 50,
       padding: const EdgeInsets.all(1),
       decoration: const BoxDecoration(
         gradient: AppColors.gradientBackground,
@@ -21,11 +21,7 @@ Widget mapsNavigateButton() {
           color: AppColors.buttonColor,
         ),
         alignment: Alignment.center,
-        child: const Icon(
-          Icons.directions,
-          color: Colors.white,
-          size: 30,
-        ),
+        child: icon,
       )
   );
 }

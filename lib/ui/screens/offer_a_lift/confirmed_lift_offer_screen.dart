@@ -9,7 +9,7 @@ import '../../../data/models/lift.dart';
 import '../../../utils/constants.dart';
 import '../../widgets/default_app_bar.dart';
 import '../../widgets/google_map.dart';
-import '../../widgets/maps_navigate_button.dart';
+import '../../widgets/action_icon_button.dart';
 
 class ConfirmedLiftOfferScreen extends StatefulWidget {
   final Lift lift;
@@ -132,7 +132,10 @@ class _ConfirmedLiftOfferScreenState extends State<ConfirmedLiftOfferScreen> {
                     lift.destinationLocationCoordinates,
                   );
                 },
-                child: mapsNavigateButton(),
+                child: actionIconButton(
+                  const Icon(Icons.directions, color: Colors.white, size: 30),
+                  50
+                ),
               )
             ]
           ),
