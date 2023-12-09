@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:liftshare/services/authentication_service.dart';
-import 'package:liftshare/ui/screens/get_a_lift/home_screen.dart';
+import 'package:liftshare/ui/screens/main_screen.dart';
 
 import '../../../utils/constants.dart';
 import '../../widgets/app_background.dart';
@@ -52,7 +52,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
       if (user != null) {
         Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => const GetALiftHomeScreen())
+            MaterialPageRoute(builder: (context) => MainScreen())
         );
       } else {
         Fluttertoast.showToast(
