@@ -60,7 +60,9 @@ class _ActivityHomeScreenState extends State<ActivityHomeScreen> {
                 padding: const EdgeInsets.fromLTRB(
                   AppValues.screenPadding, AppValues.screenPadding,
                   AppValues.screenPadding, 0),
-                child: Column(
+                child: ListView(
+                  physics: const BouncingScrollPhysics(),
+                  padding: const EdgeInsets.all(0),
                   children: [
                     const SizedBox(height: 60),
                     FutureBuilder<Lift>(
@@ -75,17 +77,7 @@ class _ActivityHomeScreenState extends State<ActivityHomeScreen> {
                                 ? CrossAxisAlignment.start
                                 : CrossAxisAlignment.center,
                             children: [
-                              const Text(
-                                "Activity",
-                                style: TextStyle(
-                                  color: AppColors.highlightColor,
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.w500,
-                                  decoration: TextDecoration.none,
-                                  fontFamily: 'Aeonik',
-                                ),
-                              ),
-                              const SizedBox(height: 20),
+
                               ListView.builder(
                                 shrinkWrap: true,
                                 physics: const BouncingScrollPhysics(),
