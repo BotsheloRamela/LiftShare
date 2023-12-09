@@ -90,7 +90,6 @@ class _WalletHomeScreenState extends State<WalletHomeScreen> {
 
   Widget walletCard(WalletViewModel viewModel) {
     return Container(
-      height: 220,
       width: double.infinity,
       padding: const EdgeInsets.all(2),
       decoration: BoxDecoration(
@@ -173,7 +172,6 @@ class _WalletHomeScreenState extends State<WalletHomeScreen> {
                 ),
               ),
             ),
-            const SizedBox(height: 10),
             // TODO: Add a divider, then add Transaction History
           ],
         ),
