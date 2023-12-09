@@ -31,6 +31,7 @@ class FirebaseAuthService {
             "name": name,
             "email": email,
             "profilePhoto": user.photoURL,
+            "cash": 0.0,
           });
         }
       }
@@ -116,6 +117,7 @@ class FirebaseAuthService {
             "name": user.displayName, // FIXME: This is null
             "email": user.email,
             "profilePhoto": user.photoURL,
+            "cash": 0.0,
           });
         }
       }

@@ -5,8 +5,9 @@ class AppUser {
   final String? displayName;
   final String? email;
   final String? photoURL;
+  final double? cash;
 
-  AppUser({this.uid, this.displayName, this.email, this.photoURL});
+  AppUser({this.uid, this.displayName, this.email, this.photoURL, this.cash});
 
   factory AppUser.fromDocument(DocumentSnapshot doc) {
     return AppUser(
@@ -14,6 +15,7 @@ class AppUser {
       displayName: doc["displayName"],
       email: doc["email"],
       photoURL: doc["photoURL"],
+      cash: doc["cash"],
     );
   }
 }

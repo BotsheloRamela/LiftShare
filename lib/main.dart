@@ -53,6 +53,7 @@ class _MyAppState extends State<MyApp> {
           displayName: event.displayName,
           email: event.email,
           photoURL: event.photoURL,
+          cash: 0.0,
         );
 
         userProvider.setUser(user);
