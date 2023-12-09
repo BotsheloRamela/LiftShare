@@ -26,6 +26,7 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       body: _children[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         backgroundColor: AppColors.buttonColor,
         currentIndex: _currentIndex,
         onTap: onTabTapped,
