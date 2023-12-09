@@ -78,7 +78,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       _user.email ?? "email",
                       style: const TextStyle(
                         color: AppColors.highlightColor,
-                        fontSize: 22,
+                        fontSize: 18,
                         fontWeight: FontWeight.normal,
                         decoration: TextDecoration.none,
                         fontFamily: 'Aeonik',

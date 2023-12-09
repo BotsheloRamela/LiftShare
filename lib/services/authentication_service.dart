@@ -105,7 +105,9 @@ class FirebaseAuthService {
 
   Future<User?> signInWithGoogle() async {
     final GoogleSignIn googleSignIn = GoogleSignIn();
+
     try {
+      await googleSignIn.signOut(); // Signing out any existing user before signing in
 
       final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
 
@@ -117,12 +119,14 @@ class FirebaseAuthService {
           idToken: googleAuth.idToken,
         );
 
-        await _auth.signInWithCredential(credential);
+        UserCredential userCredential = await _auth.signInWithCredential(credential);
 
-        DocumentSnapshot doc = await _firestore.collection("users").doc(googleUser.id).get();
+        String uid = userCredential.user!.uid;
+        DocumentSnapshot doc = await _firestore.collection("users").doc(uid).get();
+
         if (!doc.exists) {
-          await _firestore.collection("users").doc(googleUser.id).set({
-            "uid": googleUser.id,
+          await _firestore.collection("users").doc(uid).set({
+            "uid": uid,
             "name": googleUser.displayName,
             "email": googleUser.email,
             "profilePhoto": googleUser.photoUrl,
@@ -158,7 +162,7 @@ class FirebaseAuthService {
       await _firestore.collection("users").doc(_auth.currentUser!.uid).delete();
       await _auth.currentUser!.delete();
     } catch (e) {
-      throw Exception('An error occurred while deleting user.');
+      throw Exception('An error occurred while deleting user: $e');
     }
   }
 }

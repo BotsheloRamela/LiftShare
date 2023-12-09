@@ -173,7 +173,7 @@ class _WalletHomeScreenState extends State<WalletHomeScreen> {
                 ),
               ),
             ),
-
+            const SizedBox(height: 10),
             // TODO: Add a divider, then add Transaction History
           ],
         ),
