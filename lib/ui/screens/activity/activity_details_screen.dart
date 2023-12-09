@@ -155,7 +155,9 @@ class _ActivityDetailsScreenState extends State<ActivityDetailsScreen> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  "R${lift.tripPrice}",
+                  lift.wasLiftOfferedByUser
+                      ? "R${lift.tripPrice}"
+                      : "R${lift.tripPrice / lift.bookedSeats}",
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 16,
