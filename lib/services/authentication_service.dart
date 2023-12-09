@@ -1,6 +1,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class FirebaseAuthService {
   static final FirebaseAuthService _instance = FirebaseAuthService._internal();
@@ -103,26 +104,34 @@ class FirebaseAuthService {
   }
 
   Future<User?> signInWithGoogle() async {
+    final GoogleSignIn googleSignIn = GoogleSignIn();
     try {
-      GoogleAuthProvider googleProvider = GoogleAuthProvider();
-      UserCredential userCredential = await _auth.signInWithProvider(googleProvider);
 
-      User? user = userCredential.user;
+      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
 
-      if (user != null) {
-        DocumentSnapshot doc = await _firestore.collection("users").doc(user.uid).get();
+      if (googleUser != null) {
+        final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+        final AuthCredential credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken,
+          idToken: googleAuth.idToken,
+        );
+
+        await _auth.signInWithCredential(credential);
+
+        DocumentSnapshot doc = await _firestore.collection("users").doc(googleUser.id).get();
         if (!doc.exists) {
-          await _firestore.collection("users").doc(user.uid).set({
-            "uid": user.uid,
-            "name": user.displayName, // FIXME: This is null
-            "email": user.email,
-            "profilePhoto": user.photoURL,
+          await _firestore.collection("users").doc(googleUser.id).set({
+            "uid": googleUser.id,
+            "name": googleUser.displayName,
+            "email": googleUser.email,
+            "profilePhoto": googleUser.photoUrl,
             "cash": 0.0,
           });
         }
       }
 
-      return user;
+      return _auth.currentUser;
     } catch (e) {
       throw Exception('An error occurred while signing in with Google.');
     }

@@ -46,6 +46,7 @@ dependencies:
   flutter_config: ^2.0.2
   flutter_polyline_points: ^2.0.0
   android_intent: ^2.0.2
+  google_sign_in: ^6.2.0
 
 dependency_overrides:
   http: ^1.1.0
