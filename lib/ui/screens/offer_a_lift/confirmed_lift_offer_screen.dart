@@ -91,7 +91,7 @@ class _ConfirmedLiftOfferScreenState extends State<ConfirmedLiftOfferScreen> {
     );
   }
 
-  Container _liftDetailsCard(Lift lift, LiftOfferViewModel viewModel) {
+  Widget _liftDetailsCard(Lift lift, LiftOfferViewModel viewModel) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: const BoxDecoration(
@@ -99,7 +99,7 @@ class _ConfirmedLiftOfferScreenState extends State<ConfirmedLiftOfferScreen> {
           topLeft: Radius.circular(AppValues.largeBorderRadius),
           topRight: Radius.circular(AppValues.largeBorderRadius),
         ),
-        color: AppColors.buttonColor,
+        color: AppColors.backgroundColor,
       ),
       child: Column(
         children: [
@@ -159,7 +159,7 @@ class _ConfirmedLiftOfferScreenState extends State<ConfirmedLiftOfferScreen> {
     );
   }
 
-  Column liftInfo(Lift lift) {
+  Widget liftInfo(Lift lift) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -168,17 +168,18 @@ class _ConfirmedLiftOfferScreenState extends State<ConfirmedLiftOfferScreen> {
         const Text(
           "Pickup Time",
           style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
             color: AppColors.highlightColor,
+            fontSize: 12,
+            fontWeight: FontWeight.normal,
+            decoration: TextDecoration.none,
+            fontFamily: 'Aeonik',
           ),
         ),
-        const SizedBox(height: 10),
         Text(
           formatFirebaseTimestamp(lift.departureTime),
           style: const TextStyle(
             fontSize: 16,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.normal,
             color: Colors.white,
           ),
         ),
@@ -193,17 +194,18 @@ class _ConfirmedLiftOfferScreenState extends State<ConfirmedLiftOfferScreen> {
                 const Text(
                   "Price",
                   style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
                     color: AppColors.highlightColor,
+                    fontSize: 12,
+                    fontWeight: FontWeight.normal,
+                    decoration: TextDecoration.none,
+                    fontFamily: 'Aeonik',
                   ),
                 ),
-                const SizedBox(height: 10),
                 Text(
                   "R${lift.tripPrice}",
                   style: const TextStyle(
                     fontSize: 16,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.normal,
                     color: Colors.white,
                   ),
                 ),
@@ -216,17 +218,18 @@ class _ConfirmedLiftOfferScreenState extends State<ConfirmedLiftOfferScreen> {
                 const Text(
                   "Seats",
                   style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
                     color: AppColors.highlightColor,
+                    fontSize: 12,
+                    fontWeight: FontWeight.normal,
+                    decoration: TextDecoration.none,
+                    fontFamily: 'Aeonik',
                   ),
                 ),
-                const SizedBox(height: 10),
                 Text(
-                  "${lift.availableSeats - lift.bookedSeats} available",
+                  "${lift.availableSeats - lift.bookedSeats}/${lift.availableSeats} available",
                   style: const TextStyle(
                     fontSize: 16,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.normal,
                     color: Colors.white,
                   ),
                 ),
@@ -239,17 +242,18 @@ class _ConfirmedLiftOfferScreenState extends State<ConfirmedLiftOfferScreen> {
                 const Text(
                   "Status",
                   style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
                     color: AppColors.highlightColor,
+                    fontSize: 12,
+                    fontWeight: FontWeight.normal,
+                    decoration: TextDecoration.none,
+                    fontFamily: 'Aeonik',
                   ),
                 ),
-                const SizedBox(height: 10),
                 Text(
                   lift.liftStatus.capitalize(),
                   style: const TextStyle(
                     fontSize: 16,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.normal,
                     color: Colors.white,
                   ),
                 ),

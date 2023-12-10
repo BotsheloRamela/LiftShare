@@ -174,8 +174,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                       width: 1.5,
                                     ),
                                     borderRadius: const BorderRadius.all(
-                                        Radius.circular(
-                                            AppValues.largeBorderRadius)
+                                        Radius.circular(AppValues.largeBorderRadius)
                                     )
                                 ),
                                 focusedBorder: const OutlineInputBorder(
@@ -184,8 +183,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                       width: 1.5,
                                     ),
                                     borderRadius: BorderRadius.all(
-                                        Radius.circular(
-                                            AppValues.largeBorderRadius)
+                                        Radius.circular(AppValues.largeBorderRadius)
                                     )
                                 ),
                               ),
@@ -271,12 +269,12 @@ Widget _emailTextField(controller) {
   return TextFormField(
     controller: controller,
     keyboardType: TextInputType.emailAddress,
-    decoration: const InputDecoration(
+    decoration: InputDecoration(
       labelText: 'Email',
       filled: true,
       fillColor: AppColors.buttonColor,
-      labelStyle: TextStyle(
-        color: Colors.white,
+      labelStyle: const TextStyle(
+        color: AppColors.highlightColor,
         fontSize: 16,
         fontWeight: FontWeight.normal,
         decoration: TextDecoration.none,
@@ -284,14 +282,14 @@ Widget _emailTextField(controller) {
       ),
       enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(
-            color: AppColors.highlightColor,
+            color: AppColors.enabledBorderColor,
             width: 1.5,
           ),
-          borderRadius: BorderRadius.all(
+          borderRadius: const BorderRadius.all(
               Radius.circular(AppValues.largeBorderRadius)
           )
       ),
-      focusedBorder: OutlineInputBorder(
+      focusedBorder: const OutlineInputBorder(
           borderSide: BorderSide(
             color: Colors.white,
             width: 1.5,

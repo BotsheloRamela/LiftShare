@@ -258,7 +258,6 @@ class _ActivityDetailsScreenState extends State<ActivityDetailsScreen> {
                     fontFamily: 'Aeonik',
                   ),
                 ),
-                const SizedBox(height: 10),
                 Text(
                   formatFirebaseTimestamp(lift.departureTime),
                   style: const TextStyle(

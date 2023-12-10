@@ -132,7 +132,7 @@ class _ActivityHomeScreenState extends State<ActivityHomeScreen> {
         padding: const EdgeInsets.all(20),
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(AppValues.largeBorderRadius - 6)),
-          color: AppColors.buttonColor,
+          color: AppColors.backgroundColor,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,

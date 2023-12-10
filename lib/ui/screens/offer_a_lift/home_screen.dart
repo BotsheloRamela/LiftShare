@@ -191,7 +191,7 @@ Widget offeredLiftListItem(
       padding: const EdgeInsets.all(10),
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(AppValues.largeBorderRadius - 6)),
-        color: AppColors.buttonColor,
+        color: AppColors.backgroundColor,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,

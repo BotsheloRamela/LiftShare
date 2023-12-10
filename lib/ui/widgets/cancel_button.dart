@@ -15,7 +15,7 @@ Widget cancelButton(String buttonText, Function() onPressed) {
           color: AppColors.warningColor,
           width: 1,
         ),
-        color: AppColors.backgroundColor.withOpacity(0.2),
+        color: AppColors.buttonColor,
       ),
       child: const Text(
         "Cancel Lift",

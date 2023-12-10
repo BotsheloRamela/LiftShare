@@ -145,7 +145,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 filled: true,
                                 fillColor: AppColors.buttonColor,
                                 labelStyle: const TextStyle(
-                                  color: Colors.white,
+                                  color: AppColors.highlightColor,
                                   fontSize: 16,
                                   fontWeight: FontWeight.normal,
                                   decoration: TextDecoration.none,
@@ -165,14 +165,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                   },
                                 ),
 
-                                enabledBorder: const OutlineInputBorder(
+                                enabledBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
-                                      color: AppColors.highlightColor,
+                                      color: AppColors.enabledBorderColor,
                                       width: 1.5,
                                     ),
-                                    borderRadius: BorderRadius.all(
-                                        Radius.circular(
-                                            AppValues.largeBorderRadius)
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(AppValues.largeBorderRadius)
                                     )
                                 ),
                                 focusedBorder: const OutlineInputBorder(
@@ -181,8 +180,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       width: 1.5,
                                     ),
                                     borderRadius: BorderRadius.all(
-                                        Radius.circular(
-                                            AppValues.largeBorderRadius)
+                                        Radius.circular(AppValues.largeBorderRadius)
                                     )
                                 ),
                               ),

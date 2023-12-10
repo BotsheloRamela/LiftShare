@@ -106,6 +106,7 @@ class _SearchForLiftScreenState extends State<SearchForLiftScreen> {
         builder: (context) {
           return SizedBox(
             height: 350,
+            width: double.infinity,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [

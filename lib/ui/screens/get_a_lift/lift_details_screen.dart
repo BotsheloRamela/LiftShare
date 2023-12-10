@@ -120,7 +120,7 @@ class _LiftDetailsScreenState extends State<LiftDetailsScreen> {
           topLeft: Radius.circular(AppValues.largeBorderRadius),
           topRight: Radius.circular(AppValues.largeBorderRadius),
         ),
-        color: AppColors.buttonColor,
+        color: AppColors.backgroundColor,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -146,16 +146,23 @@ class _LiftDetailsScreenState extends State<LiftDetailsScreen> {
                         ),
                       ),
                       const SizedBox(height: 5),
-                      Text(
-                        "Lift Status: ${isLiftFull ? 'Full' : 'Available'}",
-                        style: const TextStyle(
-                          color: AppColors.highlightColor,
-                          fontSize: 16,
-                          fontWeight: FontWeight.normal,
-                          decoration: TextDecoration.none,
-                          fontFamily: 'Aeonik',
-                        ),
-                      )
+                      Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                          decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(4)),
+                            color: Colors.green,
+                          ),
+                          child: const Text(
+                            "Available",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.normal,
+                              decoration: TextDecoration.none,
+                              fontFamily: 'Aeonik',
+                            ),
+                          )
+                      ),
                     ],
                   ),
                 ],
@@ -171,13 +178,12 @@ class _LiftDetailsScreenState extends State<LiftDetailsScreen> {
                 "Trip Route",
                 style: TextStyle(
                   color: AppColors.highlightColor,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
+                  fontSize: 12,
+                  fontWeight: FontWeight.normal,
                   decoration: TextDecoration.none,
                   fontFamily: 'Aeonik',
                 ),
               ),
-              const SizedBox(height: 10),
               Text(
                 "${lift.pickupLocationName} → ${lift.destinationLocationName}",
                 style: const TextStyle(
@@ -194,13 +200,12 @@ class _LiftDetailsScreenState extends State<LiftDetailsScreen> {
                 "Trip Departure Time",
                 style: TextStyle(
                   color: AppColors.highlightColor,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
+                  fontSize: 12,
+                  fontWeight: FontWeight.normal,
                   decoration: TextDecoration.none,
                   fontFamily: 'Aeonik',
                 ),
               ),
-              const SizedBox(height: 10),
               Text(
                 formatFirebaseTimestamp(lift.departureTime),
                 style: const TextStyle(
@@ -217,13 +222,12 @@ class _LiftDetailsScreenState extends State<LiftDetailsScreen> {
                 "Trip Price",
                 style: TextStyle(
                   color: AppColors.highlightColor,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
+                  fontSize: 12,
+                  fontWeight: FontWeight.normal,
                   decoration: TextDecoration.none,
                   fontFamily: 'Aeonik',
                 ),
               ),
-              const SizedBox(height: 10),
               Text(
                 "R${lift.tripPrice} (${lift.availableSeats - lift.bookedSeats} seats left)",
                 style: const TextStyle(
