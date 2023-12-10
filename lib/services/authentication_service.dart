@@ -2,6 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:liftshare/utils/constants.dart';
 
 class FirebaseAuthService {
   static final FirebaseAuthService _instance = FirebaseAuthService._internal();
@@ -129,7 +130,7 @@ class FirebaseAuthService {
             "uid": uid,
             "name": googleUser.displayName,
             "email": googleUser.email,
-            "profilePhoto": googleUser.photoUrl,
+            "profilePhoto": googleUser.photoUrl ?? AppValues.defaultUserImg,
             "cash": 0.0,
           });
         }
@@ -142,7 +143,9 @@ class FirebaseAuthService {
   }
 
   Future<void> signOut() async {
+    final GoogleSignIn googleSignIn = GoogleSignIn();
     try {
+      await googleSignIn.signOut();
       await _auth.signOut();
     } catch (e) {
       throw Exception('An error occurred while signing out.');

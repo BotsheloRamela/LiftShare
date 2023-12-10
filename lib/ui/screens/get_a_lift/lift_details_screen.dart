@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:liftshare/data/models/lift.dart';
+import 'package:liftshare/ui/screens/chats/messaging_screen.dart';
 import 'package:liftshare/ui/widgets/action_button.dart';
 import 'package:liftshare/ui/widgets/cancel_button.dart';
 import 'package:liftshare/ui/widgets/default_app_bar.dart';
@@ -249,7 +250,12 @@ class _LiftDetailsScreenState extends State<LiftDetailsScreen> {
                     const SizedBox(width: 10),
                     GestureDetector(
                       onTap: () {
-                        // TODO: Open chat screen
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MessagingScreen(lift.driverId),
+                          ),
+                        );
                       },
                       child: Container(
                         width: 50,

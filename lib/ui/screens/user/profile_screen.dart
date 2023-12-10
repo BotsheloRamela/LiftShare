@@ -47,6 +47,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ],
       builder: (context, child) {
         ProfileViewModel viewModel = Provider.of<ProfileViewModel>(context, listen: true);
+        UserProvider userProvider = Provider.of<UserProvider>(context, listen: true);
 
         return SafeArea(
           child: Scaffold(
@@ -89,6 +90,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     GestureDetector(
                       onTap: () async {
                         await viewModel.signOut();
+                        userProvider.clearUser();
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(builder: (_) => const WelcomeScreen())
@@ -178,6 +180,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     GestureDetector(
                       onTap: () async {
                         await viewModel.deleteAccount();
+                        userProvider.clearUser();
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(builder: (_) => const WelcomeScreen())

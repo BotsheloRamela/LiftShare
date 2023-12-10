@@ -2,6 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:liftshare/ui/screens/chats/chats_screen.dart';
 import 'package:liftshare/utils/constants.dart';
 
 import '../screens/user/profile_screen.dart';
@@ -24,7 +25,10 @@ PreferredSizeWidget homeAppBar(String? userPhotoUrl, BuildContext context) {
     actions: [
       GestureDetector(
         onTap: () {
-          // TODO: Navigate to chat screen
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const ChatsScreen())
+          );
         },
         child: Container(
           height: 30,

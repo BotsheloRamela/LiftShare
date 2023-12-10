@@ -12,10 +12,20 @@ class AppUser {
   factory AppUser.fromDocument(DocumentSnapshot doc) {
     return AppUser(
       uid: doc["uid"],
-      displayName: doc["displayName"],
+      displayName: doc["name"],
       email: doc["email"],
-      photoURL: doc["photoURL"],
+      photoURL: doc["profilePhoto"],
       cash: doc["cash"],
     );
   }
+
+  // factory AppUser.fromMap(Map<String, dynamic> data) {
+  //   return AppUser(
+  //     uid: data['uid'],
+  //     displayName: data['displayName'],
+  //     email: data['email'],
+  //     photoURL: data['photoURL'],
+  //     cash: data['cash'],
+  //   );
+  // }
 }
