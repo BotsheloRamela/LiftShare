@@ -12,7 +12,10 @@ import 'package:liftshare/ui/widgets/default_app_bar.dart';
 import 'package:liftshare/ui/widgets/user_icon.dart';
 import 'package:liftshare/utils/firebase_utils.dart';
 import 'package:liftshare/viewmodels/lift_join_viewmodel.dart';
+import 'package:provider/provider.dart';
 
+import '../../../data/models/app_user.dart';
+import '../../../providers/user_provider.dart';
 import '../../../utils/constants.dart';
 import '../../widgets/google_map.dart';
 
@@ -28,6 +31,7 @@ class LiftDetailsScreen extends StatefulWidget {
 }
 
 class _LiftDetailsScreenState extends State<LiftDetailsScreen> {
+  late AppUser _user;
   Set<Marker> _markers = {};
   Set<Polyline> _polylines = {};
   bool _isLoading = true;
@@ -37,23 +41,31 @@ class _LiftDetailsScreenState extends State<LiftDetailsScreen> {
   void initState() {
     super.initState();
     // Delay the visibility of buttons by 1 second
+    _getUser();
     Timer(const Duration(seconds: 1), () {
       setState(() {
         buttonsVisible = true;
       });
     });
     _loadMapData();
+    widget.joinLiftViewModel.getUserCash();
   }
 
   void _loadMapData() async {
     Lift lift = widget.lift;
     LiftJoinViewModel viewModel = widget.joinLiftViewModel;
-
     _markers.addAll(await viewModel.getMarkers(lift));
     _polylines.add(await viewModel.getPolyline(lift));
 
     setState(() {
       _isLoading = false;
+    });
+  }
+
+  Future<void> _getUser() async {
+    UserProvider userProvider = Provider.of<UserProvider>(context, listen: false);
+    setState(() {
+      _user = (userProvider.user)!;
     });
   }
 
@@ -111,7 +123,6 @@ class _LiftDetailsScreenState extends State<LiftDetailsScreen> {
   
   Container _liftDetailsCard(Lift lift, LiftJoinViewModel viewModel) {
     viewModel.isLiftBookedAlready(lift.documentId);
-    bool isLiftFull = lift.availableSeats - lift.bookedSeats == 0;
 
     return Container(
       padding: const EdgeInsets.all(20),
@@ -241,7 +252,8 @@ class _LiftDetailsScreenState extends State<LiftDetailsScreen> {
             ],
           ),
           const Spacer(),
-          if (buttonsVisible)
+
+          if (buttonsVisible && viewModel.userCash >= lift.tripPrice)
             viewModel.isLiftBooked
                 ? Row(
                   children: [
@@ -291,7 +303,20 @@ class _LiftDetailsScreenState extends State<LiftDetailsScreen> {
                 : actionButton("Join Lift", () {
               viewModel.bookLift(lift.documentId);
               Navigator.pop(context);
-            })
+            }),
+
+          if (buttonsVisible && viewModel.userCash < lift.tripPrice)
+            const Text(
+              "You do not have enough cash to join this lift, please top up your wallet.",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.red,
+                fontSize: 14,
+                fontWeight: FontWeight.normal,
+                decoration: TextDecoration.none,
+                fontFamily: 'Aeonik',
+              ),
+            ),
         ],
       ),
     );

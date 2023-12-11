@@ -328,25 +328,4 @@ class _WalletHomeScreenState extends State<WalletHomeScreen> {
         }
     );
   }
-
-  String? _validateCardNumber(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Card number is required';
-    }
-    return null;
-  }
-
-  String? _validateExpiryDate(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Expiry date is required';
-    }
-    return null;
-  }
-
-  String? _validateCVC(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'CVC is required';
-    }
-    return null;
-  }
 }

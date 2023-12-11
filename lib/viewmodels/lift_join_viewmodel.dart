@@ -3,6 +3,7 @@ import 'package:liftshare/viewmodels/lift_viewmodel.dart';
 
 import '../data/models/lift.dart';
 import '../data/repositories/lift_repository.dart';
+import '../data/repositories/user_repository.dart';
 
 class LiftJoinViewModel extends LiftViewModel {
   final String _userID;
@@ -23,7 +24,11 @@ class LiftJoinViewModel extends LiftViewModel {
   bool _isLiftBooked = false;
   bool get isLiftBooked => _isLiftBooked;
 
+  double _cash = 0.0;
+  double get userCash => _cash;
+
   final LiftRepository _liftRepository = LiftRepository();
+  final UserRepository _userRepository = UserRepository();
 
   Future<List<Lift>> getBookings() async {
     List<Lift> lifts = await _liftRepository.getBookingsByUserId(_userID);
@@ -65,10 +70,16 @@ class LiftJoinViewModel extends LiftViewModel {
     notifyListeners();
   }
 
+  Future<void> getUserCash() async {
+    _cash = await _userRepository.getUserCash(_userID);
+    notifyListeners();
+  }
+
   @override
   void dispose() {
     _availableLifts.clear();
     _bookedLifts.clear();
+
     super.dispose();
   }
 }
