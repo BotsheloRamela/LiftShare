@@ -2,7 +2,7 @@
 
 ## Project Description
 
-The LiftShare app is designed to make it easy for users to organize or join rides to specific destinations, particularly aimed at helping students and individuals with budget constraints. The app allows users to offer lifts, search for available lifts, confirm or cancel rides, and includes features for notifications and onboarding.
+The LiftShare app, developed as my final project for the Mobile Development elective at WeThinkCode in December 2023, is meticulously crafted to simplify the process of organizing or joining rides to specific destinations. Targeted primarily at assisting students and individuals facing budget constraints, the app provides a user-friendly platform. It empowers users to offer lifts, search for available rides, confirm or cancel rides, and incorporates essential features for notifications and onboarding. With a focus on enhancing the commuting experience, the LiftShare app aims to foster a community-driven approach to transportation.
 
 ## Technologies Used
 
@@ -28,9 +28,8 @@ lib
 |   |-- user_provider.dart
 |-- services
 |   |-- authentication_service.dart
-|   |-- firebase_service.dart
 |   |-- google_maps_service.dart
-|   |-- in_app_messaging_service.dart
+|   |-- chat_service.dart
 |   |-- paystack_service.dart
 |-- ui
 |   |-- screens
@@ -57,20 +56,20 @@ lib
 |   |   |-- user
 |   |   |   |-- edit_profile_screen.dart
 |   |   |   |-- profile_screen.dart
+|   |   |-- wallet
+|   |   |   |-- home_screen.dart
 |   |   |-- main_screen.dart
 |   |-- widgets
 |   |   |-- app_button.dart
 |   |   |-- app_card.dart
 |   |   |-- app_textfield.dart
-|   |   |-- ... (other reusable widgets)
 |-- utils
 |   |-- constants.dart
+|   |-- enums.dart
 |   |-- firebase_utils.dart
 |-- viewmodels
-|   |-- confirm_cancel_viewmodel.dart
 |   |-- lift_viewmodel.dart
-|   |-- onboarding_viewmodel.dart
-|   |-- search_viewmodel.dart
+|   |-- profile_viewmodel.dart
 |-- firebase_options.dart
 |-- main.dart
 ```
@@ -91,15 +90,13 @@ Explanation:
 - `main.dart`: The entry point of the application
 
 
-
-
 ## Getting Started
 
 ### Prerequisites
 
 - [Flutter SDK](https://flutter.dev/docs/get-started/install)
 - [Firebase Project](https://console.firebase.google.com/): Set up a project on Firebase and configure the necessary services.
-- [PayStack API Key](https://dashboard.paystack.com/): Obtain an API key for payment processing.
+- [Paystack API Key](https://dashboard.paystack.com/): Obtain an API key for payment processing.
 - [Google Maps API Key](https://cloud.google.com/maps-platform/): Get an API key for using Google Maps services.
 
 ### Environment Variables
