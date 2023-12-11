@@ -283,25 +283,27 @@ class LiftRepository {
 
       num amountToDeduct = tripPrice / bookedSeats;
 
-      for (var doc in bookingsSnapshot.docs) {
-        await bookingsCollection.doc(doc.id).update({
-          "paid": true,
-        });
+      if (bookingsSnapshot.docs.isNotEmpty) {
+        for (var doc in bookingsSnapshot.docs) {
+          await bookingsCollection.doc(doc.id).update({
+            "paid": true,
+          });
 
-        var userDoc = await _firestore.collection("users").doc(doc["userId"]).get();
-        num userCash = userDoc["cash"];
-        num newCash = userCash - amountToDeduct;
-        await _firestore.collection("users").doc(doc["userId"]).update({
-          "cash": newCash,
+          var userDoc = await _firestore.collection("users").doc(doc["userId"]).get();
+          num userCash = userDoc["cash"];
+          num newCash = userCash - amountToDeduct;
+          await _firestore.collection("users").doc(doc["userId"]).update({
+            "cash": newCash,
+          });
+        }
+
+        var driverDoc = await _firestore.collection("users").doc(liftDoc["driverId"]).get();
+        num driverCash = driverDoc["cash"];
+        num newDriverCash = driverCash + tripPrice;
+        await _firestore.collection("users").doc(liftDoc["driverId"]).update({
+          "cash": newDriverCash,
         });
       }
-
-      var driverDoc = await _firestore.collection("users").doc(liftDoc["driverId"]).get();
-      num driverCash = driverDoc["cash"];
-      num newDriverCash = driverCash + tripPrice;
-      await _firestore.collection("users").doc(liftDoc["driverId"]).update({
-        "cash": newDriverCash,
-      });
 
       await liftsCollection.doc(liftId).update({
         "liftStatus": "completed",
