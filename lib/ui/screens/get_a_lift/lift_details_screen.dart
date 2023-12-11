@@ -12,10 +12,7 @@ import 'package:liftshare/ui/widgets/default_app_bar.dart';
 import 'package:liftshare/ui/widgets/user_icon.dart';
 import 'package:liftshare/utils/firebase_utils.dart';
 import 'package:liftshare/viewmodels/lift_join_viewmodel.dart';
-import 'package:provider/provider.dart';
 
-import '../../../data/models/app_user.dart';
-import '../../../providers/user_provider.dart';
 import '../../../utils/constants.dart';
 import '../../widgets/google_map.dart';
 
@@ -31,7 +28,6 @@ class LiftDetailsScreen extends StatefulWidget {
 }
 
 class _LiftDetailsScreenState extends State<LiftDetailsScreen> {
-  late AppUser _user;
   Set<Marker> _markers = {};
   Set<Polyline> _polylines = {};
   bool _isLoading = true;
@@ -41,7 +37,6 @@ class _LiftDetailsScreenState extends State<LiftDetailsScreen> {
   void initState() {
     super.initState();
     // Delay the visibility of buttons by 1 second
-    _getUser();
     Timer(const Duration(seconds: 1), () {
       setState(() {
         buttonsVisible = true;
@@ -62,12 +57,6 @@ class _LiftDetailsScreenState extends State<LiftDetailsScreen> {
     });
   }
 
-  Future<void> _getUser() async {
-    UserProvider userProvider = Provider.of<UserProvider>(context, listen: false);
-    setState(() {
-      _user = (userProvider.user)!;
-    });
-  }
 
   @override
   void dispose() {
