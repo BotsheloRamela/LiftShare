@@ -10,8 +10,8 @@ class WalletViewModel extends ChangeNotifier {
 
   WalletViewModel(this._userID, this._userEmail, this.plugin);
 
-  double _cash = 0.0;
-  double get cash => _cash;
+  num _cash = 0;
+  num get cash => _cash;
 
   bool _isPaymentSuccessful = false;
   bool get isPaymentSuccessful => _isPaymentSuccessful;

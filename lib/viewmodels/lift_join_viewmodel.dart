@@ -24,8 +24,8 @@ class LiftJoinViewModel extends LiftViewModel {
   bool _isLiftBooked = false;
   bool get isLiftBooked => _isLiftBooked;
 
-  double _cash = 0.0;
-  double get userCash => _cash;
+  num _cash = 0.0;
+  num get userCash => _cash;
 
   final LiftRepository _liftRepository = LiftRepository();
   final UserRepository _userRepository = UserRepository();

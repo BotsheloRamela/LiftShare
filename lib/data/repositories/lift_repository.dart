@@ -278,10 +278,10 @@ class LiftRepository {
 
       var liftDoc = await liftsCollection.doc(liftId).get();
 
-      double tripPrice = liftDoc["tripPrice"];
-      int bookedSeats = liftDoc["bookedSeats"];
+      num tripPrice = liftDoc["tripPrice"];
+      num bookedSeats = liftDoc["bookedSeats"];
 
-      double amountToDeduct = tripPrice / bookedSeats;
+      num amountToDeduct = tripPrice / bookedSeats;
 
       for (var doc in bookingsSnapshot.docs) {
         await bookingsCollection.doc(doc.id).update({
@@ -289,16 +289,16 @@ class LiftRepository {
         });
 
         var userDoc = await _firestore.collection("users").doc(doc["userId"]).get();
-        double userCash = userDoc["cash"];
-        double newCash = userCash - amountToDeduct;
+        num userCash = userDoc["cash"];
+        num newCash = userCash - amountToDeduct;
         await _firestore.collection("users").doc(doc["userId"]).update({
           "cash": newCash,
         });
       }
 
       var driverDoc = await _firestore.collection("users").doc(liftDoc["driverId"]).get();
-      double driverCash = driverDoc["cash"];
-      double newDriverCash = driverCash + tripPrice;
+      num driverCash = driverDoc["cash"];
+      num newDriverCash = driverCash + tripPrice;
       await _firestore.collection("users").doc(liftDoc["driverId"]).update({
         "cash": newDriverCash,
       });

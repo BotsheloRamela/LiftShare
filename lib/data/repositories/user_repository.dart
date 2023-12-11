@@ -24,10 +24,10 @@ class UserRepository {
     }
   }
 
-  Future<double> getUserCash(String userId) async {
+  Future<num> getUserCash(String userId) async {
     try {
       final DocumentSnapshot userDoc = await _firestore.collection("users").doc(userId).get();
-      final double cash = userDoc.get("cash").toDouble();
+      final num cash = userDoc.get("cash").toDouble();
       return cash;
     } catch (e) {
       print("Error getting user cash: $e");
