@@ -90,6 +90,12 @@ Explanation:
 - `main.dart`: The entry point of the application
 
 
+## App Sceenshots
+<img src="appScreenshots/OnboardingScreens.png" height="400" alt="Onboarding Screens"/> 
+<img src="appScreenshots/OfferLiftScreens.png" height="400" alt="Offer Lift Screens"/>
+<img src="appScreenshots/GetLiftScreens.png" height="400" alt="Get Lift Screens"/>
+<img src="appScreenshots/Activity&WalletScreens.png" height="400" alt="Activity & Wallet Screens"/>
+
 ## Getting Started
 
 ### Prerequisites
